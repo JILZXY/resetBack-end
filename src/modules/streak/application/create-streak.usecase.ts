@@ -11,7 +11,7 @@ export class CreateStreakUseCase {
 
   async execute(userId: string): Promise<void> {
     const existing = await this.streakRepo.findByUserId(userId);
-    if (existing) return; // Ya tiene racha, no crear otra
+    if (existing) return;
 
     const addiction = await this.prisma.userAddiction.findUnique({
       where: { user_id: userId },

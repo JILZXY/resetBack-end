@@ -33,7 +33,6 @@ export class UpdateStreakUseCase {
         });
       }
     } else {
-      // Hubo consumo: registrar reset y reiniciar racha
       await this.eventRepo.create({
         streakId: streak.id,
         eventType: 'reset',
