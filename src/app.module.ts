@@ -6,6 +6,7 @@ import { databaseConfig } from './config/database.config';
 import { jwtConfig } from './config/jwt.config';
 import { AuthModule } from './modules/auth/auth.module';
 import { TrackingModule } from './modules/tracking/tracking.module';
+import { StreakModule } from './modules/streak/streak.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { TrackingModule } from './modules/tracking/tracking.module';
     PrismaModule,
     AuthModule,
     TrackingModule,
+    StreakModule,
   ],
 })
 export class AppModule {}
