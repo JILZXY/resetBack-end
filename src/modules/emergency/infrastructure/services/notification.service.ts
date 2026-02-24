@@ -1,63 +1,84 @@
-import { Injectable, Logger } from '@nestjs/common';
+// src/modules/emergency/infrastructure/services/notification.service.ts
+import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as sgMail from '@sendgrid/mail';
-import { SupportContactEntity } from '../../domain/support-contact.entity';
 
 @Injectable()
 export class NotificationService {
-  private readonly logger = new Logger(NotificationService.name);
+  private isConfigured = false;
 
-  constructor(private readonly config: ConfigService) {
-    sgMail.setApiKey(this.config.get<string>('SENDGRID_API_KEY') ?? '');
-  }
-
-  async sendEmergencyAlert(
-    contacts: SupportContactEntity[],
-    userName: string,
-  ): Promise<void> {
-    const fromEmail = this.config.get<string>('SENDGRID_FROM_EMAIL') ?? '';
-    const fromName = this.config.get<string>('SENDGRID_FROM_NAME') ?? 'Reset App';
-
-    const emailContacts = contacts.filter((c) => c.email && c.isActive);
-
-    if (emailContacts.length === 0) {
-      this.logger.warn(`No hay contactos con email activos para notificar`);
+  constructor(private config: ConfigService) {
+    const apiKey = this.config.get('SENDGRID_API_KEY');
+    
+    if (!apiKey || apiKey === 'not_configured') {
+      console.warn('⚠️  SendGrid not configured - emails will be skipped');
+      this.isConfigured = false;
       return;
     }
 
-    const messages = emailContacts.map((contact) => ({
-      to: contact.email as string,
-      from: { email: fromEmail, name: fromName },
-      subject: `⚠️ Alerta de emergencia — ${userName} necesita apoyo`,
-      html: this.buildEmailTemplate(userName, contact.contactName),
-    }));
+    sgMail.setApiKey(apiKey);
+    this.isConfigured = true;
+    console.log('✅ SendGrid configured');
+  }
+
+  async sendEmergencyAlert(
+    contactEmail: string,
+    userName: string,
+    message?: string,
+  ): Promise<void> {
+    if (!this.isConfigured) {
+      console.log(`📧 [MOCK] Emergency email to ${contactEmail} from ${userName}`);
+      return;
+    }
+
+    const msg = {
+      to: contactEmail,
+      from: {
+        email: this.config.get('SENDGRID_FROM_EMAIL'),
+        name: this.config.get('SENDGRID_FROM_NAME'),
+      },
+      subject: '🚨 Alerta de Emergencia - ReSet',
+      html: `
+        <h2>Alerta de Emergencia</h2>
+        <p><strong>${userName}</strong> necesita tu apoyo inmediato.</p>
+        <p>Mensaje: ${message}</p>
+        <p>Por favor, comunícate con esta persona lo antes posible.</p>
+      `,
+    };
 
     try {
-      await Promise.all(messages.map((msg) => sgMail.send(msg)));
-      this.logger.log(
-        `Alertas enviadas a ${emailContacts.length} contacto(s) de ${userName}`,
-      );
+      await sgMail.send(msg);
+      console.log(`✅ Email sent to ${contactEmail}`);
     } catch (error) {
-      this.logger.error('Error al enviar alertas por SendGrid', error);
+      console.error('❌ SendGrid error:', error);
+      throw error;
     }
   }
 
-  private buildEmailTemplate(userName: string, contactName: string): string {
-    return `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-        <h2 style="color: #e53e3e;">⚠️ Alerta de Emergencia — Reset App</h2>
-        <p>Hola <strong>${contactName}</strong>,</p>
-        <p>
-          <strong>${userName}</strong> ha activado el botón de emergencia en la 
-          aplicación Reset. Esto significa que necesita apoyo en este momento.
-        </p>
-        <p>Por favor comunícate con él/ella lo antes posible.</p>
-        <hr style="border: 1px solid #eee; margin: 24px 0;" />
-        <p style="color: #718096; font-size: 12px;">
-          Este mensaje fue enviado automáticamente por Reset App. 
-          Si crees que recibiste este correo por error, ignóralo.
-        </p>
-      </div>
-    `;
+  async sendWelcomeEmail(userEmail: string, userName: string): Promise<void> {
+    if (!this.isConfigured) {
+      console.log(`📧 [MOCK] Welcome email to ${userEmail}`);
+      return;
+    }
+
+    const msg = {
+      to: userEmail,
+      from: {
+        email: this.config.get('SENDGRID_FROM_EMAIL'),
+        name: this.config.get('SENDGRID_FROM_NAME'),
+      },
+      subject: 'Bienvenido a ReSet',
+      html: `
+        <h2>¡Hola ${userName}!</h2>
+        <p>Te damos la bienvenida a ReSet, tu plataforma de apoyo en recuperación.</p>
+      `,
+    };
+
+    try {
+      await sgMail.send(msg);
+      console.log(`✅ Welcome email sent to ${userEmail}`);
+    } catch (error) {
+      console.warn('⚠️  Failed to send welcome email:', error.message);
+    }
   }
 }

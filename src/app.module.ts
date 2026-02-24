@@ -7,6 +7,7 @@ import { jwtConfig } from './config/jwt.config';
 import { AuthModule } from './modules/auth/auth.module';
 import { TrackingModule } from './modules/tracking/tracking.module';
 import { StreakModule } from './modules/streak/streak.module';
+import { EmergencyModule } from './modules/emergency/emergency.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { StreakModule } from './modules/streak/streak.module';
     AuthModule,
     TrackingModule,
     StreakModule,
+    EmergencyModule,
   ],
 })
 export class AppModule {}
