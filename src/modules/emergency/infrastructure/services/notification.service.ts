@@ -18,7 +18,7 @@ export class NotificationService {
 
     sgMail.setApiKey(apiKey);
     this.isConfigured = true;
-    console.log('✅ SendGrid configured');
+    console.log('SendGrid configured');
   }
 
   async sendEmergencyAlert(
@@ -27,7 +27,7 @@ export class NotificationService {
     message?: string,
   ): Promise<void> {
     if (!this.isConfigured) {
-      console.log(`📧 [MOCK] Emergency email to ${contactEmail} from ${userName}`);
+      console.log(`[MOCK] Emergency email to ${contactEmail} from ${userName}`);
       return;
     }
 
@@ -37,7 +37,7 @@ export class NotificationService {
         email: this.config.get('SENDGRID_FROM_EMAIL'),
         name: this.config.get('SENDGRID_FROM_NAME'),
       },
-      subject: '🚨 Alerta de Emergencia - ReSet',
+      subject: 'Alerta de Emergencia - ReSet',
       html: `
         <h2>Alerta de Emergencia</h2>
         <p><strong>${userName}</strong> necesita tu apoyo inmediato.</p>
@@ -48,16 +48,16 @@ export class NotificationService {
 
     try {
       await sgMail.send(msg);
-      console.log(`✅ Email sent to ${contactEmail}`);
+      console.log(`Email sent to ${contactEmail}`);
     } catch (error) {
-      console.error('❌ SendGrid error:', error);
+      console.error('SendGrid error:', error);
       throw error;
     }
   }
 
   async sendWelcomeEmail(userEmail: string, userName: string): Promise<void> {
     if (!this.isConfigured) {
-      console.log(`📧 [MOCK] Welcome email to ${userEmail}`);
+      console.log(`[MOCK] Welcome email to ${userEmail}`);
       return;
     }
 
@@ -76,9 +76,9 @@ export class NotificationService {
 
     try {
       await sgMail.send(msg);
-      console.log(`✅ Welcome email sent to ${userEmail}`);
+      console.log(`Welcome email sent to ${userEmail}`);
     } catch (error) {
-      console.warn('⚠️  Failed to send welcome email:', error.message);
+      console.warn('Failed to send welcome email:', error.message);
     }
   }
 }
