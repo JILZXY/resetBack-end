@@ -8,6 +8,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { TrackingModule } from './modules/tracking/tracking.module';
 import { StreakModule } from './modules/streak/streak.module';
 import { EmergencyModule } from './modules/emergency/emergency.module';
+import { ForumModule } from './modules/forum/forum.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { EmergencyModule } from './modules/emergency/emergency.module';
     TrackingModule,
     StreakModule,
     EmergencyModule,
+    ForumModule,
   ],
 })
 export class AppModule {}
