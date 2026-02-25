@@ -53,9 +53,16 @@ export class TriggerAlertUseCase {
       resolutionNotes: dto.resolution_notes,
     });
 
-    await this.notificationService.sendEmergencyAlert(
-      contacts,
-      user?.name ?? 'Un usuario',
+    await Promise.all(
+      contacts
+        .filter((c) => c.email)
+        .map((contact) =>
+          this.notificationService.sendEmergencyAlert(
+            contact.email!,
+            user?.name ?? 'Un usuario',
+            dto.resolution_notes,
+          ),
+        ),
     );
 
     return {

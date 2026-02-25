@@ -1,0 +1,363 @@
+{
+  "info": {
+    "name": "ReSet App API - Flujo Normal",
+    "description": "Pruebas de caminos felices y flujos normales para la API de ReSet",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000/api/v1",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const response = pm.response.json();",
+                  "if (response && response.accessToken) {",
+                  "    pm.collectionVariables.set(\"token\", response.accessToken);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Usuario de Prueba\",\n  \"email\": \"test_postman@reset.com\",\n  \"password\": \"qwerty1234\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const response = pm.response.json();",
+                  "if (response && response.accessToken) {",
+                  "    pm.collectionVariables.set(\"token\", response.accessToken);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"test_postman@reset.com\",\n  \"password\": \"qwerty1234\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Tracking (Daily Logs)",
+      "item": [
+        {
+          "name": "Crear Registro Diario",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+            },
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"log_date\": \"2023-11-01\",\n  \"consumed\": false,\n  \"craving_level\": 5,\n  \"emotional_state\": 7,\n  \"triggers\": \"Estrés en el trabajo\",\n  \"notes\": \"Día difícil pero logré superarlo.\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/tracking/logs",
+              "host": ["{{base_url}}"],
+              "path": ["tracking", "logs"]
+            }
+          }
+        },
+        {
+          "name": "Obtener Historial",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/tracking/logs?limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["tracking", "logs"],
+              "query": [
+                { "key": "limit", "value": "10" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Obtener Estadísticas",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/tracking/statistics",
+              "host": ["{{base_url}}"],
+              "path": ["tracking", "statistics"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Streak (Rachas)",
+      "item": [
+        {
+          "name": "Obtener Racha Actual",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/streak",
+              "host": ["{{base_url}}"],
+              "path": ["streak"]
+            }
+          }
+        },
+        {
+          "name": "Obtener Eventos de Racha",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/streak/events",
+              "host": ["{{base_url}}"],
+              "path": ["streak", "events"]
+            }
+          }
+        },
+        {
+          "name": "Reiniciar Racha",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+            },
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/streak/reset",
+              "host": ["{{base_url}}"],
+              "path": ["streak", "reset"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Emergency (Contactos)",
+      "item": [
+        {
+          "name": "Agregar Contacto",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+            },
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"contact_name\": \"Madrina Ana\",\n  \"email\": \"ana_fake@example.com\",\n  \"relationship\": \"Sponsor\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/emergency/contacts",
+              "host": ["{{base_url}}"],
+              "path": ["emergency", "contacts"]
+            }
+          }
+        },
+        {
+          "name": "Obtener Contactos",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/emergency/contacts",
+              "host": ["{{base_url}}"],
+              "path": ["emergency", "contacts"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Forum",
+      "item": [
+        {
+          "name": "Crear Post",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const response = pm.response.json();",
+                  "if (response && response._id) {",
+                  "    pm.collectionVariables.set(\"post_id\", response._id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+            },
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Mi primer día\",\n  \"content\": \"Hoy empecé de nuevo y me siento motivado.\",\n  \"tags\": [\"inicio\", \"motivacion\"]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/forum/posts",
+              "host": ["{{base_url}}"],
+              "path": ["forum", "posts"]
+            }
+          }
+        },
+        {
+          "name": "Obtener Posts",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/forum/posts?page=1&limit=5",
+              "host": ["{{base_url}}"],
+              "path": ["forum", "posts"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "5" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Reaccionar a Post",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+            },
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/forum/posts/{{post_id}}/react",
+              "host": ["{{base_url}}"],
+              "path": ["forum", "posts", "{{post_id}}", "react"]
+            }
+          }
+        },
+        {
+          "name": "Comentar Post",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+            },
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"content\": \"¡Mucho ánimo! Tú puedes.\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/forum/posts/{{post_id}}/comments",
+              "host": ["{{base_url}}"],
+              "path": ["forum", "posts", "{{post_id}}", "comments"]
+            }
+          }
+        },
+        {
+          "name": "Eliminar Post",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/forum/posts/{{post_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["forum", "posts", "{{post_id}}"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

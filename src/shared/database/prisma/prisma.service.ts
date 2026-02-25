@@ -10,14 +10,14 @@ export class PrismaService implements OnModuleInit, OnModuleDestroy {
 
   constructor(private config: ConfigService) {
     const pool = new Pool({
-      connectionString: this.config.get('DATABASE_URL'),
+      connectionString: this.config.get<string>('database.url'),
     });
 
     const adapter = new PrismaPg(pool);
 
     this.prisma = new PrismaClient({
       adapter,
-      log: process.env.NODE_ENV === 'development' 
+      log: this.config.get<string>('app.nodeEnv') === 'development' 
         ? ['query', 'info', 'warn', 'error'] 
         : ['error'],
     });
