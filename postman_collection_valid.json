@@ -38,11 +38,14 @@
               "script": {
                 "exec": [
                   "const response = pm.response.json();",
-                  "if (response && response.accessToken) {",
-                  "    pm.collectionVariables.set(\"token\", response.accessToken);",
+                  "const data = response.data || response;",
+                  "if (data && data.accessToken) {",
+                  "    pm.collectionVariables.set(\"token\", data.accessToken);",
                   "}",
-                  "if (response && response.user && response.user.id) {",
-                  "    pm.collectionVariables.set(\"addict_id\", response.user.id);",
+                  "if (data && data.user && data.user.id) {",
+                  "    pm.collectionVariables.set(\"addict_id\", data.user.id);",
+                  "} else if (data && data.id) {",
+                  "    pm.collectionVariables.set(\"addict_id\", data.id);",
                   "}"
                 ],
                 "type": "text/javascript"
@@ -52,7 +55,10 @@
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -60,8 +66,13 @@
             },
             "url": {
               "raw": "{{base_url}}/auth/register",
-              "host": ["{{base_url}}"],
-              "path": ["auth", "register"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
             }
           }
         },
@@ -73,8 +84,11 @@
               "script": {
                 "exec": [
                   "const response = pm.response.json();",
-                  "if (response && response.user && response.user.id) {",
-                  "    pm.collectionVariables.set(\"sponsor_id\", response.user.id);",
+                  "const data = response.data || response;",
+                  "if (data && data.user && data.user.id) {",
+                  "    pm.collectionVariables.set(\"sponsor_id\", data.user.id);",
+                  "} else if (data && data.id) {",
+                  "    pm.collectionVariables.set(\"sponsor_id\", data.id);",
                   "}"
                 ],
                 "type": "text/javascript"
@@ -84,7 +98,10 @@
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -92,8 +109,13 @@
             },
             "url": {
               "raw": "{{base_url}}/auth/register",
-              "host": ["{{base_url}}"],
-              "path": ["auth", "register"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
             }
           }
         },
@@ -105,8 +127,9 @@
               "script": {
                 "exec": [
                   "const response = pm.response.json();",
-                  "if (response && response.accessToken) {",
-                  "    pm.collectionVariables.set(\"token\", response.accessToken);",
+                  "const data = response.data || response;",
+                  "if (data && data.accessToken) {",
+                  "    pm.collectionVariables.set(\"token\", data.accessToken);",
                   "}"
                 ],
                 "type": "text/javascript"
@@ -116,7 +139,10 @@
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -124,8 +150,13 @@
             },
             "url": {
               "raw": "{{base_url}}/auth/login",
-              "host": ["{{base_url}}"],
-              "path": ["auth", "login"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
             }
           }
         }
@@ -139,11 +170,20 @@
           "request": {
             "auth": {
               "type": "bearer",
-              "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
             },
             "method": "POST",
             "header": [
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -151,8 +191,13 @@
             },
             "url": {
               "raw": "{{base_url}}/tracking/logs",
-              "host": ["{{base_url}}"],
-              "path": ["tracking", "logs"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "tracking",
+                "logs"
+              ]
             }
           }
         },
@@ -161,16 +206,30 @@
           "request": {
             "auth": {
               "type": "bearer",
-              "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
             },
             "method": "GET",
             "header": [],
             "url": {
               "raw": "{{base_url}}/tracking/logs?limit=10",
-              "host": ["{{base_url}}"],
-              "path": ["tracking", "logs"],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "tracking",
+                "logs"
+              ],
               "query": [
-                { "key": "limit", "value": "10" }
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
               ]
             }
           }
@@ -180,14 +239,25 @@
           "request": {
             "auth": {
               "type": "bearer",
-              "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
             },
             "method": "GET",
             "header": [],
             "url": {
               "raw": "{{base_url}}/tracking/statistics",
-              "host": ["{{base_url}}"],
-              "path": ["tracking", "statistics"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "tracking",
+                "statistics"
+              ]
             }
           }
         }
@@ -201,14 +271,24 @@
           "request": {
             "auth": {
               "type": "bearer",
-              "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
             },
             "method": "GET",
             "header": [],
             "url": {
               "raw": "{{base_url}}/streak",
-              "host": ["{{base_url}}"],
-              "path": ["streak"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "streak"
+              ]
             }
           }
         },
@@ -217,14 +297,25 @@
           "request": {
             "auth": {
               "type": "bearer",
-              "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
             },
             "method": "GET",
             "header": [],
             "url": {
               "raw": "{{base_url}}/streak/events",
-              "host": ["{{base_url}}"],
-              "path": ["streak", "events"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "streak",
+                "events"
+              ]
             }
           }
         },
@@ -233,14 +324,25 @@
           "request": {
             "auth": {
               "type": "bearer",
-              "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
             },
             "method": "POST",
             "header": [],
             "url": {
               "raw": "{{base_url}}/streak/reset",
-              "host": ["{{base_url}}"],
-              "path": ["streak", "reset"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "streak",
+                "reset"
+              ]
             }
           }
         }
@@ -254,11 +356,20 @@
           "request": {
             "auth": {
               "type": "bearer",
-              "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
             },
             "method": "POST",
             "header": [
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -266,8 +377,13 @@
             },
             "url": {
               "raw": "{{base_url}}/emergency/contacts",
-              "host": ["{{base_url}}"],
-              "path": ["emergency", "contacts"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "emergency",
+                "contacts"
+              ]
             }
           }
         },
@@ -276,14 +392,25 @@
           "request": {
             "auth": {
               "type": "bearer",
-              "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
             },
             "method": "GET",
             "header": [],
             "url": {
               "raw": "{{base_url}}/emergency/contacts",
-              "host": ["{{base_url}}"],
-              "path": ["emergency", "contacts"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "emergency",
+                "contacts"
+              ]
             }
           }
         }
@@ -300,8 +427,9 @@
               "script": {
                 "exec": [
                   "const response = pm.response.json();",
-                  "if (response && response.id) {",
-                  "    pm.collectionVariables.set(\"sponsorship_id\", response.id);",
+                  "const data = response.data || response;",
+                  "if (data && data.id) {",
+                  "    pm.collectionVariables.set(\"sponsorship_id\", data.id);",
                   "}"
                 ],
                 "type": "text/javascript"
@@ -311,11 +439,20 @@
           "request": {
             "auth": {
               "type": "bearer",
-              "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
             },
             "method": "POST",
             "header": [
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -323,8 +460,13 @@
             },
             "url": {
               "raw": "{{base_url}}/sponsorships/assign",
-              "host": ["{{base_url}}"],
-              "path": ["sponsorships", "assign"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "sponsorships",
+                "assign"
+              ]
             }
           }
         },
@@ -333,16 +475,30 @@
           "request": {
             "auth": {
               "type": "bearer",
-              "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
             },
             "method": "GET",
             "header": [],
             "url": {
               "raw": "{{base_url}}/tracking/logs?userId={{addict_id}}",
-              "host": ["{{base_url}}"],
-              "path": ["tracking", "logs"],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "tracking",
+                "logs"
+              ],
               "query": [
-                { "key": "userId", "value": "{{addict_id}}" }
+                {
+                  "key": "userId",
+                  "value": "{{addict_id}}"
+                }
               ]
             }
           }
@@ -352,16 +508,30 @@
           "request": {
             "auth": {
               "type": "bearer",
-              "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
             },
             "method": "GET",
             "header": [],
             "url": {
               "raw": "{{base_url}}/tracking/statistics?userId={{addict_id}}",
-              "host": ["{{base_url}}"],
-              "path": ["tracking", "statistics"],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "tracking",
+                "statistics"
+              ],
               "query": [
-                { "key": "userId", "value": "{{addict_id}}" }
+                {
+                  "key": "userId",
+                  "value": "{{addict_id}}"
+                }
               ]
             }
           }
@@ -371,11 +541,20 @@
           "request": {
             "auth": {
               "type": "bearer",
-              "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
             },
             "method": "POST",
             "header": [
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -383,8 +562,14 @@
             },
             "url": {
               "raw": "{{base_url}}/sponsorships/{{sponsorship_id}}/terminate",
-              "host": ["{{base_url}}"],
-              "path": ["sponsorships", "{{sponsorship_id}}", "terminate"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "sponsorships",
+                "{{sponsorship_id}}",
+                "terminate"
+              ]
             }
           }
         },
@@ -393,14 +578,25 @@
           "request": {
             "auth": {
               "type": "bearer",
-              "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
             },
             "method": "POST",
             "header": [],
             "url": {
               "raw": "{{base_url}}/sponsorships/graduate",
-              "host": ["{{base_url}}"],
-              "path": ["sponsorships", "graduate"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "sponsorships",
+                "graduate"
+              ]
             }
           }
         }
@@ -417,8 +613,9 @@
               "script": {
                 "exec": [
                   "const response = pm.response.json();",
-                  "if (response && response.id) {",
-                  "    pm.collectionVariables.set(\"post_id\", response.id);",
+                  "const data = response.data || response;",
+                  "if (data && data.id) {",
+                  "    pm.collectionVariables.set(\"post_id\", data.id);",
                   "}"
                 ],
                 "type": "text/javascript"
@@ -428,11 +625,20 @@
           "request": {
             "auth": {
               "type": "bearer",
-              "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
             },
             "method": "POST",
             "header": [
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -440,8 +646,13 @@
             },
             "url": {
               "raw": "{{base_url}}/forum/posts",
-              "host": ["{{base_url}}"],
-              "path": ["forum", "posts"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "forum",
+                "posts"
+              ]
             }
           }
         },
@@ -450,17 +661,34 @@
           "request": {
             "auth": {
               "type": "bearer",
-              "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
             },
             "method": "GET",
             "header": [],
             "url": {
               "raw": "{{base_url}}/forum/posts?page=1&limit=5",
-              "host": ["{{base_url}}"],
-              "path": ["forum", "posts"],
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "forum",
+                "posts"
+              ],
               "query": [
-                { "key": "page", "value": "1" },
-                { "key": "limit", "value": "5" }
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "5"
+                }
               ]
             }
           }
@@ -470,14 +698,27 @@
           "request": {
             "auth": {
               "type": "bearer",
-              "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
             },
             "method": "POST",
             "header": [],
             "url": {
               "raw": "{{base_url}}/forum/posts/{{post_id}}/react",
-              "host": ["{{base_url}}"],
-              "path": ["forum", "posts", "{{post_id}}", "react"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "forum",
+                "posts",
+                "{{post_id}}",
+                "react"
+              ]
             }
           }
         },
@@ -486,11 +727,20 @@
           "request": {
             "auth": {
               "type": "bearer",
-              "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
             },
             "method": "POST",
             "header": [
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -498,8 +748,15 @@
             },
             "url": {
               "raw": "{{base_url}}/forum/posts/{{post_id}}/comments",
-              "host": ["{{base_url}}"],
-              "path": ["forum", "posts", "{{post_id}}", "comments"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "forum",
+                "posts",
+                "{{post_id}}",
+                "comments"
+              ]
             }
           }
         },
@@ -508,14 +765,26 @@
           "request": {
             "auth": {
               "type": "bearer",
-              "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
             },
             "method": "DELETE",
             "header": [],
             "url": {
               "raw": "{{base_url}}/forum/posts/{{post_id}}",
-              "host": ["{{base_url}}"],
-              "path": ["forum", "posts", "{{post_id}}"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "forum",
+                "posts",
+                "{{post_id}}"
+              ]
             }
           }
         }
