@@ -117,6 +117,80 @@
       ]
     },
     {
+      "name": "Sponsorship - Errores",
+      "item": [
+        {
+          "name": "Assign Sponsor - Mismo Usuario",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+            },
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sponsorId\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"addictId\": \"123e4567-e89b-12d3-a456-426614174000\"\n}"
+            },
+            "description": "Debería fallar con HTTP 400 Bad Request porque un usuario no puede ser sponsor de sí mismo.",
+            "url": {
+              "raw": "{{base_url}}/sponsorships/assign",
+              "host": ["{{base_url}}"],
+              "path": ["sponsorships", "assign"]
+            }
+          }
+        },
+        {
+          "name": "Assign Sponsor - IDs Inválidos",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+            },
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sponsorId\": \"no-soy-un-uuid\",\n  \"addictId\": \"tampoco-soy-un-uuid\"\n}"
+            },
+            "description": "Class-validator debería rechazar esto porque los IDs enviandos no son UUIDs válidos versión 4.",
+            "url": {
+              "raw": "{{base_url}}/sponsorships/assign",
+              "host": ["{{base_url}}"],
+              "path": ["sponsorships", "assign"]
+            }
+          }
+        },
+        {
+          "name": "Terminate Sponsorship - Falta Razón",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+            },
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "description": "Debería fallar porque terminar un apadrinamiento exige un string con el motivo en la propiedad 'reason'.",
+            "url": {
+              "raw": "{{base_url}}/sponsorships/some-uuid/terminate",
+              "host": ["{{base_url}}"],
+              "path": ["sponsorships", "some-uuid", "terminate"]
+            }
+          }
+        }
+      ]
+    },
+    {
       "name": "Forum - Errores",
       "item": [
         {
