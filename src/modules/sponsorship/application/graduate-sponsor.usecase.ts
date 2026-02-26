@@ -10,9 +10,7 @@ export class GraduateSponsorUseCase {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
       include: {
-        addictions: {
-          where: { is_active: true }
-        }
+        addictions: true
       }
     });
 
@@ -46,17 +44,11 @@ export class GraduateSponsorUseCase {
       }
 
       // 2. Desactivar adicción activa
-      if (user.addictions) {
-        const addictionId = Array.isArray(user.addictions)
-          ? (user.addictions[0] as any)?.id
-          : (user.addictions as any).id;
-
-        if (addictionId) {
-          await tx.userAddiction.update({
-            where: { id: addictionId },
-            data: { is_active: false },
-          });
-        }
+      if (user.addictions && user.addictions.is_active) {
+        await tx.userAddiction.update({
+          where: { id: user.addictions.id },
+          data: { is_active: false },
+        });
       }
 
       // 3. Cambiar el rol a 'sponsor'
