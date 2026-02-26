@@ -102,7 +102,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"log_date\": \"2023-11-01\",\n  \"consumed\": false,\n  \"craving_level\": 5,\n  \"emotional_state\": 7,\n  \"triggers\": \"Estrés en el trabajo\",\n  \"notes\": \"Día difícil pero logré superarlo.\"\n}"
+              "raw": "{\n  \"log_date\": \"2023-11-01\",\n  \"consumed\": false,\n  \"craving_level\": 5,\n  \"emotional_state\": 7\n}"
             },
             "url": {
               "raw": "{{base_url}}/tracking/logs",
@@ -217,7 +217,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"contact_name\": \"Madrina Ana\",\n  \"email\": \"ana_fake@example.com\",\n  \"relationship\": \"Sponsor\"\n}"
+              "raw": "{\n  \"contact_name\": \"Madrina Ana\",\n  \"isActive\": true\n}"
             },
             "url": {
               "raw": "{{base_url}}/emergency/contacts",
@@ -274,7 +274,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"title\": \"Mi primer día\",\n  \"content\": \"Hoy empecé de nuevo y me siento motivado.\",\n  \"tags\": [\"inicio\", \"motivacion\"]\n}"
+              "raw": "{\n  \"title\": \"Mi primer día\",\n  \"content\": \"Hoy empecé de nuevo y me siento motivado.\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/forum/posts",

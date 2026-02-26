@@ -33,6 +33,10 @@ export class PrismaService implements OnModuleInit, OnModuleDestroy {
     console.log('Database disconnected');
   }
 
+  get $transaction() {
+    return this.prisma.$transaction.bind(this.prisma);
+  }
+
   // Exponer métodos de acceso
   get user() {
     return this.prisma.user;

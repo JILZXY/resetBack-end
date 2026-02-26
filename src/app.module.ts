@@ -12,6 +12,7 @@ import { TrackingModule } from './modules/tracking/tracking.module';
 import { StreakModule } from './modules/streak/streak.module';
 import { EmergencyModule } from './modules/emergency/emergency.module';
 import { ForumModule } from './modules/forum/forum.module';
+import { SponsorshipModule } from './modules/sponsorship/sponsorship.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { ForumModule } from './modules/forum/forum.module';
     StreakModule,
     EmergencyModule,
     ForumModule,
+    SponsorshipModule,
   ],
 })
 export class AppModule {}

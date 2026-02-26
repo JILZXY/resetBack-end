@@ -35,12 +35,13 @@ export class TrackingController {
   history(
     @Request() req: any,
     @Query(new ValidationPipe({ transform: true })) filter: LogFilterDto,
+    @Query('userId') requestedUserId?: string,
   ) {
-    return this.getHistory.execute(req.user.userId, filter);
+    return this.getHistory.execute(req.user.userId, filter, requestedUserId);
   }
 
   @Get('statistics')
-  statistics(@Request() req: any) {
-    return this.getStats.execute(req.user.userId);
+  statistics(@Request() req: any, @Query('userId') requestedUserId?: string) {
+    return this.getStats.execute(req.user.userId, requestedUserId);
   }
 }
