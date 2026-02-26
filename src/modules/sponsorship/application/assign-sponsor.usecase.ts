@@ -8,7 +8,7 @@ export class AssignSponsorUseCase {
   constructor(
     private readonly sponsorshipRepo: SponsorshipRepository,
     private readonly userRepo: UserRepository,
-  ) {}
+  ) { }
 
   async execute(dto: AssignSponsorDto) {
     if (dto.sponsorId === dto.addictId) {
@@ -21,10 +21,10 @@ export class AssignSponsorUseCase {
     const sponsor = await this.userRepo.findById(dto.sponsorId);
     const addict = await this.userRepo.findById(dto.addictId);
 
-    if (!sponsor || sponsor.role !== 'sponsor') {
+    if (!sponsor || sponsor.role !== 'PADRINO') {
       throw new HttpException('Padrino no encontrado o inválido', HttpStatus.NOT_FOUND);
     }
-    if (!addict || addict.role !== 'patient') {
+    if (!addict || addict.role !== 'ADICTO') {
       throw new HttpException('Ahijado no encontrado o inválido', HttpStatus.NOT_FOUND);
     }
 

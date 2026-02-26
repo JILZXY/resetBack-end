@@ -4,7 +4,7 @@ import { SupportContactEntity } from '../../domain/support-contact.entity';
 
 @Injectable()
 export class ContactRepository {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   async countByUserId(userId: string): Promise<number> {
     return this.prisma.supportContact.count({
@@ -40,11 +40,11 @@ export class ContactRepository {
       data: {
         user_id: data.userId,
         contact_name: data.contactName,
-        phone: data.phone ?? null,
-        email: data.email ?? null,
-        relationship: data.relationship ?? null,
-        custom_relationship: data.customRelationship ?? null,
-        priority_order: data.priorityOrder ?? null,
+        phone: data.phone ?? undefined,
+        email: data.email ?? undefined,
+        relationship: data.relationship ?? undefined,
+        custom_relationship: data.customRelationship ?? undefined,
+        priority_order: data.priorityOrder ?? undefined,
       },
     });
     return this.toEntity(contact);
