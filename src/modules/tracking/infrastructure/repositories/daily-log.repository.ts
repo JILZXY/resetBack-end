@@ -1,0 +1,112 @@
+import { Injectable } from '@nestjs/common';
+import { PrismaService } from 'src/shared/database/prisma/prisma.service';
+import { DailyLogEntity } from '../../domain/daily-log.entity';
+
+@Injectable()
+export class DailyLogRepository {
+  constructor(private readonly prisma: PrismaService) {}
+
+  async findByDate(userId: string, logDate: Date): Promise<DailyLogEntity | null> {
+    const log = await this.prisma.dailyLog.findUnique({
+      where: { user_id_log_date: { user_id: userId, log_date: logDate } },
+    });
+    return log ? this.toEntity(log) : null;
+  }
+
+  async findCravingLevelByValue(level: number) {
+    return this.prisma.cravingLevel.findUnique({ where: { level } });
+  }
+
+  async findEmotionalStateByValue(level: number) {
+    return this.prisma.emotionalState.findUnique({ where: { level } });
+  }
+
+  async create(data: {
+    userId: string;
+    logDate: Date;
+    consumed: boolean;
+    cravingLevelId?: string;
+    emotionalStateId?: string;
+    triggers?: string;
+    notes?: string;
+  }): Promise<DailyLogEntity> {
+    const log = await this.prisma.dailyLog.create({
+      data: {
+        user_id: data.userId,
+        log_date: data.logDate,
+        consumed: data.consumed,
+        craving_level_id: data.cravingLevelId ?? null,
+        emotional_state_id: data.emotionalStateId ?? null,
+        triggers: data.triggers ?? null,
+        notes: data.notes ?? null,
+      },
+      include: { craving_level: true, emotional_state: true },
+    });
+    return this.toEntity(log);
+  }
+
+  async findHistory(
+    userId: string,
+    from?: Date,
+    to?: Date,
+  ): Promise<DailyLogEntity[]> {
+    const logs = await this.prisma.dailyLog.findMany({
+      where: {
+        user_id: userId,
+        ...(from || to
+          ? {
+              log_date: {
+                ...(from ? { gte: from } : {}),
+                ...(to ? { lte: to } : {}),
+              },
+            }
+          : {}),
+      },
+      orderBy: { log_date: 'desc' },
+      include: { craving_level: true, emotional_state: true },
+    });
+    return logs.map((l) => this.toEntity(l));
+  }
+
+  async getStatistics(userId: string) {
+  const logs = await this.prisma.dailyLog.findMany({
+    where: { user_id: userId },
+    include: { craving_level: true, emotional_state: true },
+  });
+
+  const totalLogs = logs.length;
+  const relapseCount = logs.filter((l) => l.consumed).length;
+
+  const logsWithCraving = logs.filter((l) => l.craving_level !== null);
+  const logsWithEmotion = logs.filter((l) => l.emotional_state !== null);
+
+  const avgCraving = logsWithCraving.length
+    ? logsWithCraving.reduce((sum, l) => sum + l.craving_level!.level, 0) / logsWithCraving.length
+    : null;
+
+  const avgEmotion = logsWithEmotion.length
+    ? logsWithEmotion.reduce((sum, l) => sum + l.emotional_state!.level, 0) / logsWithEmotion.length
+    : null;
+
+  return {
+    total_logs: totalLogs,
+    relapse_count: relapseCount,
+    avg_craving: avgCraving ? Number(avgCraving.toFixed(2)) : null,
+    avg_emotion: avgEmotion ? Number(avgEmotion.toFixed(2)) : null,
+  };
+}
+
+  private toEntity(raw: any): DailyLogEntity {
+    const entity = new DailyLogEntity();
+    entity.id = raw.id;
+    entity.userId = raw.user_id;
+    entity.logDate = raw.log_date;
+    entity.consumed = raw.consumed;
+    entity.cravingLevelId = raw.craving_level_id;
+    entity.emotionalStateId = raw.emotional_state_id;
+    entity.triggers = raw.triggers;
+    entity.notes = raw.notes;
+    entity.createdAt = raw.created_at;
+    return entity;
+  }
+}
