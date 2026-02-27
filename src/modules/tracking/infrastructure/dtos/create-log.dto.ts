@@ -21,13 +21,13 @@ export class CreateLogDto {
   @IsInt()
   @Min(1)
   @Max(10)
-  craving_level: number; // Enviamos el número 1-10, el service resuelve el ID
+  craving_level: number; 
 
   @IsOptional()
   @IsInt()
   @Min(1)
   @Max(10)
-  emotional_state: number; // Igual
+  emotional_state: number; 
 
   @IsOptional()
   @IsString()
