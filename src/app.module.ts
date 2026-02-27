@@ -4,6 +4,7 @@ import { PrismaModule } from './shared/database/prisma/prisma.module';
 import { appConfig } from './config/app.config';
 import { databaseConfig } from './config/database.config';
 import { jwtConfig } from './config/jwt.config';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { jwtConfig } from './config/jwt.config';
       load: [appConfig, databaseConfig, jwtConfig],
     }),
     PrismaModule,
+    AuthModule,
   ],
 })
 export class AppModule {}
