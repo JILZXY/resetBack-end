@@ -8,7 +8,7 @@ export class CreateLogUseCase {
   constructor(
     private readonly logRepo: DailyLogRepository,
     private readonly streakService: StreakService,
-  ) {}
+  ) { }
 
   async execute(userId: string, dto: CreateLogDto) {
     const logDate = new Date(dto.log_date);
@@ -69,6 +69,7 @@ export class CreateLogUseCase {
       notes: dto.notes,
     });
 
+    await this.streakService.initializeStreak(userId);
     await this.streakService.handleDailyLog(userId, dto.consumed, logDate);
 
     return log;
