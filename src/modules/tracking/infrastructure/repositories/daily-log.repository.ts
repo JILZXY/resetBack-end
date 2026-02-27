@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { PrismaService } from 'src/shared/database/prisma/prisma.service';
 import { DailyLogEntity } from '../../domain/daily-log.entity';
 
@@ -69,31 +70,21 @@ export class DailyLogRepository {
   }
 
   async getStatistics(userId: string) {
-    const logs = await this.prisma.dailyLog.findMany({
-      where: { user_id: userId },
-      include: { craving_level: true, emotional_state: true },
-    });
+    const result: any[] = await this.prisma.$queryRaw(
+      Prisma.sql`SELECT * FROM core.fn_get_user_stats(${userId}::uuid)`,
+    );
 
-    const totalLogs = logs.length;
-    const relapseCount = logs.filter((l) => l.consumed).length;
+    if (result.length === 0) {
+      return {
+        day_counter: 0,
+        avg_craving: null,
+        avg_emotion: null,
+        streak_status: 'none',
+        total_relapses: 0,
+      };
+    }
 
-    const logsWithCraving = logs.filter((l) => l.craving_level !== null);
-    const logsWithEmotion = logs.filter((l) => l.emotional_state !== null);
-
-    const avgCraving = logsWithCraving.length
-      ? logsWithCraving.reduce((sum, l) => sum + l.craving_level!.level, 0) / logsWithCraving.length
-      : null;
-
-    const avgEmotion = logsWithEmotion.length
-      ? logsWithEmotion.reduce((sum, l) => sum + l.emotional_state!.level, 0) / logsWithEmotion.length
-      : null;
-
-    return {
-      total_logs: totalLogs,
-      relapse_count: relapseCount,
-      avg_craving: avgCraving ? Number(avgCraving.toFixed(2)) : null,
-      avg_emotion: avgEmotion ? Number(avgEmotion.toFixed(2)) : null,
-    };
+    return result[0];
   }
 
   private toEntity(raw: any): DailyLogEntity {

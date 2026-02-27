@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
+import { ScheduleModule } from '@nestjs/schedule';
 import { PrismaModule } from './shared/database/prisma/prisma.module';
 import { appConfig } from './config/app.config';
 import { databaseConfig } from './config/database.config';
@@ -33,6 +34,7 @@ import { SponsorshipModule } from './modules/sponsorship/sponsorship.module';
       inject: [ConfigService],
     }),
     PrismaModule,
+    ScheduleModule.forRoot(),
     AuthModule,
     TrackingModule,
     StreakModule,
