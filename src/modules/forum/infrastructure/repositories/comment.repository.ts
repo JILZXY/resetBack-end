@@ -29,30 +29,50 @@ export class CommentRepository {
 
   async findByPostId(postId: string): Promise<CommentEntity[]> {
     const comments = await this.commentModel
-      .find({ postId: new Types.ObjectId(postId) })
+      .find({ postId: new Types.ObjectId(postId), isDeleted: false })
       .sort({ createdAt: 1 })
       .exec();
     return comments.map((c) => this.toEntity(c));
   }
 
   async findById(id: string): Promise<CommentEntity | null> {
-    const comment = await this.commentModel.findById(id).exec();
+    const comment = await this.commentModel.findOne({ _id: id, isDeleted: false }).exec();
     return comment ? this.toEntity(comment) : null;
   }
 
-  async delete(id: string): Promise<void> {
-    await this.commentModel.findByIdAndDelete(id).exec();
+  async softDelete(id: string): Promise<void> {
+    await this.commentModel.findByIdAndUpdate(id, { $set: { isDeleted: true } }).exec();
   }
 
-  async deleteByPostId(postId: string): Promise<void> {
+  async softDeleteByPostId(postId: string): Promise<void> {
     await this.commentModel
-      .deleteMany({ postId: new Types.ObjectId(postId) })
+      .updateMany(
+        { postId: new Types.ObjectId(postId) },
+        { $set: { isDeleted: true } },
+      )
       .exec();
+  }
+
+  async update(id: string, data: Partial<{
+    content: string;
+    isEdited: boolean;
+  }>): Promise<CommentEntity | null> {
+    const comment = await this.commentModel
+      .findByIdAndUpdate(id, { $set: data }, { new: true })
+      .exec();
+    return comment ? this.toEntity(comment) : null;
   }
 
   async incrementReaction(id: string): Promise<CommentEntity | null> {
     const comment = await this.commentModel
       .findByIdAndUpdate(id, { $inc: { reactionUps: 1 } }, { new: true })
+      .exec();
+    return comment ? this.toEntity(comment) : null;
+  }
+
+  async decrementReaction(id: string): Promise<CommentEntity | null> {
+    const comment = await this.commentModel
+      .findByIdAndUpdate(id, { $inc: { reactionUps: -1 } }, { new: true })
       .exec();
     return comment ? this.toEntity(comment) : null;
   }
@@ -66,6 +86,8 @@ export class CommentRepository {
     entity.content = raw.content;
     entity.isAnonymous = raw.isAnonymous;
     entity.reactionUps = raw.reactionUps;
+    entity.isDeleted = raw.isDeleted;
+    entity.isEdited = raw.isEdited;
     entity.createdAt = (raw as any).createdAt;
     entity.updatedAt = (raw as any).updatedAt;
     return entity;

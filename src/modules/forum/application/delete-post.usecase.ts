@@ -26,9 +26,10 @@ export class DeletePostUseCase {
       );
     }
 
+    // Borrado lógico en vez de físico
     await Promise.all([
-      this.postRepo.delete(postId),
-      this.commentRepo.deleteByPostId(postId),
+      this.postRepo.softDelete(postId),
+      this.commentRepo.softDeleteByPostId(postId),
     ]);
 
     return { message: 'Post eliminado correctamente' };

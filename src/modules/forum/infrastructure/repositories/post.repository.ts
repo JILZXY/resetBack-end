@@ -28,7 +28,8 @@ export class PostRepository {
   }
 
   async findAll(page: number, limit: number, tag?: string): Promise<PostEntity[]> {
-    const filter = tag ? { tags: tag } : {};
+    const filter: any = { isDeleted: false };
+    if (tag) filter.tags = tag;
     const posts = await this.postModel
       .find(filter)
       .sort({ createdAt: -1 })
@@ -39,13 +40,13 @@ export class PostRepository {
   }
 
   async findById(id: string): Promise<PostEntity | null> {
-    const post = await this.postModel.findById(id).exec();
+    const post = await this.postModel.findOne({ _id: id, isDeleted: false }).exec();
     return post ? this.toEntity(post) : null;
   }
 
   async findByAuthorId(authorId: string): Promise<PostEntity[]> {
     const posts = await this.postModel
-      .find({ authorId })
+      .find({ authorId, isDeleted: false })
       .sort({ createdAt: -1 })
       .exec();
     return posts.map((p) => this.toEntity(p));
@@ -56,6 +57,8 @@ export class PostRepository {
     content: string;
     tags: string[];
     images: string[];
+    isDeleted: boolean;
+    isEdited: boolean;
   }>): Promise<PostEntity | null> {
     const post = await this.postModel
       .findByIdAndUpdate(id, { $set: data }, { new: true })
@@ -63,13 +66,20 @@ export class PostRepository {
     return post ? this.toEntity(post) : null;
   }
 
-  async delete(id: string): Promise<void> {
-    await this.postModel.findByIdAndDelete(id).exec();
+  async softDelete(id: string): Promise<void> {
+    await this.postModel.findByIdAndUpdate(id, { $set: { isDeleted: true } }).exec();
   }
 
   async incrementReaction(id: string): Promise<PostEntity | null> {
     const post = await this.postModel
       .findByIdAndUpdate(id, { $inc: { reactionUps: 1 } }, { new: true })
+      .exec();
+    return post ? this.toEntity(post) : null;
+  }
+
+  async decrementReaction(id: string): Promise<PostEntity | null> {
+    const post = await this.postModel
+      .findByIdAndUpdate(id, { $inc: { reactionUps: -1 } }, { new: true })
       .exec();
     return post ? this.toEntity(post) : null;
   }
@@ -95,6 +105,8 @@ export class PostRepository {
     entity.tags = raw.tags;
     entity.reactionUps = raw.reactionUps;
     entity.commentCount = raw.commentCount;
+    entity.isDeleted = raw.isDeleted;
+    entity.isEdited = raw.isEdited;
     entity.createdAt = (raw as any).createdAt;
     entity.updatedAt = (raw as any).updatedAt;
     return entity;

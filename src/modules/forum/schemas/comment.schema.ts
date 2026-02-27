@@ -22,6 +22,12 @@ export class Comment {
 
   @Prop({ default: 0 })
   reactionUps: number;
+
+  @Prop({ default: false })
+  isDeleted: boolean;
+
+  @Prop({ default: false })
+  isEdited: boolean;
 }
 
 export const CommentSchema = SchemaFactory.createForClass(Comment);
