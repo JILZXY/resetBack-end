@@ -1,7 +1,7 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { DailyLogRepository } from '../infrastructure/repositories/daily-log.repository';
 import { CreateLogDto } from '../infrastructure/dtos/create-log.dto';
-import { StreakService } from 'src/modules/streak/streak.service';
+import { StreakService } from '../../streak/streak.service';
 
 @Injectable()
 export class CreateLogUseCase {
