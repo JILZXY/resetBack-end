@@ -9,17 +9,15 @@ export class UpdateStreakUseCase {
     private readonly streakRepo: StreakRepository,
     private readonly eventRepo: StreakEventRepository,
     private readonly logRepo: DailyLogRepository,
-  ) {}
+  ) { }
 
   async execute(userId: string, consumed: boolean, logDate: Date): Promise<void> {
     const streak = await this.streakRepo.findByUserId(userId);
-    if (!streak) return; // Si no hay racha activa no hacemos nada
+    if (!streak) return;
 
     if (!consumed) {
-      // Día sobrio: incrementar contador
       await this.streakRepo.incrementDay(streak.id, logDate);
 
-      // Registrar checkpoint cada 7 días
       const updatedStreak = await this.streakRepo.findByUserId(userId);
       if (updatedStreak && updatedStreak.dayCounter % 7 === 0) {
         const stats = await this.logRepo.getStatistics(userId);
