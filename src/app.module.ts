@@ -15,6 +15,7 @@ import { StreakModule } from './modules/streak/streak.module';
 import { EmergencyModule } from './modules/emergency/emergency.module';
 import { ForumModule } from './modules/forum/forum.module';
 import { SponsorshipModule } from './modules/sponsorship/sponsorship.module';
+import { AdminModule } from './modules/admin/admin.module';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { SponsorshipModule } from './modules/sponsorship/sponsorship.module';
     EmergencyModule,
     ForumModule,
     SponsorshipModule,
+    AdminModule,
   ],
   controllers: [AppController]
 })
