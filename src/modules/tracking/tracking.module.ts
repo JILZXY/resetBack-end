@@ -7,7 +7,7 @@ import { GetStatisticsUseCase } from './application/get-statistics.usecase';
 import { StreakModule } from '../streak/streak.module';
 
 @Module({
-  imports: [forwardRef(() => StreakModule)], // forwardRef por dependencia circular con streak
+  imports: [forwardRef(() => StreakModule)], 
   controllers: [TrackingController],
   providers: [
     DailyLogRepository,

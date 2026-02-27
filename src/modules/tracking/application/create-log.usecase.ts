@@ -69,7 +69,6 @@ export class CreateLogUseCase {
       notes: dto.notes,
     });
 
-    // Actualizar racha según si hubo consumo o no
     await this.streakService.handleDailyLog(userId, dto.consumed, logDate);
 
     return log;
