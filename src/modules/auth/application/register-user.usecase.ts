@@ -37,6 +37,7 @@ export class RegisterUserUseCase {
       name: user.name,
       email: user.email,
       role: user.role,
+      sponsorCode: user.sponsorCode,
       createdAt: user.createdAt,
     };
   }
