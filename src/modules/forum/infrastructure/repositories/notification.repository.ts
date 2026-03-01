@@ -44,4 +44,14 @@ export class NotificationRepository {
     entity.createdAt = (raw as any).createdAt;
     return entity;
   }
+
+  async countUnread(userId: string): Promise<number> {
+    return this.notificationModel.countDocuments({ userId, isRead: false }).exec();
+  }
+
+  async markAllAsRead(userId: string): Promise<void> {
+    await this.notificationModel
+      .updateMany({ userId, isRead: false }, { $set: { isRead: true } })
+      .exec();
+  }
 }
