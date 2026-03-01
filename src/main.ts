@@ -1,5 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
+import { IoAdapter } from '@nestjs/platform-socket.io';
 import { AppModule } from './app.module';
 import { GlobalExceptionFilter } from './shared/filters/http-exception.filter';
 import { TransformInterceptor } from './shared/interceptors/transform.interceptor';
@@ -31,6 +32,10 @@ async function bootstrap() {
     credentials: true,
     allowedHeaders: 'Content-Type, Authorization, X-Requested-With, Accept',
   });
+
+  // Configurar WebSocket adapter (socket.io) con los mismos orígenes permitidos
+  const ioAdapter = new IoAdapter(app);
+  app.useWebSocketAdapter(ioAdapter);
 
   const port = configService.get<number>('app.port') ?? 3000;
 
