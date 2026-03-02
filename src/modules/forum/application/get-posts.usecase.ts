@@ -12,7 +12,6 @@ export class GetPostsUseCase {
   async execute(page: number, limit: number, tag?: string) {
     const posts = await this.postRepo.findAll(page, limit, tag);
 
-    // Resolver nombres de autores no anónimos en una sola consulta
     const authorIds = [...new Set(
       posts.filter((p) => !p.isAnonymous).map((p) => p.authorId)
     )];
