@@ -2,6 +2,8 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { ReactionRepository } from '../infrastructure/repositories/reaction.repository';
 import { PostRepository } from '../infrastructure/repositories/post.repository';
 import { CommentRepository } from '../infrastructure/repositories/comment.repository';
+import { NotificationRepository } from '../infrastructure/repositories/notification.repository';
+import { NotificationGateway } from '../notification.gateway';
 
 @Injectable()
 export class ToggleReactionUseCase {
@@ -9,10 +11,14 @@ export class ToggleReactionUseCase {
     private readonly reactionRepo: ReactionRepository,
     private readonly postRepo: PostRepository,
     private readonly commentRepo: CommentRepository,
+    private readonly notificationRepo: NotificationRepository,
+    private readonly notificationGateway: NotificationGateway,
   ) {}
 
   async execute(userId: string, targetId: string, targetType: 'post' | 'comment') {
-    // Validar que el target existe
+    // Validar que el target existe y obtener su autor
+    let targetAuthorId: string | undefined;
+
     if (targetType === 'post') {
       const post = await this.postRepo.findById(targetId);
       if (!post) {
@@ -21,6 +27,7 @@ export class ToggleReactionUseCase {
           HttpStatus.NOT_FOUND,
         );
       }
+      targetAuthorId = post.authorId;
     } else {
       const comment = await this.commentRepo.findById(targetId);
       if (!comment) {
@@ -29,6 +36,7 @@ export class ToggleReactionUseCase {
           HttpStatus.NOT_FOUND,
         );
       }
+      targetAuthorId = comment.authorId;
     }
 
     // Verificar si el usuario ya reaccionó
@@ -55,7 +63,23 @@ export class ToggleReactionUseCase {
         await this.commentRepo.incrementReaction(targetId);
       }
 
+      // Notificación al autor del target (fire-and-forget, sin auto-notificación)
+      if (targetAuthorId && targetAuthorId !== userId) {
+        this.notificationRepo
+          .create({
+            userId: targetAuthorId,
+            actorId: userId,
+            type: 'REACTION',
+            targetId,
+          })
+          .then((notification) => {
+            this.notificationGateway.sendToUser(targetAuthorId!, notification);
+          })
+          .catch(() => {});
+      }
+
       return { action: 'added', message: 'Reacción agregada' };
     }
   }
 }
+
