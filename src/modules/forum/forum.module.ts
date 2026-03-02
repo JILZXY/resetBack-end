@@ -1,6 +1,9 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ForumController } from './forum.controller';
+import { NotificationController } from './notification.controller';
+import { NotificationGateway } from './notification.gateway';
+import { AuthModule } from '../auth/auth.module';
 import { Post, PostSchema } from './schemas/post.schema';
 import { Comment, CommentSchema } from './schemas/comment.schema';
 import { Reaction, ReactionSchema } from './schemas/reaction.schema';
@@ -22,6 +25,7 @@ import { CreateReportUseCase } from './application/create-report.usecase';
 
 @Module({
   imports: [
+    AuthModule,
     MongooseModule.forFeature([
       { name: Post.name, schema: PostSchema },
       { name: Comment.name, schema: CommentSchema },
@@ -30,13 +34,14 @@ import { CreateReportUseCase } from './application/create-report.usecase';
       { name: Notification.name, schema: NotificationSchema },
     ]),
   ],
-  controllers: [ForumController],
+  controllers: [ForumController, NotificationController],
   providers: [
     PostRepository,
     CommentRepository,
     ReactionRepository,
     ReportRepository,
     NotificationRepository,
+    NotificationGateway,
     CreatePostUseCase,
     GetPostsUseCase,
     UpdatePostUseCase,
