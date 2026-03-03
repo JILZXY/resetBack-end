@@ -47,10 +47,16 @@ export class GraduateSponsorUseCase {
 
       // 2. Desactivar adicción activa
       if (user.addictions) {
-        await tx.userAddiction.update({
-          where: { id: user.addictions.id },
-          data: { is_active: false },
-        });
+        const addictionId = Array.isArray(user.addictions) 
+          ? (user.addictions[0] as any)?.id 
+          : (user.addictions as any).id;
+
+        if (addictionId) {
+          await tx.userAddiction.update({
+            where: { id: addictionId },
+            data: { is_active: false },
+          });
+        }
       }
 
       // 3. Cambiar el rol a 'sponsor'

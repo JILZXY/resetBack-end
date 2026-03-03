@@ -26,14 +26,14 @@ export class UserRepository {
     addictionName?: string;
     classification?: string;
   }): Promise<UserEntity> {
-    const role = data.role ?? 'patient';
+    const role = data.role ?? 'ADICTO';
     const user = await this.prisma.user.create({
       data: {
         name: data.name,
         email: data.email,
         password_hash: data.passwordHash,
         role: role,
-        ...(role === 'patient' && data.addictionName
+        ...(role === 'ADICTO' && data.addictionName
           ? {
               addictions: {
                 create: {
