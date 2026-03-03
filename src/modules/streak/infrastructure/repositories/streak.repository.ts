@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { PrismaService } from 'src/shared/database/prisma/prisma.service';
 import { StreakEntity } from '../../domain/streak.entity';
 
 @Injectable()
 export class StreakRepository {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   async findByUserId(userId: string): Promise<StreakEntity | null> {
     const streak = await this.prisma.streak.findUnique({
@@ -30,8 +31,14 @@ export class StreakRepository {
     return this.toEntity(streak);
   }
 
-  async incrementDay(streakId: string, lastLogDate: Date): Promise<StreakEntity> {
-    const streak = await this.prisma.streak.update({
+  async incrementDay(
+    streakId: string,
+    lastLogDate: Date,
+    tx?: Prisma.TransactionClient,
+  ): Promise<StreakEntity> {
+    const client = tx || this.prisma;
+
+    const streak = await client.streak.update({
       where: { id: streakId },
       data: {
         day_counter: { increment: 1 },
@@ -39,19 +46,46 @@ export class StreakRepository {
         status: 'active',
       },
     });
+
+    await client.streakEvent.create({
+      data: {
+        streak_id: streakId,
+        event_type: 'progress',
+        event_date: new Date(),
+        days_achieved: streak.day_counter,
+      },
+    });
+
     return this.toEntity(streak);
   }
 
-  async reset(streakId: string, newStartedAt: Date): Promise<StreakEntity> {
-    const streak = await this.prisma.streak.update({
+  async reset(
+    streakId: string,
+    newStartedAt: Date,
+    currentDayCounter: number,
+    tx?: Prisma.TransactionClient,
+  ): Promise<StreakEntity> {
+    const client = tx || this.prisma;
+
+    const streak = await client.streak.update({
       where: { id: streakId },
       data: {
         day_counter: 0,
         started_at: newStartedAt,
         last_log_date: newStartedAt,
-        status: 'reset',
+        status: 'broken',
       },
     });
+
+    await client.streakEvent.create({
+      data: {
+        streak_id: streakId,
+        event_type: 'relapse',
+        event_date: new Date(),
+        days_achieved: currentDayCounter,
+      },
+    });
+
     return this.toEntity(streak);
   }
 
