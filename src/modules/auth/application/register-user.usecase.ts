@@ -28,6 +28,8 @@ export class RegisterUserUseCase {
       email: dto.email,
       passwordHash,
       role: dto.role,
+      addictionName: dto.addictionName,
+      classification: dto.classification,
     });
 
     return {

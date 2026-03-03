@@ -5,9 +5,10 @@ import { CreateLogUseCase } from './application/create-log.usecase';
 import { GetLogHistoryUseCase } from './application/get-log-history.usecase';
 import { GetStatisticsUseCase } from './application/get-statistics.usecase';
 import { StreakModule } from '../streak/streak.module'
+import { SponsorshipModule } from '../sponsorship/sponsorship.module';
 
 @Module({
-  imports: [forwardRef(() => StreakModule)], 
+  imports: [forwardRef(() => StreakModule), SponsorshipModule], 
   controllers: [TrackingController],
   providers: [
     DailyLogRepository,

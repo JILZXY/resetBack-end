@@ -23,14 +23,30 @@ export class UserRepository {
     email: string;
     passwordHash: string;
     role?: string;
+    addictionName?: string;
+    classification?: string;
   }): Promise<UserEntity> {
+    const role = data.role ?? 'patient';
     const user = await this.prisma.user.create({
       data: {
         name: data.name,
         email: data.email,
         password_hash: data.passwordHash,
-        role: data.role ?? 'patient',
+        role: role,
+        ...(role === 'patient' && data.addictionName
+          ? {
+              addictions: {
+                create: {
+                  custom_name: data.addictionName,
+                  classification: data.classification ?? '',
+                },
+              },
+            }
+          : {}),
       },
+      include: {
+        addictions: true,
+      }
     });
     return this.toEntity(user);
   }
