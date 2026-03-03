@@ -3,7 +3,7 @@ import { PrismaService } from 'src/shared/database/prisma/prisma.service';
 
 @Injectable()
 export class GraduateSponsorUseCase {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   async execute(userId: string) {
     // Verificar que el usuario exista y sea patient
@@ -19,7 +19,7 @@ export class GraduateSponsorUseCase {
     if (!user) {
       throw new HttpException('Usuario no encontrado', HttpStatus.NOT_FOUND);
     }
-    if (user.role !== 'patient') {
+    if (user.role !== 'ADICTO') {
       throw new HttpException('Solo los pacientes pueden graduarse a padrinos', HttpStatus.BAD_REQUEST);
     }
 
@@ -47,8 +47,8 @@ export class GraduateSponsorUseCase {
 
       // 2. Desactivar adicción activa
       if (user.addictions) {
-        const addictionId = Array.isArray(user.addictions) 
-          ? (user.addictions[0] as any)?.id 
+        const addictionId = Array.isArray(user.addictions)
+          ? (user.addictions[0] as any)?.id
           : (user.addictions as any).id;
 
         if (addictionId) {
@@ -62,7 +62,7 @@ export class GraduateSponsorUseCase {
       // 3. Cambiar el rol a 'sponsor'
       await tx.user.update({
         where: { id: userId },
-        data: { role: 'sponsor' },
+        data: { role: 'PADRINO' },
       });
     });
 
