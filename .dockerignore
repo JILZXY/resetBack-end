@@ -1,0 +1,29 @@
+# Directorios y cache
+node_modules
+dist
+.npm
+.eslintcache
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Entornos virtuales e IDEs
+.env
+.env.*
+.vscode
+.idea
+*.swp
+*.swo
+
+# Git
+.git
+.gitignore
+
+# Archivos innecesarios para ejecución
+README.md
+*.md
+docker-compose.yml
+postman_collection*.json
+test/

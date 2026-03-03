@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  reset-backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: reset-backend
+    restart: unless-stopped
+    ports:
+      - "80:3000" # Mapea el puerto 80 del VPS (Droplet) al 3000 del contenedor
+    environment:
+      - NODE_ENV=production
+      # Base de Datos
+      - DATABASE_URL=${DATABASE_URL}
+      - MONGO_URI=${MONGO_URI}
+      # JWT (Asegúrate de cambiar esto en producción)
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_EXPIRES_IN=${JWT_EXPIRES_IN:-7d}
+      # SendGrid (Email para botón de pánico / Padrinazgos)
+      - SENDGRID_API_KEY=${SENDGRID_API_KEY}
+      - SENDGRID_FROM_EMAIL=${SENDGRID_FROM_EMAIL}
+      - SENDGRID_FROM_NAME=${SENDGRID_FROM_NAME}
+    # Opcional: Si quieres montar un volumen para logs u otras cosas
+    # volumes:
+    #   - ./logs:/app/logs
