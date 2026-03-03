@@ -28,6 +28,6 @@ import { LoginUseCase } from './application/login.usecase';
     RegisterUserUseCase,
     LoginUseCase,
   ],
-  exports: [JwtModule],
+  exports: [JwtModule, UserRepository],
 })
 export class AuthModule {}
