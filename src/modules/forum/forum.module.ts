@@ -51,5 +51,6 @@ import { CreateReportUseCase } from './application/create-report.usecase';
     ToggleReactionUseCase,
     CreateReportUseCase,
   ],
+  exports: [NotificationRepository, NotificationGateway],
 })
 export class ForumModule {}

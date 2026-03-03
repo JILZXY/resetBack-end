@@ -17,6 +17,6 @@ import { NotifyContactsUseCase } from './application/notify-contacts.usecase';
     TriggerAlertUseCase,
     NotifyContactsUseCase,
   ],
-  exports: [AlertRepository],
+  exports: [AlertRepository, NotificationService],
 })
 export class EmergencyModule {}
