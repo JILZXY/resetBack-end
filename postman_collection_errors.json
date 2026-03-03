@@ -1,0 +1,184 @@
+{
+  "info": {
+    "name": "ReSet App API - Flujos de Error (Validaciones)",
+    "description": "Pruebas de peticiones malformadas, omisión de campos requeridos y formatos incorrectos para comprobar las Validations de NestJS",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000/api/v1",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth - Errores",
+      "item": [
+        {
+          "name": "Register - Faltan Campos y Correo Inválido",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"\",\n  \"email\": \"esto_no_es_un_correo\",\n  \"password\": \"123\"\n}"
+            },
+            "description": "Debería fallar porque el correo no es válido, el nombre está vacío y el password es muy corto.",
+            "url": {
+              "raw": "{{base_url}}/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "Login - Contraseña Incorrecta",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"test_postman@reset.com\",\n  \"password\": \"clavesuperincorrecta\"\n}"
+            },
+            "description": "Debería devolver un error 401 Unauthorized.",
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Tracking - Errores",
+      "item": [
+        {
+          "name": "Crear Registro Diario - Formato Fecha Inválido",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+            },
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"log_date\": \"hoy por la mañana\",\n  \"consumed\": \"tal vez\"\n}"
+            },
+            "description": "Debería fallar porque log_date no es un string de fecha (ISO/YYYY-MM-DD) y consumed no es booleano.",
+            "url": {
+              "raw": "{{base_url}}/tracking/logs",
+              "host": ["{{base_url}}"],
+              "path": ["tracking", "logs"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Emergency - Errores",
+      "item": [
+        {
+          "name": "Agregar Contacto - Faltan Campos",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+            },
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"relationship\": \"Amigo\"\n}"
+            },
+            "description": "Debería rechazar la petición porque falta el nombre del contacto (contact_name requerido).",
+            "url": {
+              "raw": "{{base_url}}/emergency/contacts",
+              "host": ["{{base_url}}"],
+              "path": ["emergency", "contacts"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Forum - Errores",
+      "item": [
+        {
+          "name": "Crear Post - Vacío",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+            },
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "description": "Falla porque title y content son obligatorios.",
+            "url": {
+              "raw": "{{base_url}}/forum/posts",
+              "host": ["{{base_url}}"],
+              "path": ["forum", "posts"]
+            }
+          }
+        },
+        {
+          "name": "Comentar Post - Id Inválido de Mongo",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+            },
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"content\": \"Esto no se guardará porque el post id de la url no es un ObjectId válido de Mongo\"\n}"
+            },
+            "description": "Apunta a un ID de mongo inexistente o mal formado (`fake_invalid_id_format`).",
+            "url": {
+              "raw": "{{base_url}}/forum/posts/fake_invalid_id_format/comments",
+              "host": ["{{base_url}}"],
+              "path": ["forum", "posts", "fake_invalid_id_format", "comments"]
+            }
+          }
+        },
+        {
+          "name": "Endpoints Protegidos Sin Token",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "Petición a un endpoint seguro pero sin inyectar el Bearer Token en Auth. Debería retornar 401 Unauthorized.",
+            "url": {
+              "raw": "{{base_url}}/tracking/statistics",
+              "host": ["{{base_url}}"],
+              "path": ["tracking", "statistics"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

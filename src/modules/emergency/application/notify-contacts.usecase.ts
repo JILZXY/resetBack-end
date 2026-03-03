@@ -15,9 +15,15 @@ export class NotifyContactsUseCase {
   async execute(userId: string): Promise<void> {
     const user = await this.prisma.user.findUnique({ where: { id: userId } });
     const contacts = await this.contactRepo.findAllByUserId(userId);
-    await this.notificationService.sendEmergencyAlert(
-      contacts,
-      user?.name ?? 'Un usuario',
+    await Promise.all(
+      contacts
+        .filter((c) => c.email)
+        .map((contact) =>
+          this.notificationService.sendEmergencyAlert(
+            contact.email!,
+            user?.name ?? 'Un usuario',
+          ),
+        ),
     );
   }
 }

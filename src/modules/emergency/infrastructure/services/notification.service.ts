@@ -1,14 +1,15 @@
 // src/modules/emergency/infrastructure/services/notification.service.ts
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import * as sgMail from '@sendgrid/mail';
+
+const sgMail = require('@sendgrid/mail');
 
 @Injectable()
 export class NotificationService {
   private isConfigured = false;
 
   constructor(private config: ConfigService) {
-    const apiKey = this.config.get('SENDGRID_API_KEY');
+    const apiKey = this.config.get<string>('sendgrid.apiKey');
     
     if (!apiKey || apiKey === 'not_configured') {
       console.warn('⚠️  SendGrid not configured - emails will be skipped');
@@ -34,8 +35,8 @@ export class NotificationService {
     const msg = {
       to: contactEmail,
       from: {
-        email: this.config.get('SENDGRID_FROM_EMAIL'),
-        name: this.config.get('SENDGRID_FROM_NAME'),
+        email: this.config.get<string>('sendgrid.fromEmail')!,
+        name: this.config.get<string>('sendgrid.fromName'),
       },
       subject: 'Alerta de Emergencia - ReSet',
       html: `
@@ -64,8 +65,8 @@ export class NotificationService {
     const msg = {
       to: userEmail,
       from: {
-        email: this.config.get('SENDGRID_FROM_EMAIL'),
-        name: this.config.get('SENDGRID_FROM_NAME'),
+        email: this.config.get<string>('sendgrid.fromEmail')!,
+        name: this.config.get<string>('sendgrid.fromName'),
       },
       subject: 'Bienvenido a ReSet',
       html: `
