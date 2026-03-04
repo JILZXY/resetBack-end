@@ -22,6 +22,80 @@ export class DailyLogRepository {
     return this.prisma.emotionalState.findUnique({ where: { level } });
   }
 
+  async createWithStreakUpdate(data: {
+    userId: string;
+    logDate: Date;
+    consumed: boolean;
+    cravingLevelId?: string;
+    emotionalStateId?: string;
+    triggers?: string;
+    notes?: string;
+  }): Promise<DailyLogEntity> {
+    return this.prisma.$transaction(async (tx) => {
+      const log = await tx.dailyLog.create({
+        data: {
+          user_id: data.userId,
+          log_date: data.logDate,
+          consumed: data.consumed,
+          craving_level_id: data.cravingLevelId,
+          emotional_state_id: data.emotionalStateId,
+          triggers: data.triggers,
+          notes: data.notes,
+        },
+        include: { craving_level: true, emotional_state: true },
+      });
+
+      const streak = await tx.streak.findUnique({
+        where: { user_id: data.userId },
+      });
+
+      if (streak) {
+        if (data.consumed) {
+          await tx.streak.update({
+            where: { id: streak.id },
+            data: {
+              day_counter: 0,
+              status: 'broken',
+              updated_at: new Date(),
+            },
+          });
+
+          await tx.streakEvent.create({
+            data: {
+              streak_id: streak.id,
+              event_type: 'relapse',
+              event_date: new Date(),
+              days_achieved: streak.day_counter,
+            },
+          });
+        } else {
+          if (!streak.last_log_date || streak.last_log_date < data.logDate) {
+            await tx.streak.update({
+              where: { id: streak.id },
+              data: {
+                day_counter: { increment: 1 },
+                last_log_date: data.logDate,
+                status: 'active',
+                updated_at: new Date(),
+              },
+            });
+
+            await tx.streakEvent.create({
+              data: {
+                streak_id: streak.id,
+                event_type: 'progress',
+                event_date: new Date(),
+                days_achieved: streak.day_counter + 1,
+              },
+            });
+          }
+        }
+      }
+
+      return this.toEntity(log);
+    });
+  }
+
   async create(data: {
     userId: string;
     logDate: Date;

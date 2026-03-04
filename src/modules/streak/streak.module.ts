@@ -17,4 +17,4 @@ import { BestStreaksUseCase } from './application/best-streaks.usecase';
   ],
   exports: [CreateStreakUseCase],
 })
-export class StreakModule {}
+export class StreakModule { }

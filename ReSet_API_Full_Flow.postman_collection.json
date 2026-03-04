@@ -1,0 +1,318 @@
+{
+    "info": {
+        "name": "ReSet API - Full Flow",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "variable": [
+        {
+            "key": "baseUrl",
+            "value": "http://localhost:3000/api/v1",
+            "type": "string"
+        },
+        {
+            "key": "token",
+            "value": "",
+            "type": "string"
+        },
+        {
+            "key": "testEmail",
+            "value": "test_postman@example.com",
+            "type": "string"
+        },
+        {
+            "key": "testPassword",
+            "value": "Password123!",
+            "type": "string"
+        }
+    ],
+    "item": [
+        {
+            "name": "1. Auth",
+            "item": [
+                {
+                    "name": "Register User",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code is 201\", function () { pm.response.to.have.status(201); });"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        },
+                        {
+                            "listen": "prerequest",
+                            "script": {
+                                "exec": [
+                                    "pm.collectionVariables.set('testEmail', 'test_postman_' + Date.now() + '@example.com');"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"name\": \"Test Setup User\",\n  \"email\": \"{{testEmail}}\",\n  \"password\": \"{{testPassword}}\",\n  \"role\": \"ADICTO\",\n  \"addictionName\": \"Alcohol\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/auth/register",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "register"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Login User",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Status code is 200 or 201\", function () { pm.expect(pm.response.code).to.be.oneOf([200, 201]); });",
+                                    "var jsonData = pm.response.json();",
+                                    "if (jsonData.accessToken) pm.collectionVariables.set(\"token\", jsonData.accessToken);",
+                                    "if (jsonData.data && jsonData.data.accessToken) pm.collectionVariables.set(\"token\", jsonData.data.accessToken);"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"email\": \"{{testEmail}}\",\n  \"password\": \"{{testPassword}}\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/auth/login",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "login"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "2. Tracking",
+            "item": [
+                {
+                    "name": "Get Logs",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/tracking/logs",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "tracking",
+                                "logs"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Create Log",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"log_date\": \"2024-05-15\",\n  \"consumed\": false,\n  \"emotional_state\": 7,\n  \"craving_level\": 3,\n  \"notes\": \"Test log from Postman\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/tracking/logs",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "tracking",
+                                "logs"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "3. Streak",
+            "item": [
+                {
+                    "name": "Get Current Streak",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/streak",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "streak"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "4. Emergency",
+            "item": [
+                {
+                    "name": "Get Emergency Contacts",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/emergency/contacts",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "emergency",
+                                "contacts"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Trigger Alert",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"resulted_in_relapse\": false,\n  \"resolution_notes\": \"Postman Test Alert\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/emergency/alert",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "emergency",
+                                "alert"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "5. Forum",
+            "item": [
+                {
+                    "name": "Get All Posts",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{baseUrl}}/forum/posts",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "forum",
+                                "posts"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Create Post",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"title\": \"Test Post\",\n  \"content\": \"Test content from Postman\",\n  \"is_anonymous\": false\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/forum/posts",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "forum",
+                                "posts"
+                            ]
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}
