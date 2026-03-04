@@ -10,9 +10,9 @@ export class NotificationService {
 
   constructor(private config: ConfigService) {
     const apiKey = this.config.get<string>('sendgrid.apiKey');
-    
-    if (!apiKey || apiKey === 'not_configured') {
-      console.warn('⚠️  SendGrid not configured - emails will be skipped');
+
+    if (!apiKey || apiKey === 'not_configured' || !apiKey.startsWith('SG.')) {
+      console.warn('⚠️  SendGrid not configured or invalid API key - emails will be skipped');
       this.isConfigured = false;
       return;
     }
@@ -51,8 +51,7 @@ export class NotificationService {
       await sgMail.send(msg);
       console.log(`Email sent to ${contactEmail}`);
     } catch (error) {
-      console.error('SendGrid error:', error);
-      throw error;
+      console.warn('SendGrid error (email not sent, alert still saved):', error?.message ?? error);
     }
   }
 
