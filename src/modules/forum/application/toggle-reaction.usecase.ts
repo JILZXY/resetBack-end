@@ -65,11 +65,13 @@ export class ToggleReactionUseCase {
 
       // Notificación al autor del target (fire-and-forget, sin auto-notificación)
       if (targetAuthorId && targetAuthorId !== userId) {
+        const notificationType = targetType === 'post' ? 'POST_REACTION' : 'COMMENT_REACTION';
+        
         this.notificationRepo
           .create({
             userId: targetAuthorId,
             actorId: userId,
-            type: 'REACTION',
+            type: notificationType,
             targetId,
           })
           .then((notification) => {

@@ -38,6 +38,7 @@ export class RegisterUserUseCase {
       email: user.email,
       role: user.role,
       sponsorCode: user.sponsorCode,
+      avatarUrl: user.avatarUrl,
       createdAt: user.createdAt,
     };
   }
