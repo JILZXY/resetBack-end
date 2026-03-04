@@ -41,28 +41,31 @@ export class DailyLogRepository {
           user_id: data.userId,
           log_date: data.logDate,
           consumed: data.consumed,
-          craving_level_id: data.cravingLevelId,
-          emotional_state_id: data.emotionalStateId,
-          triggers: data.triggers,
-          notes: data.notes,
+          craving_level_id: data.cravingLevelId ?? null,
+          emotional_state_id: data.emotionalStateId ?? null,
+          triggers: data.triggers ?? "",
+          notes: data.notes ?? "",
         },
         include: { craving_level: true, emotional_state: true },
       });
 
-      const streak = await this.streakRepository.findByUserId(data.userId);
+      // Importante: Usar el cliente de la transacción 'tx' para la búsqueda también
+      const streakRecord = await tx.streak.findUnique({
+        where: { user_id: data.userId },
+      });
 
-      if (streak) {
+      if (streakRecord) {
         if (data.consumed) {
           await this.streakRepository.reset(
-            streak.id,
+            streakRecord.id,
             new Date(),
-            streak.dayCounter,
+            streakRecord.day_counter,
             tx,
           );
         } else {
-          if (!streak.lastLogDate || streak.lastLogDate < data.logDate) {
+          if (!streakRecord.last_log_date || streakRecord.last_log_date < data.logDate) {
             await this.streakRepository.incrementDay(
-              streak.id,
+              streakRecord.id,
               data.logDate,
               tx,
             );
