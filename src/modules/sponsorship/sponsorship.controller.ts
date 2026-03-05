@@ -13,7 +13,7 @@ export class SponsorshipController {
     private readonly assignUseCase: AssignSponsorUseCase,
     private readonly terminateUseCase: TerminateSponsorshipUseCase,
     private readonly graduateUseCase: GraduateSponsorUseCase,
-  ) {}
+  ) { }
 
   @Post('assign')
   async assign(@Body() dto: AssignSponsorDto) {
@@ -27,12 +27,12 @@ export class SponsorshipController {
     @Param('id') sponsorshipId: string,
     @Body() dto: TerminateSponsorshipDto,
   ) {
-    return await this.terminateUseCase.execute(req.user.id, sponsorshipId, dto);
+    return await this.terminateUseCase.execute(req.user.userId, sponsorshipId, dto);
   }
 
   @Post('graduate')
   @HttpCode(200)
   async graduate(@Request() req: any) {
-    return await this.graduateUseCase.execute(req.user.id);
+    return await this.graduateUseCase.execute(req.user.userId);
   }
 }

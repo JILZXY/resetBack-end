@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { AppController } from './app.controller';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PrismaModule } from './shared/database/prisma/prisma.module';
@@ -39,5 +40,6 @@ import { SponsorshipModule } from './modules/sponsorship/sponsorship.module';
     ForumModule,
     SponsorshipModule,
   ],
+  controllers: [AppController]
 })
-export class AppModule {}
+export class AppModule { }

@@ -39,7 +39,7 @@
     "passport-jwt": "^4.0.1",
     "pg": "^8.19.0",
     "reflect-metadata": "^0.2.2",
-    "reset-infra": "file:../../bdReset/reset-infra",
+    "reset-infra": "^1.0.3",
     "rxjs": "^7.8.1",
     "zod": "^4.3.6"
   },
