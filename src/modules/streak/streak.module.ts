@@ -1,24 +1,20 @@
-import { Module, forwardRef } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { StreakController } from './streak.controller';
-import { StreakService } from './streak.service';
 import { StreakRepository } from './infrastructure/repositories/streak.repository';
 import { StreakEventRepository } from './infrastructure/repositories/streak-event.repository';
 import { CreateStreakUseCase } from './application/create-streak.usecase';
-import { UpdateStreakUseCase } from './application/update-streak.usecase';
 import { ResetStreakUseCase } from './application/reset-streak.usecase';
-import { TrackingModule } from '../tracking/tracking.module';
+import { BestStreaksUseCase } from './application/best-streaks.usecase';
 
 @Module({
-  imports: [forwardRef(() => TrackingModule)],
   controllers: [StreakController],
   providers: [
-    StreakService,
     StreakRepository,
     StreakEventRepository,
     CreateStreakUseCase,
-    UpdateStreakUseCase,
     ResetStreakUseCase,
+    BestStreaksUseCase,
   ],
-  exports: [StreakService],
+  exports: [CreateStreakUseCase],
 })
 export class StreakModule {}

@@ -1,12 +1,18 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { SponsorshipRepository } from '../infrastructure/repositories/sponsorship.repository';
 import { TerminateSponsorshipDto } from '../infrastructure/dtos/terminate-sponsorship.dto';
+import { PrismaService } from 'src/shared/database/prisma/prisma.service';
 
 @Injectable()
 export class TerminateSponsorshipUseCase {
-  constructor(private readonly sponsorshipRepo: SponsorshipRepository) {}
+  constructor(
+    private readonly sponsorshipRepo: SponsorshipRepository,
+    private readonly prisma: PrismaService,
+  ) {}
 
   async execute(userId: string, sponsorshipId: string, dto: TerminateSponsorshipDto) {
+    // Validar que el sponsorship existe y que el usuario tiene permisos
     const sponsorship = await this.sponsorshipRepo.findById(sponsorshipId);
 
     if (!sponsorship) {
@@ -22,6 +28,21 @@ export class TerminateSponsorshipUseCase {
       throw new HttpException('No tienes permisos para terminar esta relación', HttpStatus.FORBIDDEN);
     }
 
-    return await this.sponsorshipRepo.setInactive(sponsorshipId, dto.reason);
+    // Delegar la terminación a la función de DB usando el sponsor_id
+    const reason = dto.reason || 'Terminación voluntaria';
+    const result: any[] = await this.prisma.$queryRaw(
+      Prisma.sql`SELECT core.fn_close_sponsorship(${sponsorship.sponsorId}::uuid, ${reason}) AS success`,
+    );
+
+    const success = result[0]?.success ?? false;
+
+    if (!success) {
+      throw new HttpException('No se pudo terminar la relación de apadrinamiento', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    return {
+      message: 'Relación de apadrinamiento terminada exitosamente',
+      sponsorshipId,
+    };
   }
 }
