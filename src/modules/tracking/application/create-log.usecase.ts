@@ -23,40 +23,33 @@ export class CreateLogUseCase {
       );
     }
 
-    let cravingLevelId: string | undefined;
-    let emotionalStateId: string | undefined;
-
-    if (dto.craving_level) {
-      const cl = await this.logRepo.findCravingLevelByValue(dto.craving_level);
-      if (!cl) {
-        throw new HttpException(
-          {
-            code: 'INVALID_CRAVING_LEVEL',
-            message: 'Nivel de craving inválido',
-            details: { craving_level: dto.craving_level },
-          },
-          HttpStatus.BAD_REQUEST,
-        );
-      }
-      cravingLevelId = cl.id;
-    }
-
-    if (dto.emotional_state) {
-      const es = await this.logRepo.findEmotionalStateByValue(
-        dto.emotional_state,
+    const cl = await this.logRepo.findCravingLevelByValue(dto.craving_level);
+    if (!cl) {
+      throw new HttpException(
+        {
+          code: 'INVALID_CRAVING_LEVEL',
+          message: 'Nivel de craving inválido',
+          details: { craving_level: dto.craving_level },
+        },
+        HttpStatus.BAD_REQUEST,
       );
-      if (!es) {
-        throw new HttpException(
-          {
-            code: 'INVALID_EMOTIONAL_STATE',
-            message: 'Estado emocional inválido',
-            details: { emotional_state: dto.emotional_state },
-          },
-          HttpStatus.BAD_REQUEST,
-        );
-      }
-      emotionalStateId = es.id;
     }
+    const cravingLevelId = cl.id;
+
+    const es = await this.logRepo.findEmotionalStateByValue(
+      dto.emotional_state,
+    );
+    if (!es) {
+      throw new HttpException(
+        {
+          code: 'INVALID_EMOTIONAL_STATE',
+          message: 'Estado emocional inválido',
+          details: { emotional_state: dto.emotional_state },
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    const emotionalStateId = es.id;
 
     const log = await this.logRepo.createWithStreakUpdate({
       userId,
@@ -64,6 +57,8 @@ export class CreateLogUseCase {
       consumed: dto.consumed,
       cravingLevelId,
       emotionalStateId,
+      cravingLevel: dto.craving_level,
+      emotionalState: dto.emotional_state,
       triggers: dto.triggers,
       notes: dto.notes,
     });

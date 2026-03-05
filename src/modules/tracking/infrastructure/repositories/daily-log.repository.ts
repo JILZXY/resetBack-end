@@ -30,59 +30,10 @@ export class DailyLogRepository {
     userId: string;
     logDate: Date;
     consumed: boolean;
-    cravingLevelId?: string;
-    emotionalStateId?: string;
-    triggers?: string;
-    notes?: string;
-  }): Promise<DailyLogEntity> {
-    return this.prisma.$transaction(async (tx) => {
-      const log = await tx.dailyLog.create({
-        data: {
-          user_id: data.userId,
-          log_date: data.logDate,
-          consumed: data.consumed,
-          craving_level_id: data.cravingLevelId ?? null,
-          emotional_state_id: data.emotionalStateId ?? null,
-          triggers: data.triggers ?? "",
-          notes: data.notes ?? "",
-        },
-        include: { craving_level: true, emotional_state: true },
-      });
-
-      // Importante: Usar el cliente de la transacción 'tx' para la búsqueda también
-      const streakRecord = await tx.streak.findUnique({
-        where: { user_id: data.userId },
-      });
-
-      if (streakRecord) {
-        if (data.consumed) {
-          await this.streakRepository.reset(
-            streakRecord.id,
-            new Date(),
-            streakRecord.day_counter,
-            tx,
-          );
-        } else {
-          if (!streakRecord.last_log_date || streakRecord.last_log_date < data.logDate) {
-            await this.streakRepository.incrementDay(
-              streakRecord.id,
-              data.logDate,
-              tx,
-            );
-          }
-        }
-      }
-
-      return this.toEntity(log);
-    });
-  }
-
-  async create(data: {
-    userId: string;
-    logDate: Date;
-    consumed: boolean;
-    cravingLevelId?: string;
-    emotionalStateId?: string;
+    cravingLevelId: string;
+    emotionalStateId: string;
+    cravingLevel?: number;
+    emotionalState?: number;
     triggers?: string;
     notes?: string;
   }): Promise<DailyLogEntity> {
@@ -91,10 +42,35 @@ export class DailyLogRepository {
         user_id: data.userId,
         log_date: data.logDate,
         consumed: data.consumed,
-        craving_level_id: data.cravingLevelId ?? undefined,
-        emotional_state_id: data.emotionalStateId ?? undefined,
-        triggers: data.triggers ?? undefined,
-        notes: data.notes ?? undefined,
+        craving_level_id: data.cravingLevelId,
+        emotional_state_id: data.emotionalStateId,
+        triggers: data.triggers ?? "",
+        notes: data.notes ?? "",
+      },
+      include: { craving_level: true, emotional_state: true },
+    });
+
+    return this.toEntity(log);
+  }
+
+  async create(data: {
+    userId: string;
+    logDate: Date;
+    consumed: boolean;
+    cravingLevelId: string;
+    emotionalStateId: string;
+    triggers?: string;
+    notes?: string;
+  }): Promise<DailyLogEntity> {
+    const log = await this.prisma.dailyLog.create({
+      data: {
+        user_id: data.userId,
+        log_date: data.logDate,
+        consumed: data.consumed,
+        craving_level_id: data.cravingLevelId,
+        emotional_state_id: data.emotionalStateId,
+        triggers: data.triggers ?? "",
+        notes: data.notes ?? "",
       },
       include: { craving_level: true, emotional_state: true },
     });

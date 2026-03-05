@@ -23,6 +23,6 @@ export class ResetStreakUseCase {
       );
     }
 
-    await this.streakRepo.reset(streak.id, new Date(), streak.dayCounter);
+    await this.streakRepo.reset(streak.id, new Date());
   }
 }

@@ -119,15 +119,15 @@ model DailyLog {
   user_id            String   @db.Uuid
   log_date           DateTime @db.Date
   consumed           Boolean  @default(false)
-  craving_level_id   String?  @db.Uuid
-  emotional_state_id String?  @db.Uuid
+  craving_level_id   String   @db.Uuid
+  emotional_state_id String   @db.Uuid
   triggers           String   @default("") @db.Text
   notes              String   @default("") @db.Text
   created_at         DateTime @default(now())
 
-  user            User            @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  craving_level   CravingLevel?   @relation(fields: [craving_level_id], references: [id])
-  emotional_state EmotionalState? @relation(fields: [emotional_state_id], references: [id])
+  user            User           @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  craving_level   CravingLevel   @relation(fields: [craving_level_id], references: [id])
+  emotional_state EmotionalState @relation(fields: [emotional_state_id], references: [id])
 
   @@unique([user_id, log_date])
   @@map("daily_logs")
