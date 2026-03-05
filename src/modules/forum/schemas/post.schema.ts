@@ -28,6 +28,12 @@ export class Post {
 
   @Prop({ default: 0 })
   commentCount: number;
+
+  @Prop({ default: false })
+  isDeleted: boolean;
+
+  @Prop({ default: false })
+  isEdited: boolean;
 }
 
 export const PostSchema = SchemaFactory.createForClass(Post);

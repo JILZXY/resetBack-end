@@ -19,11 +19,14 @@ import { UpdatePostUseCase } from './application/update-post.usecase';
 import { DeletePostUseCase } from './application/delete-post.usecase';
 import { CreateCommentUseCase } from './application/create-comment.usecase';
 import { DeleteCommentUseCase } from './application/delete-comment.usecase';
+import { ToggleReactionUseCase } from './application/toggle-reaction.usecase';
+import { CreateReportUseCase } from './application/create-report.usecase';
 import { PostRepository } from './infrastructure/repositories/post.repository';
 import { CommentRepository } from './infrastructure/repositories/comment.repository';
 import { CreatePostDto } from './infrastructure/dtos/create-post.dto';
 import { UpdatePostDto } from './infrastructure/dtos/update-post.dto';
 import { CreateCommentDto } from './infrastructure/dtos/create-comment.dto';
+import { CreateReportDto } from './infrastructure/dtos/create-report.dto';
 
 @Controller('forum')
 @UseGuards(JwtAuthGuard)
@@ -35,6 +38,8 @@ export class ForumController {
     private readonly deletePost: DeletePostUseCase,
     private readonly createComment: CreateCommentUseCase,
     private readonly deleteComment: DeleteCommentUseCase,
+    private readonly toggleReaction: ToggleReactionUseCase,
+    private readonly createReport: CreateReportUseCase,
     private readonly postRepo: PostRepository,
     private readonly commentRepo: CommentRepository,
   ) {}
@@ -75,11 +80,31 @@ export class ForumController {
     return this.deletePost.execute(req.user.userId, id);
   }
 
+  // Reacciones con toggle (prevención de duplicados)
   @Post('posts/:id/react')
-  reactPost(@Param('id') id: string) {
-    return this.postRepo.incrementReaction(id);
+  reactPost(@Request() req: any, @Param('id') id: string) {
+    return this.toggleReaction.execute(req.user.userId, id, 'post');
   }
 
+  @Post('comments/:id/react')
+  reactComment(@Request() req: any, @Param('id') id: string) {
+    return this.toggleReaction.execute(req.user.userId, id, 'comment');
+  }
+
+  // Reportes
+  @Post('posts/:id/report')
+  @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
+  reportPost(@Request() req: any, @Param('id') id: string, @Body() dto: CreateReportDto) {
+    return this.createReport.execute(req.user.userId, id, 'post', dto);
+  }
+
+  @Post('comments/:id/report')
+  @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
+  reportComment(@Request() req: any, @Param('id') id: string, @Body() dto: CreateReportDto) {
+    return this.createReport.execute(req.user.userId, id, 'comment', dto);
+  }
+
+  // Comentarios
   @Post('posts/:id/comments')
   @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
   addComment(
@@ -98,10 +123,5 @@ export class ForumController {
   @Delete('comments/:id')
   removeComment(@Request() req: any, @Param('id') id: string) {
     return this.deleteComment.execute(req.user.userId, id);
-  }
-
-  @Post('comments/:id/react')
-  reactComment(@Param('id') id: string) {
-    return this.commentRepo.incrementReaction(id);
   }
 }

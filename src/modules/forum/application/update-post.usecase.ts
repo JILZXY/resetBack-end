@@ -28,6 +28,7 @@ export class UpdatePostUseCase {
       content: dto.content,
       tags: dto.tags,
       images: dto.images,
+      isEdited: true,
     });
   }
 }
