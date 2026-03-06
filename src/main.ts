@@ -19,23 +19,21 @@ async function bootstrap() {
 
   app.enableCors({
     origin: (origin, callback) => {
-      // Permitir peticiones sin origen (como herramientas de servidor o apps móviles)
-      // o peticiones que coincidan con nuestra lista
+      // Si no hay origin (ej. Postman) o está en la lista permitida
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
-        callback(new Error('Not allowed by CORS'));
+        // En lugar de Error, pasamos false para que el middleware de CORS maneje el bloqueo estándar
+        callback(null, false);
       }
     },
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
+    allowedHeaders: 'Content-Type, Authorization, X-Requested-With, Accept',
   });
 
   const port = configService.get<number>('app.port') ?? 3000;
-  console.log(`🚀 Servidor listo en: http://0.0.0.0:${port}/api/v1`);
-  console.log(`🔗 Orígenes CORS permitidos: ${allowedOrigins.join(', ')}`);
 
-  await app.listen(port, '0.0.0.0');
+  await app.listen(port);
 }
 bootstrap();
