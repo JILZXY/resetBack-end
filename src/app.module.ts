@@ -8,7 +8,7 @@ import { appConfig } from './config/app.config';
 import { databaseConfig } from './config/database.config';
 import { jwtConfig } from './config/jwt.config';
 import { mongoConfig } from './config/mongo.config';
-import { sendgridConfig } from './config/sendgrid.config';
+import { brevoConfig } from './config/brevo.config';
 import { AuthModule } from './modules/auth/auth.module';
 import { TrackingModule } from './modules/tracking/tracking.module';
 import { StreakModule } from './modules/streak/streak.module';
@@ -16,6 +16,7 @@ import { EmergencyModule } from './modules/emergency/emergency.module';
 import { ForumModule } from './modules/forum/forum.module';
 import { SponsorshipModule } from './modules/sponsorship/sponsorship.module';
 import { AdminModule } from './modules/admin/admin.module';
+import { MailModule } from './shared/mail/mail.module';
 
 @Module({
   imports: [
@@ -25,7 +26,7 @@ import { AdminModule } from './modules/admin/admin.module';
         process.env.NODE_ENV === 'production'
           ? '.env.production'
           : '.env.development',
-      load: [appConfig, databaseConfig, jwtConfig, mongoConfig, sendgridConfig],
+      load: [appConfig, databaseConfig, jwtConfig, mongoConfig, brevoConfig],
     }),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
@@ -35,6 +36,7 @@ import { AdminModule } from './modules/admin/admin.module';
       inject: [ConfigService],
     }),
     PrismaModule,
+    MailModule,
     ScheduleModule.forRoot(),
     AuthModule,
     TrackingModule,
@@ -44,6 +46,6 @@ import { AdminModule } from './modules/admin/admin.module';
     SponsorshipModule,
     AdminModule,
   ],
-  controllers: [AppController]
+  controllers: [AppController],
 })
-export class AppModule { }
+export class AppModule {}

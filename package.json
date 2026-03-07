@@ -1,6 +1,6 @@
 {
   "name": "reset-back",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "",
   "author": "",
   "private": true,
@@ -18,9 +18,13 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "test:selenium": "npx ts-node test/selenium/api_tests.ts"
+    "test:selenium": "npx ts-node test/selenium/api_tests.ts",
+    "prisma:generate": "prisma generate --schema ./node_modules/reset-infra/prisma/schema.prisma",
+    "prisma:push": "prisma db push --schema ./node_modules/reset-infra/prisma/schema.prisma",
+    "postinstall": "npm run prisma:generate"
   },
   "dependencies": {
+    "@getbrevo/brevo": "^4.0.1",
     "@nestjs/common": "^11.0.1",
     "@nestjs/config": "^4.0.3",
     "@nestjs/core": "^11.0.1",
@@ -33,10 +37,10 @@
     "@nestjs/websockets": "^11.1.16",
     "@prisma/adapter-pg": "^7.4.2",
     "@prisma/client": "^7.4.2",
-    "@sendgrid/mail": "^8.1.6",
     "bcrypt": "^6.0.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.15.1",
+    "cookie-parser": "^1.4.7",
     "dotenv": "^17.3.1",
     "mongoose": "^9.2.3",
     "nanoid": "^3.3.11",
@@ -44,7 +48,7 @@
     "passport-jwt": "^4.0.1",
     "pg": "^8.19.0",
     "reflect-metadata": "^0.2.2",
-    "reset-infra": "^1.0.6",
+    "reset-infra": "file:../reset-infra",
     "rxjs": "^7.8.1",
     "socket.io": "^4.8.3",
     "zod": "^4.3.6"
