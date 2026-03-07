@@ -18,18 +18,18 @@ export class CommentRepository {
     parentId?: string;
   }): Promise<CommentEntity> {
     const comment = await this.commentModel.create({
-      postId: new Types.ObjectId(data.postId),
+      postId: data.postId,
       authorId: data.authorId,
       content: data.content,
       isAnonymous: data.isAnonymous,
-      parentId: data.parentId ? new Types.ObjectId(data.parentId) : null,
+      parentId: data.parentId ?? null,
     });
     return this.toEntity(comment);
   }
 
   async findByPostId(postId: string): Promise<CommentEntity[]> {
     const comments = await this.commentModel
-      .find({ postId: new Types.ObjectId(postId), isDeleted: false })
+      .find({ postId: postId, isDeleted: false })
       .sort({ createdAt: 1 })
       .exec();
     return comments.map((c) => this.toEntity(c));
@@ -47,7 +47,7 @@ export class CommentRepository {
   async softDeleteByPostId(postId: string): Promise<void> {
     await this.commentModel
       .updateMany(
-        { postId: new Types.ObjectId(postId) },
+        { postId: postId },
         { $set: { isDeleted: true } },
       )
       .exec();
@@ -80,8 +80,8 @@ export class CommentRepository {
   private toEntity(raw: CommentDocument): CommentEntity {
     const entity = new CommentEntity();
     entity.id = (raw._id as any).toString();
-    entity.postId = raw.postId.toString();
-    entity.parentId = raw.parentId ? raw.parentId.toString() : null;
+    entity.postId = raw.postId;
+    entity.parentId = raw.parentId ?? null;
     entity.authorId = raw.authorId;
     entity.content = raw.content;
     entity.isAnonymous = raw.isAnonymous;

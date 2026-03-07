@@ -7,6 +7,7 @@ export class CommentEntity {
   content: string;
   isAnonymous: boolean;
   reactionUps: number;
+  reportCount: number;
   isDeleted: boolean;
   isEdited: boolean;
   createdAt: Date;
