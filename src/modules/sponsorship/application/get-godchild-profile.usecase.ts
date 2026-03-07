@@ -7,7 +7,7 @@ export class GetGodchildProfileUseCase {
   constructor(
     private readonly sponsorshipRepo: SponsorshipRepository,
     private readonly prisma: PrismaService,
-  ) {}
+  ) { }
 
   async execute(userId: string) {
     // Buscar relación activa donde el usuario sea el padrino
@@ -47,7 +47,7 @@ export class GetGodchildProfileUseCase {
 
     // Obtener estadísticas del ahijado
     const stats = await this.prisma.$queryRaw<any[]>`
-      SELECT * FROM tracking.fn_get_statistics(${addictId}::uuid)
+      SELECT * FROM core.fn_get_user_stats(${addictId}::uuid)
     `;
     const rawStats = stats[0] || {};
 

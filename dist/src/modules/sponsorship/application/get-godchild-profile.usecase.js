@@ -47,7 +47,7 @@ let GetGodchildProfileUseCase = class GetGodchildProfileUseCase {
             throw new common_1.HttpException('Ahijado no encontrado', common_1.HttpStatus.NOT_FOUND);
         }
         const stats = await this.prisma.$queryRaw `
-      SELECT * FROM tracking.fn_get_statistics(${addictId}::uuid)
+      SELECT * FROM core.fn_get_user_stats(${addictId}::uuid)
     `;
         const rawStats = stats[0] || {};
         const recentLogs = await this.prisma.dailyLog.findMany({
