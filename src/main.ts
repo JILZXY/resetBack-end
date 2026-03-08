@@ -19,15 +19,7 @@ async function bootstrap() {
     : [];
 
   app.enableCors({
-    origin: (origin, callback) => {
-      // Si no hay origin (ej. Postman) o está en la lista permitida
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        // En lugar de Error, pasamos false para que el middleware de CORS maneje el bloqueo estándar
-        callback(null, false);
-      }
-    },
+    origin: allowedOrigins,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
     allowedHeaders: 'Content-Type, Authorization, X-Requested-With, Accept',
