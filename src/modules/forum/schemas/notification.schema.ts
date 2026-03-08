@@ -8,6 +8,9 @@ export enum NotificationType {
   COMMENT = 'COMMENT',
   REPLY = 'REPLY',
   REPORT_UPDATE = 'REPORT_UPDATE',
+  SPONSORSHIP_REQUEST = 'SPONSORSHIP_REQUEST',
+  SPONSORSHIP_ACCEPTED = 'SPONSORSHIP_ACCEPTED',
+  SPONSORSHIP_REJECTED = 'SPONSORSHIP_REJECTED',
 }
 
 @Schema({ collection: 'notifications', timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' } })

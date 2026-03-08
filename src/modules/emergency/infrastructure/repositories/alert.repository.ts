@@ -17,7 +17,7 @@ export class AlertRepository {
         user_id: data.userId,
         user_addiction_id: data.userAddictionId,
         resulted_in_relapse: data.resultedInRelapse ?? false,
-        resolution_notes: data.resolutionNotes ?? null,
+        resolution_notes: data.resolutionNotes ?? '',
       },
     });
     return this.toEntity(alert);
