@@ -5,22 +5,30 @@ const { nanoid } = require('nanoid');
 
 @Injectable()
 export class UserRepository {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
 
   async findByEmail(email: string): Promise<UserEntity | null> {
-    const user = await this.prisma.user.findUnique({ where: { email } });
+    const user = await this.prisma.user.findFirst({
+      where: { email, is_deleted: false },
+      include: { addictions: true },
+    });
     if (!user) return null;
     return this.toEntity(user);
   }
 
   async findById(id: string): Promise<UserEntity | null> {
-    const user = await this.prisma.user.findUnique({ where: { id } });
+    const user = await this.prisma.user.findFirst({
+      where: { id, is_deleted: false },
+      include: { addictions: true },
+    });
     if (!user) return null;
     return this.toEntity(user);
   }
 
   async findBySponsorCode(code: string): Promise<UserEntity | null> {
-    const user = await this.prisma.user.findUnique({ where: { sponsor_code: code } });
+    const user = await this.prisma.user.findFirst({
+      where: { sponsor_code: code, is_deleted: false },
+    });
     if (!user) return null;
     return this.toEntity(user);
   }
@@ -34,7 +42,8 @@ export class UserRepository {
     classification?: string;
   }): Promise<UserEntity> {
     const role = data.role ?? 'ADICTO';
-    const sponsorCode = role === 'PADRINO' ? nanoid(8).toUpperCase() : undefined;
+    const sponsorCode =
+      role === 'PADRINO' ? nanoid(8).toUpperCase() : undefined;
 
     const user = await this.prisma.user.create({
       data: {
@@ -45,18 +54,18 @@ export class UserRepository {
         sponsor_code: sponsorCode,
         ...(role === 'ADICTO' && data.addictionName
           ? {
-            addictions: {
-              create: {
-                custom_name: data.addictionName,
-                classification: data.classification ?? '',
+              addictions: {
+                create: {
+                  custom_name: data.addictionName,
+                  classification: data.classification ?? '',
+                },
               },
-            },
-          }
+            }
           : {}),
       },
       include: {
         addictions: true,
-      }
+      },
     });
 
     // Actualizar avatar_url dinámico basado en el ID generado
@@ -67,10 +76,20 @@ export class UserRepository {
       },
       include: {
         addictions: true,
-      }
+      },
     });
 
     return this.toEntity(updatedUser);
+  }
+
+  async softDelete(id: string): Promise<void> {
+    await this.prisma.user.update({
+      where: { id },
+      data: {
+        is_deleted: true,
+        deleted_at: new Date(),
+      },
+    });
   }
 
   private toEntity(raw: any): UserEntity {
@@ -82,8 +101,11 @@ export class UserRepository {
     entity.role = raw.role;
     entity.sponsorCode = raw.sponsor_code ?? null;
     entity.avatarUrl = raw.avatar_url;
+    entity.isVerified = raw.is_verified;
+    entity.twoFactorEnabled = raw.two_factor_enabled;
     entity.createdAt = raw.created_at;
     entity.updatedAt = raw.updated_at;
+    entity.addictions = raw.addictions ?? [];
     return entity;
   }
 }
