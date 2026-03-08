@@ -12,13 +12,20 @@ async function bootstrap() {
   app.useGlobalFilters(new GlobalExceptionFilter());
   app.useGlobalInterceptors(new TransformInterceptor());
 
+  const frontendUrls = configService.get<string>('app.frontendUrl');
+  const allowedOrigins = frontendUrls
+    ? frontendUrls.split(',').map(url => url.trim())
+    : [];
+
   app.enableCors({
-    origin: configService.get<string>('app.frontendUrl'), // Ajustar en producción con los dominios del front
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+    origin: allowedOrigins,
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    credentials: true,
+    allowedHeaders: 'Content-Type, Authorization, X-Requested-With, Accept',
   });
 
   const port = configService.get<number>('app.port') ?? 3000;
+
   await app.listen(port);
-  console.log(`🚀 Reset API corriendo en: http://localhost:${port}/api/v1`);
 }
 bootstrap();

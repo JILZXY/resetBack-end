@@ -3,6 +3,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { StreakRepository } from './infrastructure/repositories/streak.repository';
 import { StreakEventRepository } from './infrastructure/repositories/streak-event.repository';
 import { ResetStreakUseCase } from './application/reset-streak.usecase';
+import { BestStreaksUseCase } from './application/best-streaks.usecase';
 
 @Controller('streak')
 @UseGuards(JwtAuthGuard)
@@ -11,6 +12,7 @@ export class StreakController {
     private readonly streakRepo: StreakRepository,
     private readonly eventRepo: StreakEventRepository,
     private readonly resetStreak: ResetStreakUseCase,
+    private readonly bestStreaks: BestStreaksUseCase,
   ) {}
 
   @Get()
@@ -34,6 +36,11 @@ export class StreakController {
     const streak = await this.streakRepo.findByUserId(req.user.userId);
     if (!streak) return [];
     return this.eventRepo.findByStreakId(streak.id);
+  }
+
+  @Get('best')
+  async getBest(@Request() req: any) {
+    return this.bestStreaks.execute(req.user.userId);
   }
 
   @Post('reset')
