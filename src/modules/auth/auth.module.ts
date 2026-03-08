@@ -12,6 +12,7 @@ import { GetProfileUseCase } from './application/get-profile.usecase';
 import { ForgotPasswordUseCase } from './application/forgot-password.usecase';
 import { ResetPasswordUseCase } from './application/reset-password.usecase';
 import { VerifyEmailUseCase } from './application/verify-email.usecase';
+import { DeleteAccountUseCase } from './application/delete-account.usecase';
 import { PasswordResetTokenRepository } from './infrastructure/repositories/password-reset-token.repository';
 import { VerificationTokenRepository } from './infrastructure/repositories/verification-token.repository';
 
@@ -39,6 +40,7 @@ import { VerificationTokenRepository } from './infrastructure/repositories/verif
     ForgotPasswordUseCase,
     ResetPasswordUseCase,
     VerifyEmailUseCase,
+    DeleteAccountUseCase,
     PasswordResetTokenRepository,
     VerificationTokenRepository,
   ],
