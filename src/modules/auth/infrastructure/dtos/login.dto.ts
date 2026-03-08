@@ -6,4 +6,7 @@ export class LoginDto {
 
   @IsNotEmpty({ message: 'La contraseña es obligatoria' })
   password: string;
+
+  @IsNotEmpty({ message: 'La opción de recordar dispositivo es necesaria' })
+  rememberMe?: boolean;
 }
