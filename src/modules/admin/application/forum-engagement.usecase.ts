@@ -4,14 +4,19 @@ import { Model } from 'mongoose';
 import { MetricsFilterDto } from '../infrastructure/dtos/metrics-filter.dto';
 import { Post, PostDocument } from '../../forum/schemas/post.schema';
 import { Comment, CommentDocument } from '../../forum/schemas/comment.schema';
-import { Reaction, ReactionDocument } from '../../forum/schemas/reaction.schema';
+import {
+  Reaction,
+  ReactionDocument,
+} from '../../forum/schemas/reaction.schema';
 
 @Injectable()
 export class ForumEngagementUseCase {
   constructor(
     @InjectModel(Post.name) private readonly postModel: Model<PostDocument>,
-    @InjectModel(Comment.name) private readonly commentModel: Model<CommentDocument>,
-    @InjectModel(Reaction.name) private readonly reactionModel: Model<ReactionDocument>,
+    @InjectModel(Comment.name)
+    private readonly commentModel: Model<CommentDocument>,
+    @InjectModel(Reaction.name)
+    private readonly reactionModel: Model<ReactionDocument>,
   ) {}
 
   async execute(filter: MetricsFilterDto) {
@@ -36,11 +41,20 @@ export class ForumEngagementUseCase {
     ]);
 
     // Usuarios únicos que publicaron posts
-    const uniquePostAuthors = await this.postModel.distinct('authorId', postQuery);
+    const uniquePostAuthors = await this.postModel.distinct(
+      'authorId',
+      postQuery,
+    );
     // Usuarios únicos que comentaron
-    const uniqueCommentAuthors = await this.commentModel.distinct('authorId', commentQuery);
+    const uniqueCommentAuthors = await this.commentModel.distinct(
+      'authorId',
+      commentQuery,
+    );
     // Usuarios únicos que reaccionaron
-    const uniqueReactors = await this.reactionModel.distinct('userId', reactionQuery);
+    const uniqueReactors = await this.reactionModel.distinct(
+      'userId',
+      reactionQuery,
+    );
 
     // Todos los usuarios únicos del foro (unión de los 3 conjuntos)
     const allForumUsers = new Set([

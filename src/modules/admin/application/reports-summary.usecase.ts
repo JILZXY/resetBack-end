@@ -7,7 +7,8 @@ import { Report, ReportDocument } from '../../forum/schemas/report.schema';
 @Injectable()
 export class ReportsSummaryUseCase {
   constructor(
-    @InjectModel(Report.name) private readonly reportModel: Model<ReportDocument>,
+    @InjectModel(Report.name)
+    private readonly reportModel: Model<ReportDocument>,
   ) {}
 
   async execute(filter: MetricsFilterDto) {
@@ -45,7 +46,10 @@ export class ReportsSummaryUseCase {
       totalReports,
       byReason: byReason.map((r) => ({ reason: r._id, count: r.count })),
       byStatus: byStatus.map((s) => ({ status: s._id, count: s.count })),
-      byTargetType: byTargetType.map((t) => ({ targetType: t._id, count: t.count })),
+      byTargetType: byTargetType.map((t) => ({
+        targetType: t._id,
+        count: t.count,
+      })),
     };
   }
 }

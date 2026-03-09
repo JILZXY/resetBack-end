@@ -1,10 +1,4 @@
-import {
-  Controller,
-  Get,
-  Query,
-  UseGuards,
-  SetMetadata,
-} from '@nestjs/common';
+import { Controller, Get, Query, UseGuards, SetMetadata } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard, ROLES_KEY } from '../auth/guards/roles.guard';
 import { MetricsFilterDto } from './infrastructure/dtos/metrics-filter.dto';

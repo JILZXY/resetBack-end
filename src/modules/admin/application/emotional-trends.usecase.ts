@@ -25,16 +25,35 @@ export class EmotionalTrendsUseCase {
     const logsWithCraving = logs.filter((l) => l.craving_level !== null);
     const logsWithEmotion = logs.filter((l) => l.emotional_state !== null);
 
-    const avgCraving = logsWithCraving.length > 0
-      ? Number((logsWithCraving.reduce((sum, l) => sum + l.craving_level!.level, 0) / logsWithCraving.length).toFixed(2))
-      : null;
+    const avgCraving =
+      logsWithCraving.length > 0
+        ? Number(
+            (
+              logsWithCraving.reduce(
+                (sum, l) => sum + l.craving_level!.level,
+                0,
+              ) / logsWithCraving.length
+            ).toFixed(2),
+          )
+        : null;
 
-    const avgEmotion = logsWithEmotion.length > 0
-      ? Number((logsWithEmotion.reduce((sum, l) => sum + l.emotional_state!.level, 0) / logsWithEmotion.length).toFixed(2))
-      : null;
+    const avgEmotion =
+      logsWithEmotion.length > 0
+        ? Number(
+            (
+              logsWithEmotion.reduce(
+                (sum, l) => sum + l.emotional_state!.level,
+                0,
+              ) / logsWithEmotion.length
+            ).toFixed(2),
+          )
+        : null;
 
     // Agrupar por fecha para serie temporal
-    const dailyMap = new Map<string, { cravings: number[]; emotions: number[]; count: number }>();
+    const dailyMap = new Map<
+      string,
+      { cravings: number[]; emotions: number[]; count: number }
+    >();
     for (const log of logs) {
       const dateStr = log.log_date.toISOString().split('T')[0];
       if (!dailyMap.has(dateStr)) {
@@ -48,12 +67,22 @@ export class EmotionalTrendsUseCase {
 
     const daily = Array.from(dailyMap.entries()).map(([date, data]) => ({
       date,
-      avgCraving: data.cravings.length > 0
-        ? Number((data.cravings.reduce((a, b) => a + b, 0) / data.cravings.length).toFixed(2))
-        : null,
-      avgEmotion: data.emotions.length > 0
-        ? Number((data.emotions.reduce((a, b) => a + b, 0) / data.emotions.length).toFixed(2))
-        : null,
+      avgCraving:
+        data.cravings.length > 0
+          ? Number(
+              (
+                data.cravings.reduce((a, b) => a + b, 0) / data.cravings.length
+              ).toFixed(2),
+            )
+          : null,
+      avgEmotion:
+        data.emotions.length > 0
+          ? Number(
+              (
+                data.emotions.reduce((a, b) => a + b, 0) / data.emotions.length
+              ).toFixed(2),
+            )
+          : null,
       logCount: data.count,
     }));
 
