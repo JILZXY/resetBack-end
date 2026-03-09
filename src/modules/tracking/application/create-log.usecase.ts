@@ -4,9 +4,7 @@ import { CreateLogDto } from '../infrastructure/dtos/create-log.dto';
 
 @Injectable()
 export class CreateLogUseCase {
-  constructor(
-    private readonly logRepo: DailyLogRepository,
-  ) { }
+  constructor(private readonly logRepo: DailyLogRepository) {}
 
   async execute(userId: string, dto: CreateLogDto) {
     const logDate = new Date(dto.log_date);

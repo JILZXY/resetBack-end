@@ -17,7 +17,11 @@ export class RejectSponsorshipUseCase {
 
     if (!pending) {
       throw new HttpException(
-        { code: 'NO_PENDING_REQUEST', message: 'No tienes solicitudes de apadrinamiento pendientes', details: {} },
+        {
+          code: 'NO_PENDING_REQUEST',
+          message: 'No tienes solicitudes de apadrinamiento pendientes',
+          details: {},
+        },
         HttpStatus.NOT_FOUND,
       );
     }

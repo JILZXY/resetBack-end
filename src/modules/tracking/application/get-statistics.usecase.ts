@@ -13,9 +13,15 @@ export class GetStatisticsUseCase {
     const targetUserId = requestedUserId || userId;
 
     if (userId !== targetUserId) {
-      const isActiveSponsor = await this.sponsorRepo.checkActiveSponsorship(userId, targetUserId);
+      const isActiveSponsor = await this.sponsorRepo.checkActiveSponsorship(
+        userId,
+        targetUserId,
+      );
       if (!isActiveSponsor) {
-        throw new HttpException('No tienes permisos para ver las estadísticas de este usuario', HttpStatus.FORBIDDEN);
+        throw new HttpException(
+          'No tienes permisos para ver las estadísticas de este usuario',
+          HttpStatus.FORBIDDEN,
+        );
       }
     }
 

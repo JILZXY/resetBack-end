@@ -24,7 +24,9 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
         secret: configService.get<string>('JWT_SECRET'),
-        signOptions: { expiresIn: configService.get<string>('JWT_EXPIRES_IN') as any },
+        signOptions: {
+          expiresIn: configService.get<string>('JWT_EXPIRES_IN') as any,
+        },
       }),
       inject: [ConfigService],
     }),
@@ -42,4 +44,3 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
   exports: [SponsorshipRepository],
 })
 export class SponsorshipModule {}
-

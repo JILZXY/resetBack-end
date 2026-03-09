@@ -4,24 +4,35 @@ import { TerminateSponsorshipDto } from '../infrastructure/dtos/terminate-sponso
 
 @Injectable()
 export class TerminateSponsorshipUseCase {
-  constructor(
-    private readonly sponsorshipRepo: SponsorshipRepository,
-  ) {}
+  constructor(private readonly sponsorshipRepo: SponsorshipRepository) {}
 
-  async execute(userId: string, sponsorshipId: string, dto: TerminateSponsorshipDto) {
+  async execute(
+    userId: string,
+    sponsorshipId: string,
+    dto: TerminateSponsorshipDto,
+  ) {
     const sponsorship = await this.sponsorshipRepo.findById(sponsorshipId);
 
     if (!sponsorship) {
-      throw new HttpException('Relación de apadrinamiento no encontrada', HttpStatus.NOT_FOUND);
+      throw new HttpException(
+        'Relación de apadrinamiento no encontrada',
+        HttpStatus.NOT_FOUND,
+      );
     }
 
     if (sponsorship.status !== 'ACTIVE') {
-      throw new HttpException('La relación no está activa', HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        'La relación no está activa',
+        HttpStatus.BAD_REQUEST,
+      );
     }
 
     // El padrino o el ahijado pueden dar por terminada la relación
     if (sponsorship.sponsorId !== userId && sponsorship.addictId !== userId) {
-      throw new HttpException('No tienes permisos para terminar esta relación', HttpStatus.FORBIDDEN);
+      throw new HttpException(
+        'No tienes permisos para terminar esta relación',
+        HttpStatus.FORBIDDEN,
+      );
     }
 
     const reason = dto.reason || 'Terminación voluntaria';
@@ -33,4 +44,3 @@ export class TerminateSponsorshipUseCase {
     };
   }
 }
-

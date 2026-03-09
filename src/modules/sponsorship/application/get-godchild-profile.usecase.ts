@@ -7,15 +7,20 @@ export class GetGodchildProfileUseCase {
   constructor(
     private readonly sponsorshipRepo: SponsorshipRepository,
     private readonly prisma: PrismaService,
-  ) { }
+  ) {}
 
   async execute(userId: string) {
     // Buscar relación activa donde el usuario sea el padrino
-    const sponsorship = await this.sponsorshipRepo.findActiveBySponsorId(userId);
+    const sponsorship =
+      await this.sponsorshipRepo.findActiveBySponsorId(userId);
 
     if (!sponsorship) {
       throw new HttpException(
-        { code: 'NO_ACTIVE_GODCHILD', message: 'No tienes un ahijado activo', details: {} },
+        {
+          code: 'NO_ACTIVE_GODCHILD',
+          message: 'No tienes un ahijado activo',
+          details: {},
+        },
         HttpStatus.NOT_FOUND,
       );
     }

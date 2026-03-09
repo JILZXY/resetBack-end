@@ -10,13 +10,23 @@ export class GetLogHistoryUseCase {
     private readonly sponsorRepo: SponsorshipRepository,
   ) {}
 
-  async execute(userId: string, filter: LogFilterDto, requestedUserId?: string) {
+  async execute(
+    userId: string,
+    filter: LogFilterDto,
+    requestedUserId?: string,
+  ) {
     const targetUserId = requestedUserId || userId;
 
     if (userId !== targetUserId) {
-      const isActiveSponsor = await this.sponsorRepo.checkActiveSponsorship(userId, targetUserId);
+      const isActiveSponsor = await this.sponsorRepo.checkActiveSponsorship(
+        userId,
+        targetUserId,
+      );
       if (!isActiveSponsor) {
-        throw new HttpException('No tienes permisos para ver el historial de este usuario', HttpStatus.FORBIDDEN);
+        throw new HttpException(
+          'No tienes permisos para ver el historial de este usuario',
+          HttpStatus.FORBIDDEN,
+        );
       }
     }
 

@@ -4,7 +4,7 @@ import { StreakEventEntity } from '../../domain/streak-event.entity';
 
 @Injectable()
 export class StreakEventRepository {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
 
   async create(data: {
     streakId: string;
@@ -52,8 +52,12 @@ export class StreakEventRepository {
     entity.eventType = raw.event_type;
     entity.eventDate = raw.event_date;
     entity.daysAchieved = raw.days_achieved;
-    entity.avgCravingPeriod = raw.avg_craving_period ? Number(raw.avg_craving_period) : null;
-    entity.avgEmotionPeriod = raw.avg_emotion_period ? Number(raw.avg_emotion_period) : null;
+    entity.avgCravingPeriod = raw.avg_craving_period
+      ? Number(raw.avg_craving_period)
+      : null;
+    entity.avgEmotionPeriod = raw.avg_emotion_period
+      ? Number(raw.avg_emotion_period)
+      : null;
     entity.createdAt = raw.created_at;
     return entity;
   }

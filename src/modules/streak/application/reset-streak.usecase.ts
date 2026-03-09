@@ -7,7 +7,7 @@ export class ResetStreakUseCase {
   constructor(
     private readonly streakRepo: StreakRepository,
     private readonly eventRepo: StreakEventRepository,
-  ) { }
+  ) {}
 
   async execute(userId: string): Promise<void> {
     const streak = await this.streakRepo.findByUserId(userId);

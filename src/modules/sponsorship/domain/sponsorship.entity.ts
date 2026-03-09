@@ -8,4 +8,3 @@ export class SponsorshipEntity {
   terminationReason: string;
   createdAt: Date;
 }
-

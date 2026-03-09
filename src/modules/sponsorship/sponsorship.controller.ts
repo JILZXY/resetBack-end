@@ -1,4 +1,14 @@
-import { Controller, Post, Patch, Get, Body, Param, UseGuards, Request, HttpCode } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Patch,
+  Get,
+  Body,
+  Param,
+  UseGuards,
+  Request,
+  HttpCode,
+} from '@nestjs/common';
 import { RequestSponsorshipUseCase } from './application/assign-sponsor.usecase';
 import { AcceptSponsorshipUseCase } from './application/accept-sponsorship.usecase';
 import { RejectSponsorshipUseCase } from './application/reject-sponsorship.usecase';
@@ -45,7 +55,11 @@ export class SponsorshipController {
     @Param('id') sponsorshipId: string,
     @Body() dto: TerminateSponsorshipDto,
   ) {
-    return await this.terminateUseCase.execute(req.user.userId, sponsorshipId, dto);
+    return await this.terminateUseCase.execute(
+      req.user.userId,
+      sponsorshipId,
+      dto,
+    );
   }
 
   @Post('graduate')
@@ -59,4 +73,3 @@ export class SponsorshipController {
     return await this.godchildProfileUseCase.execute(req.user.userId);
   }
 }
-
