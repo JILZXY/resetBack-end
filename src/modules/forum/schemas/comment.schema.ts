@@ -3,12 +3,15 @@ import { HydratedDocument, Types } from 'mongoose';
 
 export type CommentDocument = HydratedDocument<Comment>;
 
-@Schema({ collection: 'comments', timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' } })
+@Schema({
+  collection: 'comments',
+  timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' },
+})
 export class Comment {
   @Prop({ required: true })
   postId: string;
 
-  @Prop({ default: null })
+  @Prop({ type: String, default: null })
   parentId: string | null;
 
   @Prop({ required: true })

@@ -1,13 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Notification, NotificationDocument } from '../../schemas/notification.schema';
+import {
+  Notification,
+  NotificationDocument,
+} from '../../schemas/notification.schema';
 import { NotificationEntity } from '../../domain/notification.entity';
 
 @Injectable()
 export class NotificationRepository {
   constructor(
-    @InjectModel(Notification.name) private readonly notificationModel: Model<NotificationDocument>,
+    @InjectModel(Notification.name)
+    private readonly notificationModel: Model<NotificationDocument>,
   ) {}
 
   async create(data: {
@@ -30,12 +34,15 @@ export class NotificationRepository {
   }
 
   async markAsRead(id: string): Promise<void> {
-    await this.notificationModel.findByIdAndUpdate(id, { $set: { isRead: true } }).exec();
+    await this.notificationModel
+      .findByIdAndUpdate(id, { $set: { isRead: true } })
+      .exec();
   }
 
   private toEntity(raw: NotificationDocument): NotificationEntity {
     const entity = new NotificationEntity();
     entity.id = (raw._id as any).toString();
+    entity._id = (raw._id as any).toString(); // add _id for frontend expectation
     entity.userId = raw.userId;
     entity.actorId = raw.actorId;
     entity.type = raw.type;
@@ -46,7 +53,9 @@ export class NotificationRepository {
   }
 
   async countUnread(userId: string): Promise<number> {
-    return this.notificationModel.countDocuments({ userId, isRead: false }).exec();
+    return this.notificationModel
+      .countDocuments({ userId, isRead: false })
+      .exec();
   }
 
   async markAllAsRead(userId: string): Promise<void> {

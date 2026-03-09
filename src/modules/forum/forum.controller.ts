@@ -76,7 +76,11 @@ export class ForumController {
 
   @Put('posts/:id')
   @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
-  update(@Request() req: any, @Param('id') id: string, @Body() dto: UpdatePostDto) {
+  update(
+    @Request() req: any,
+    @Param('id') id: string,
+    @Body() dto: UpdatePostDto,
+  ) {
     return this.updatePost.execute(req.user.userId, id, dto);
   }
 
@@ -99,13 +103,21 @@ export class ForumController {
   // Reportes
   @Post('posts/:id/report')
   @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
-  reportPost(@Request() req: any, @Param('id') id: string, @Body() dto: CreateReportDto) {
+  reportPost(
+    @Request() req: any,
+    @Param('id') id: string,
+    @Body() dto: CreateReportDto,
+  ) {
     return this.createReport.execute(req.user.userId, id, 'post', dto);
   }
 
   @Post('comments/:id/report')
   @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
-  reportComment(@Request() req: any, @Param('id') id: string, @Body() dto: CreateReportDto) {
+  reportComment(
+    @Request() req: any,
+    @Param('id') id: string,
+    @Body() dto: CreateReportDto,
+  ) {
     return this.createReport.execute(req.user.userId, id, 'comment', dto);
   }
 
@@ -133,8 +145,15 @@ export class ForumController {
   // Notas de Aliento
   @Post('encouragement')
   @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
-  sendEncouragement(@Request() req: any, @Body() dto: CreateEncouragementNoteDto) {
-    return this.createEncouragement.execute(req.user.userId, dto.receiverId, dto.content);
+  sendEncouragement(
+    @Request() req: any,
+    @Body() dto: CreateEncouragementNoteDto,
+  ) {
+    return this.createEncouragement.execute(
+      req.user.userId,
+      dto.receiverId,
+      dto.content,
+    );
   }
 
   @Get('encouragement/my-notes')

@@ -18,7 +18,10 @@ export enum ReportStatus {
   ACTION_TAKEN = 'ACTION_TAKEN',
 }
 
-@Schema({ collection: 'reports', timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' } })
+@Schema({
+  collection: 'reports',
+  timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' },
+})
 export class Report {
   @Prop({ required: true })
   reporterId: string;

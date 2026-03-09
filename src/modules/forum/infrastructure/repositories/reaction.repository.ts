@@ -7,10 +7,15 @@ import { ReactionEntity } from '../../domain/reaction.entity';
 @Injectable()
 export class ReactionRepository {
   constructor(
-    @InjectModel(Reaction.name) private readonly reactionModel: Model<ReactionDocument>,
+    @InjectModel(Reaction.name)
+    private readonly reactionModel: Model<ReactionDocument>,
   ) {}
 
-  async findOne(userId: string, targetId: string, targetType: string): Promise<ReactionEntity | null> {
+  async findOne(
+    userId: string,
+    targetId: string,
+    targetType: string,
+  ): Promise<ReactionEntity | null> {
     const reaction = await this.reactionModel
       .findOne({ userId, targetId, targetType })
       .exec();
@@ -26,7 +31,11 @@ export class ReactionRepository {
     return this.toEntity(reaction);
   }
 
-  async delete(userId: string, targetId: string, targetType: string): Promise<void> {
+  async delete(
+    userId: string,
+    targetId: string,
+    targetType: string,
+  ): Promise<void> {
     await this.reactionModel.deleteOne({ userId, targetId, targetType }).exec();
   }
 

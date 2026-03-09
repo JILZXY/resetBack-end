@@ -23,7 +23,11 @@ export class CreateReportUseCase {
       const post = await this.postRepo.findById(targetId);
       if (!post) {
         throw new HttpException(
-          { code: 'POST_NOT_FOUND', message: 'Post no encontrado', details: { targetId } },
+          {
+            code: 'POST_NOT_FOUND',
+            message: 'Post no encontrado',
+            details: { targetId },
+          },
           HttpStatus.NOT_FOUND,
         );
       }
@@ -31,7 +35,11 @@ export class CreateReportUseCase {
       const comment = await this.commentRepo.findById(targetId);
       if (!comment) {
         throw new HttpException(
-          { code: 'COMMENT_NOT_FOUND', message: 'Comentario no encontrado', details: { targetId } },
+          {
+            code: 'COMMENT_NOT_FOUND',
+            message: 'Comentario no encontrado',
+            details: { targetId },
+          },
           HttpStatus.NOT_FOUND,
         );
       }

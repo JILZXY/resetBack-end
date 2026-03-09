@@ -8,8 +8,14 @@ import { Post, PostSchema } from './schemas/post.schema';
 import { Comment, CommentSchema } from './schemas/comment.schema';
 import { Reaction, ReactionSchema } from './schemas/reaction.schema';
 import { Report, ReportSchema } from './schemas/report.schema';
-import { Notification, NotificationSchema } from './schemas/notification.schema';
-import { EncouragementNote, EncouragementNoteSchema } from './schemas/encouragement-note.schema';
+import {
+  Notification,
+  NotificationSchema,
+} from './schemas/notification.schema';
+import {
+  EncouragementNote,
+  EncouragementNoteSchema,
+} from './schemas/encouragement-note.schema';
 import { PostRepository } from './infrastructure/repositories/post.repository';
 import { CommentRepository } from './infrastructure/repositories/comment.repository';
 import { ReactionRepository } from './infrastructure/repositories/reaction.repository';
