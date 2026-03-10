@@ -5,7 +5,7 @@ const { nanoid } = require('nanoid');
 
 @Injectable()
 export class UserRepository {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   async findByEmail(email: string): Promise<UserEntity | null> {
     const user = await this.prisma.user.findUnique({ where: { email } });
@@ -45,13 +45,13 @@ export class UserRepository {
         sponsor_code: sponsorCode,
         ...(role === 'ADICTO' && data.addictionName
           ? {
-              addictions: {
-                create: {
-                  custom_name: data.addictionName,
-                  classification: data.classification ?? '',
-                },
+            addictions: {
+              create: {
+                custom_name: data.addictionName,
+                classification: data.classification ?? '',
               },
-            }
+            },
+          }
           : {}),
       },
       include: {
@@ -63,7 +63,7 @@ export class UserRepository {
     const updatedUser = await this.prisma.user.update({
       where: { id: user.id },
       data: {
-        avatar_url: `https://api.dicebear.com/7.x/pixel-art/svg?seed=${user.id}`,
+        avatar_url: `https://api.dicebear.com/9.x/bottts-neutral/svg/svg?seed=${user.id}`,
       },
       include: {
         addictions: true,
