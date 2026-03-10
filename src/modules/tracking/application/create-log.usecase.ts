@@ -1,14 +1,12 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { DailyLogRepository } from '../infrastructure/repositories/daily-log.repository';
 import { CreateLogDto } from '../infrastructure/dtos/create-log.dto';
-import { CreateStreakUseCase } from '../../streak/application/create-streak.usecase';
 
 @Injectable()
 export class CreateLogUseCase {
   constructor(
     private readonly logRepo: DailyLogRepository,
-    private readonly createStreak: CreateStreakUseCase,
-  ) {}
+  ) { }
 
   async execute(userId: string, dto: CreateLogDto) {
     const logDate = new Date(dto.log_date);
@@ -25,7 +23,6 @@ export class CreateLogUseCase {
       );
     }
 
-    // Resolver IDs de craving y estado emocional
     let cravingLevelId: string | undefined;
     let emotionalStateId: string | undefined;
 
@@ -61,11 +58,7 @@ export class CreateLogUseCase {
       emotionalStateId = es.id;
     }
 
-    // Asegurar que exista una racha antes de insertar el log
-    // (el trigger fn_update_streak reacciona al INSERT y actualiza la racha automáticamente)
-    await this.createStreak.execute(userId);
-
-    const log = await this.logRepo.create({
+    const log = await this.logRepo.createWithStreakUpdate({
       userId,
       logDate,
       consumed: dto.consumed,
