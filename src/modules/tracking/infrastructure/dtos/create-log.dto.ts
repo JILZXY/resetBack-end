@@ -17,17 +17,15 @@ export class CreateLogDto {
   @IsBoolean({ message: 'consumed debe ser true o false' })
   consumed: boolean;
 
-  @IsOptional()
   @IsInt()
   @Min(1)
   @Max(10)
-  craving_level: number; 
+  craving_level: number;
 
-  @IsOptional()
   @IsInt()
   @Min(1)
   @Max(10)
-  emotional_state: number; 
+  emotional_state: number;
 
   @IsOptional()
   @IsString()

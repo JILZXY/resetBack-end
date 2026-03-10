@@ -34,25 +34,13 @@ export class StreakRepository {
   async incrementDay(
     streakId: string,
     lastLogDate: Date,
-    tx?: Prisma.TransactionClient,
   ): Promise<StreakEntity> {
-    const client = tx || this.prisma;
-
-    const streak = await client.streak.update({
+    const streak = await this.prisma.streak.update({
       where: { id: streakId },
       data: {
         day_counter: { increment: 1 },
         last_log_date: lastLogDate,
         status: 'active',
-      },
-    });
-
-    await client.streakEvent.create({
-      data: {
-        streak_id: streakId,
-        event_type: 'progress',
-        event_date: new Date(),
-        days_achieved: streak.day_counter,
       },
     });
 
@@ -62,27 +50,14 @@ export class StreakRepository {
   async reset(
     streakId: string,
     newStartedAt: Date,
-    currentDayCounter: number,
-    tx?: Prisma.TransactionClient,
   ): Promise<StreakEntity> {
-    const client = tx || this.prisma;
-
-    const streak = await client.streak.update({
+    const streak = await this.prisma.streak.update({
       where: { id: streakId },
       data: {
         day_counter: 0,
         started_at: newStartedAt,
         last_log_date: newStartedAt,
         status: 'broken',
-      },
-    });
-
-    await client.streakEvent.create({
-      data: {
-        streak_id: streakId,
-        event_type: 'relapse',
-        event_date: new Date(),
-        days_achieved: currentDayCounter,
       },
     });
 
