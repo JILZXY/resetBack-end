@@ -1,6 +1,6 @@
 # Directorios y cache
 node_modules
-dist
+# dist <-- Comentado para permitir subir compilados al servidor
 .npm
 .eslintcache
 
