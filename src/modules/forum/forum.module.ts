@@ -9,11 +9,13 @@ import { Comment, CommentSchema } from './schemas/comment.schema';
 import { Reaction, ReactionSchema } from './schemas/reaction.schema';
 import { Report, ReportSchema } from './schemas/report.schema';
 import { Notification, NotificationSchema } from './schemas/notification.schema';
+import { EncouragementNote, EncouragementNoteSchema } from './schemas/encouragement-note.schema';
 import { PostRepository } from './infrastructure/repositories/post.repository';
 import { CommentRepository } from './infrastructure/repositories/comment.repository';
 import { ReactionRepository } from './infrastructure/repositories/reaction.repository';
 import { ReportRepository } from './infrastructure/repositories/report.repository';
 import { NotificationRepository } from './infrastructure/repositories/notification.repository';
+import { EncouragementNoteRepository } from './infrastructure/repositories/encouragement-note.repository';
 import { CreatePostUseCase } from './application/create-post.usecase';
 import { GetPostsUseCase } from './application/get-posts.usecase';
 import { UpdatePostUseCase } from './application/update-post.usecase';
@@ -22,6 +24,7 @@ import { CreateCommentUseCase } from './application/create-comment.usecase';
 import { DeleteCommentUseCase } from './application/delete-comment.usecase';
 import { ToggleReactionUseCase } from './application/toggle-reaction.usecase';
 import { CreateReportUseCase } from './application/create-report.usecase';
+import { CreateEncouragementNoteUseCase } from './application/create-encouragement-note.usecase';
 
 @Module({
   imports: [
@@ -32,6 +35,7 @@ import { CreateReportUseCase } from './application/create-report.usecase';
       { name: Reaction.name, schema: ReactionSchema },
       { name: Report.name, schema: ReportSchema },
       { name: Notification.name, schema: NotificationSchema },
+      { name: EncouragementNote.name, schema: EncouragementNoteSchema },
     ]),
   ],
   controllers: [ForumController, NotificationController],
@@ -41,6 +45,7 @@ import { CreateReportUseCase } from './application/create-report.usecase';
     ReactionRepository,
     ReportRepository,
     NotificationRepository,
+    EncouragementNoteRepository,
     NotificationGateway,
     CreatePostUseCase,
     GetPostsUseCase,
@@ -50,6 +55,7 @@ import { CreateReportUseCase } from './application/create-report.usecase';
     DeleteCommentUseCase,
     ToggleReactionUseCase,
     CreateReportUseCase,
+    CreateEncouragementNoteUseCase,
   ],
   exports: [NotificationRepository, NotificationGateway],
 })

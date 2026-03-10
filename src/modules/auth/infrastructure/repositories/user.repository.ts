@@ -58,7 +58,19 @@ export class UserRepository {
         addictions: true,
       }
     });
-    return this.toEntity(user);
+
+    // Actualizar avatar_url dinámico basado en el ID generado
+    const updatedUser = await this.prisma.user.update({
+      where: { id: user.id },
+      data: {
+        avatar_url: `https://api.dicebear.com/7.x/pixel-art/svg?seed=${user.id}`,
+      },
+      include: {
+        addictions: true,
+      }
+    });
+
+    return this.toEntity(updatedUser);
   }
 
   private toEntity(raw: any): UserEntity {
@@ -69,6 +81,7 @@ export class UserRepository {
     entity.passwordHash = raw.password_hash;
     entity.role = raw.role;
     entity.sponsorCode = raw.sponsor_code ?? null;
+    entity.avatarUrl = raw.avatar_url;
     entity.createdAt = raw.created_at;
     entity.updatedAt = raw.updated_at;
     return entity;

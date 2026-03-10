@@ -5,6 +5,7 @@ export class UserEntity {
   passwordHash: string;
   role: string | null;
   sponsorCode: string | null;
+  avatarUrl: string;
   createdAt: Date;
   updatedAt: Date;
 }
