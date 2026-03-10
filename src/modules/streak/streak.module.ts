@@ -15,6 +15,6 @@ import { BestStreaksUseCase } from './application/best-streaks.usecase';
     ResetStreakUseCase,
     BestStreaksUseCase,
   ],
-  exports: [CreateStreakUseCase],
+  exports: [CreateStreakUseCase, StreakRepository],
 })
 export class StreakModule { }

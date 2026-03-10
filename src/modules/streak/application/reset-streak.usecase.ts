@@ -7,7 +7,7 @@ export class ResetStreakUseCase {
   constructor(
     private readonly streakRepo: StreakRepository,
     private readonly eventRepo: StreakEventRepository,
-  ) {}
+  ) { }
 
   async execute(userId: string): Promise<void> {
     const streak = await this.streakRepo.findByUserId(userId);
@@ -23,13 +23,6 @@ export class ResetStreakUseCase {
       );
     }
 
-    await this.eventRepo.create({
-      streakId: streak.id,
-      eventType: 'manual_reset',
-      eventDate: new Date(),
-      daysAchieved: streak.dayCounter,
-    });
-
-    await this.streakRepo.reset(streak.id, new Date());
+    await this.streakRepo.reset(streak.id, new Date(), streak.dayCounter);
   }
 }

@@ -2,10 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from 'src/shared/database/prisma/prisma.service';
 import { DailyLogEntity } from '../../domain/daily-log.entity';
+import { StreakRepository } from 'src/modules/streak/infrastructure/repositories/streak.repository';
 
 @Injectable()
 export class DailyLogRepository {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly streakRepository: StreakRepository,
+  ) { }
 
   async findByDate(userId: string, logDate: Date): Promise<DailyLogEntity | null> {
     const log = await this.prisma.dailyLog.findUnique({
@@ -45,49 +49,23 @@ export class DailyLogRepository {
         include: { craving_level: true, emotional_state: true },
       });
 
-      const streak = await tx.streak.findUnique({
-        where: { user_id: data.userId },
-      });
+      const streak = await this.streakRepository.findByUserId(data.userId);
 
       if (streak) {
         if (data.consumed) {
-          await tx.streak.update({
-            where: { id: streak.id },
-            data: {
-              day_counter: 0,
-              status: 'broken',
-              updated_at: new Date(),
-            },
-          });
-
-          await tx.streakEvent.create({
-            data: {
-              streak_id: streak.id,
-              event_type: 'relapse',
-              event_date: new Date(),
-              days_achieved: streak.day_counter,
-            },
-          });
+          await this.streakRepository.reset(
+            streak.id,
+            new Date(),
+            streak.dayCounter,
+            tx,
+          );
         } else {
-          if (!streak.last_log_date || streak.last_log_date < data.logDate) {
-            await tx.streak.update({
-              where: { id: streak.id },
-              data: {
-                day_counter: { increment: 1 },
-                last_log_date: data.logDate,
-                status: 'active',
-                updated_at: new Date(),
-              },
-            });
-
-            await tx.streakEvent.create({
-              data: {
-                streak_id: streak.id,
-                event_type: 'progress',
-                event_date: new Date(),
-                days_achieved: streak.day_counter + 1,
-              },
-            });
+          if (!streak.lastLogDate || streak.lastLogDate < data.logDate) {
+            await this.streakRepository.incrementDay(
+              streak.id,
+              data.logDate,
+              tx,
+            );
           }
         }
       }
