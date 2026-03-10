@@ -65,7 +65,7 @@ let UserRepository = class UserRepository {
         const updatedUser = await this.prisma.user.update({
             where: { id: user.id },
             data: {
-                avatar_url: `https://api.dicebear.com/7.x/pixel-art/svg?seed=${user.id}`,
+                avatar_url: `https://api.dicebear.com/9.x/bottts-neutral/svg/svg?seed=${user.id}`,
             },
             include: {
                 addictions: true,
