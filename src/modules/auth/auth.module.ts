@@ -15,6 +15,7 @@ import { VerifyEmailUseCase } from './application/verify-email.usecase';
 import { DeleteAccountUseCase } from './application/delete-account.usecase';
 import { PasswordResetTokenRepository } from './infrastructure/repositories/password-reset-token.repository';
 import { VerificationTokenRepository } from './infrastructure/repositories/verification-token.repository';
+import { TrustedDeviceRepository } from './infrastructure/repositories/trusted-device.repository';
 
 @Module({
   imports: [
@@ -43,6 +44,7 @@ import { VerificationTokenRepository } from './infrastructure/repositories/verif
     DeleteAccountUseCase,
     PasswordResetTokenRepository,
     VerificationTokenRepository,
+    TrustedDeviceRepository,
   ],
   exports: [JwtModule, UserRepository],
 })
