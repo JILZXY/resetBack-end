@@ -33,12 +33,13 @@ let NotificationService = class NotificationService {
     }
     async sendWelcomeEmail(userEmail, userName) {
         const subject = 'Bienvenido a ReSet - Tu camino de sanación comienza aquí';
+        const dashboardUrl = `${this.mailService.getPrimaryFrontendUrl()}/dashboard`;
         const content = `
       <h2>Bienvenido a casa, ${userName}.</h2>
       <p>Gracias por confiar en <strong>ReSet</strong>. Estamos aquí para acompañarte en cada paso de tu camino hacia el bienestar con herramientas diseñadas para tu proceso.</p>
       <p>Nuestra plataforma te ofrece la red de apoyo y la estructura necesaria para fortalecer tu camino día a día.</p>
       <div class="button-container">
-        <a href="https://resetapp.tech/dashboard" class="button">Comenzar mi Proceso</a>
+        <a href="${dashboardUrl}" class="button">Comenzar mi Proceso</a>
       </div>
       <p style="margin-top: 40px; font-style: italic; color: #64748b;">"El primer paso no te lleva a donde quieres ir, pero te saca de donde estás."</p>
     `;
