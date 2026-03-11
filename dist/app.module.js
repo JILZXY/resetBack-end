@@ -34,9 +34,8 @@ exports.AppModule = AppModule = __decorate([
         imports: [
             config_1.ConfigModule.forRoot({
                 isGlobal: true,
-                envFilePath: process.env.NODE_ENV === 'production'
-                    ? '.env.production'
-                    : '.env.development',
+                envFilePath: process.env.ENV_FILE || (process.env.NODE_ENV === 'production' ? '.env.production' : '.env.development'),
+                ignoreEnvFile: !!process.env.IGNORE_ENV_FILE || false,
                 load: [app_config_1.appConfig, database_config_1.databaseConfig, jwt_config_1.jwtConfig, mongo_config_1.mongoConfig, brevo_config_1.brevoConfig],
             }),
             mongoose_1.MongooseModule.forRootAsync({
