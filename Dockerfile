@@ -1,6 +1,5 @@
 # 1. Production Stage
 FROM node:22-alpine
-
 WORKDIR /app
 
 # Instalar dependencias necesarias para Prisma
@@ -9,16 +8,19 @@ RUN apk add --no-cache openssl
 # Set Node environment a production
 ENV NODE_ENV=production
 
-# Copiar configuración de dependencias y cliente de Prisma
+# Copiar configuración de dependencias
 COPY package*.json ./
-COPY prisma ./prisma/
 
-# Instalar dependencias de producción
-# Nota: Instalamos devDeps temporalmente para generar el cliente si es necesario, 
-# o asumimos que el usuario lo genera localmente.
-RUN npm ci --include=dev && npx prisma generate && npm prune --omit=dev
+# Instalar TODAS las deps (incluyendo dev) para poder generar el cliente
+RUN npm ci --include=dev
 
-# Copiar los compilados (DEBEN EXISTIR LOCALMENTE antes de hacer docker build)
+# Generar cliente Prisma desde reset-infra
+RUN npx prisma generate --schema ./node_modules/reset-infra/prisma/schema.prisma
+
+# Eliminar devDependencies
+RUN npm prune --omit=dev
+
+# Copiar los compilados (deben existir localmente antes de docker build)
 COPY dist ./dist
 
 # Eliminar cache de npm
