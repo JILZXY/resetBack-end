@@ -5,11 +5,11 @@ export type CommentDocument = HydratedDocument<Comment>;
 
 @Schema({ collection: 'comments', timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' } })
 export class Comment {
-  @Prop({ required: true, type: Types.ObjectId, ref: 'Post' })
-  postId: Types.ObjectId;
+  @Prop({ required: true })
+  postId: string;
 
-  @Prop({ type: Types.ObjectId, ref: 'Comment', default: null })
-  parentId: Types.ObjectId | null;
+  @Prop({ default: null })
+  parentId: string | null;
 
   @Prop({ required: true })
   authorId: string;
@@ -22,6 +22,9 @@ export class Comment {
 
   @Prop({ default: 0 })
   reactionUps: number;
+
+  @Prop({ default: 0 })
+  reportCount: number;
 
   @Prop({ default: false })
   isDeleted: boolean;
