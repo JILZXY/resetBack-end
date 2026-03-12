@@ -19,9 +19,11 @@ async function bootstrap() {
   const allowedOrigins = frontendUrls
     ? frontendUrls.split(',').map((url) => url.trim())
     : [];
+    
+  const corsOrigin = allowedOrigins.length > 0 ? allowedOrigins : true;
 
   app.enableCors({
-    origin: allowedOrigins,
+    origin: corsOrigin,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
     allowedHeaders: 'Content-Type, Authorization, X-Requested-With, Accept',
