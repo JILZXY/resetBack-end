@@ -5,7 +5,7 @@ import { StreakEntity } from '../../domain/streak.entity';
 
 @Injectable()
 export class StreakRepository {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
 
   async findByUserId(userId: string): Promise<StreakEntity | null> {
     const streak = await this.prisma.streak.findUnique({
@@ -47,10 +47,7 @@ export class StreakRepository {
     return this.toEntity(streak);
   }
 
-  async reset(
-    streakId: string,
-    newStartedAt: Date,
-  ): Promise<StreakEntity> {
+  async reset(streakId: string, newStartedAt: Date): Promise<StreakEntity> {
     const streak = await this.prisma.streak.update({
       where: { id: streakId },
       data: {

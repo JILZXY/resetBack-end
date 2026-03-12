@@ -4,29 +4,32 @@ const { nanoid } = require('nanoid');
 
 @Injectable()
 export class GraduateSponsorUseCase {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
 
   async execute(userId: string) {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
       include: {
-        addictions: true
-      }
+        addictions: true,
+      },
     });
 
     if (!user) {
       throw new HttpException('Usuario no encontrado', HttpStatus.NOT_FOUND);
     }
     if (user.role !== 'ADICTO') {
-      throw new HttpException('Solo los pacientes pueden graduarse a padrinos', HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        'Solo los pacientes pueden graduarse a padrinos',
+        HttpStatus.BAD_REQUEST,
+      );
     }
 
     // Buscar apadrinamiento activo donde sea ahijado
     const activeSponsorship = await this.prisma.sponsorship.findFirst({
       where: {
         addict_id: userId,
-        status: 'ACTIVE'
-      }
+        status: 'ACTIVE',
+      },
     });
 
     const sponsorCode = nanoid(8).toUpperCase();
@@ -46,7 +49,11 @@ export class GraduateSponsorUseCase {
       }
 
       // 2. Desactivar adicciones activas
-      const addictions = Array.isArray(user.addictions) ? user.addictions : (user.addictions ? [user.addictions] : []);
+      const addictions = Array.isArray(user.addictions)
+        ? user.addictions
+        : user.addictions
+          ? [user.addictions]
+          : [];
       for (const addiction of addictions) {
         if (addiction.is_active) {
           await tx.userAddiction.update({
@@ -72,4 +79,3 @@ export class GraduateSponsorUseCase {
     };
   }
 }
-

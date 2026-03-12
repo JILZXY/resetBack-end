@@ -6,7 +6,10 @@ import { SponsorshipEntity } from '../../domain/sponsorship.entity';
 export class SponsorshipRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async createRequest(sponsorId: string, addictId: string): Promise<SponsorshipEntity> {
+  async createRequest(
+    sponsorId: string,
+    addictId: string,
+  ): Promise<SponsorshipEntity> {
     const sponsorship = await this.prisma.sponsorship.create({
       data: {
         sponsor_id: sponsorId,
@@ -44,7 +47,9 @@ export class SponsorshipRepository {
     return this.toEntity(sponsorship);
   }
 
-  async findActiveByAddictId(addictId: string): Promise<SponsorshipEntity | null> {
+  async findActiveByAddictId(
+    addictId: string,
+  ): Promise<SponsorshipEntity | null> {
     const sponsorship = await this.prisma.sponsorship.findFirst({
       where: {
         addict_id: addictId,
@@ -54,7 +59,9 @@ export class SponsorshipRepository {
     return sponsorship ? this.toEntity(sponsorship) : null;
   }
 
-  async findActiveBySponsorId(sponsorId: string): Promise<SponsorshipEntity | null> {
+  async findActiveBySponsorId(
+    sponsorId: string,
+  ): Promise<SponsorshipEntity | null> {
     const sponsorship = await this.prisma.sponsorship.findFirst({
       where: {
         sponsor_id: sponsorId,
@@ -64,7 +71,9 @@ export class SponsorshipRepository {
     return sponsorship ? this.toEntity(sponsorship) : null;
   }
 
-  async findPendingByAddictId(addictId: string): Promise<SponsorshipEntity | null> {
+  async findPendingByAddictId(
+    addictId: string,
+  ): Promise<SponsorshipEntity | null> {
     const sponsorship = await this.prisma.sponsorship.findFirst({
       where: {
         addict_id: addictId,
@@ -74,7 +83,9 @@ export class SponsorshipRepository {
     return sponsorship ? this.toEntity(sponsorship) : null;
   }
 
-  async findPendingBySponsorId(sponsorId: string): Promise<SponsorshipEntity | null> {
+  async findPendingBySponsorId(
+    sponsorId: string,
+  ): Promise<SponsorshipEntity | null> {
     const sponsorship = await this.prisma.sponsorship.findFirst({
       where: {
         sponsor_id: sponsorId,
@@ -91,7 +102,10 @@ export class SponsorshipRepository {
     return sponsorship ? this.toEntity(sponsorship) : null;
   }
 
-  async checkActiveSponsorship(sponsorId: string, addictId: string): Promise<boolean> {
+  async checkActiveSponsorship(
+    sponsorId: string,
+    addictId: string,
+  ): Promise<boolean> {
     const count = await this.prisma.sponsorship.count({
       where: {
         sponsor_id: sponsorId,
@@ -115,4 +129,3 @@ export class SponsorshipRepository {
     return entity;
   }
 }
-

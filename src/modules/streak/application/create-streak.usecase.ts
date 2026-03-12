@@ -21,7 +21,8 @@ export class CreateStreakUseCase {
       throw new HttpException(
         {
           code: 'ADDICTION_NOT_FOUND',
-          message: 'El usuario no tiene una adicción registrada. Registra una antes de iniciar una racha',
+          message:
+            'El usuario no tiene una adicción registrada. Registra una antes de iniciar una racha',
           details: { user_id: userId },
         },
         HttpStatus.NOT_FOUND,

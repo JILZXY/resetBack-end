@@ -9,9 +9,12 @@ export class DailyLogRepository {
   constructor(
     private readonly prisma: PrismaService,
     private readonly streakRepository: StreakRepository,
-  ) { }
+  ) {}
 
-  async findByDate(userId: string, logDate: Date): Promise<DailyLogEntity | null> {
+  async findByDate(
+    userId: string,
+    logDate: Date,
+  ): Promise<DailyLogEntity | null> {
     const log = await this.prisma.dailyLog.findUnique({
       where: { user_id_log_date: { user_id: userId, log_date: logDate } },
     });
@@ -44,8 +47,8 @@ export class DailyLogRepository {
         consumed: data.consumed,
         craving_level_id: data.cravingLevelId,
         emotional_state_id: data.emotionalStateId,
-        triggers: data.triggers ?? "",
-        notes: data.notes ?? "",
+        triggers: data.triggers ?? '',
+        notes: data.notes ?? '',
       },
       include: { craving_level: true, emotional_state: true },
     });
@@ -69,8 +72,8 @@ export class DailyLogRepository {
         consumed: data.consumed,
         craving_level_id: data.cravingLevelId,
         emotional_state_id: data.emotionalStateId,
-        triggers: data.triggers ?? "",
-        notes: data.notes ?? "",
+        triggers: data.triggers ?? '',
+        notes: data.notes ?? '',
       },
       include: { craving_level: true, emotional_state: true },
     });
@@ -87,11 +90,11 @@ export class DailyLogRepository {
         user_id: userId,
         ...(from || to
           ? {
-            log_date: {
-              ...(from ? { gte: from } : {}),
-              ...(to ? { lte: to } : {}),
-            },
-          }
+              log_date: {
+                ...(from ? { gte: from } : {}),
+                ...(to ? { lte: to } : {}),
+              },
+            }
           : {}),
       },
       orderBy: { log_date: 'desc' },

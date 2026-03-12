@@ -10,7 +10,10 @@ import {
 } from 'class-validator';
 
 export class CreateLogDto {
-  @IsDateString({}, { message: 'log_date debe ser una fecha válida (YYYY-MM-DD)' })
+  @IsDateString(
+    {},
+    { message: 'log_date debe ser una fecha válida (YYYY-MM-DD)' },
+  )
   @IsNotEmpty()
   log_date: string;
 
