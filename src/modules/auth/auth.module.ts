@@ -8,6 +8,12 @@ import { JwtStrategy } from './auth.service';
 import { UserRepository } from './infrastructure/repositories/user.repository';
 import { RegisterUserUseCase } from './application/register-user.usecase';
 import { LoginUseCase } from './application/login.usecase';
+import { GetProfileUseCase } from './application/get-profile.usecase';
+import { ForgotPasswordUseCase } from './application/forgot-password.usecase';
+import { ResetPasswordUseCase } from './application/reset-password.usecase';
+import { VerifyEmailUseCase } from './application/verify-email.usecase';
+import { PasswordResetTokenRepository } from './infrastructure/repositories/password-reset-token.repository';
+import { VerificationTokenRepository } from './infrastructure/repositories/verification-token.repository';
 
 @Module({
   imports: [
@@ -17,7 +23,9 @@ import { LoginUseCase } from './application/login.usecase';
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
         secret: config.get<string>('JWT_SECRET') ?? '',
-        signOptions: { expiresIn: (config.get<string>('JWT_EXPIRES_IN') ?? '7d') as any },
+        signOptions: {
+          expiresIn: (config.get<string>('JWT_EXPIRES_IN') ?? '7d') as any,
+        },
       }),
     }),
   ],
@@ -27,6 +35,12 @@ import { LoginUseCase } from './application/login.usecase';
     UserRepository,
     RegisterUserUseCase,
     LoginUseCase,
+    GetProfileUseCase,
+    ForgotPasswordUseCase,
+    ResetPasswordUseCase,
+    VerifyEmailUseCase,
+    PasswordResetTokenRepository,
+    VerificationTokenRepository,
   ],
   exports: [JwtModule, UserRepository],
 })
