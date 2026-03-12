@@ -60,7 +60,7 @@ export class TriggerAlertUseCase {
             this.notificationService.sendEmergencyAlert(
               contact.email!,
               user?.name ?? 'Un usuario',
-              dto.resolution_notes,
+              dto.resolutionNotes,
             ),
           ),
       );
