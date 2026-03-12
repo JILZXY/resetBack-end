@@ -14,8 +14,10 @@ import {
 import type { Response, Request as ExpressRequest } from 'express';
 import { RegisterUserUseCase } from './application/register-user.usecase';
 import { LoginUseCase } from './application/login.usecase';
+import { Verify2FAUseCase } from './application/verify-2fa.usecase';
 import { RegisterDto } from './infrastructure/dtos/register.dto';
 import { LoginDto } from './infrastructure/dtos/login.dto';
+import { Verify2FADto } from './infrastructure/dtos/verify-2fa.dto';
 import { GetProfileUseCase } from './application/get-profile.usecase';
 import { ForgotPasswordUseCase } from './application/forgot-password.usecase';
 import { ResetPasswordUseCase } from './application/reset-password.usecase';
@@ -29,12 +31,13 @@ export class AuthController {
   constructor(
     private readonly registerUseCase: RegisterUserUseCase,
     private readonly loginUseCase: LoginUseCase,
+    private readonly verify2FAUseCase: Verify2FAUseCase,
     private readonly getProfileUseCase: GetProfileUseCase,
     private readonly forgotPasswordUseCase: ForgotPasswordUseCase,
     private readonly resetPasswordUseCase: ResetPasswordUseCase,
     private readonly verifyEmailUseCase: VerifyEmailUseCase,
     private readonly deleteAccountUseCase: DeleteAccountUseCase,
-  ) {}
+  ) { }
 
   @Post('register')
   @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
@@ -52,15 +55,20 @@ export class AuthController {
     const deviceIdFromCookie = req.cookies['device_id'];
     const result: any = await this.loginUseCase.execute(dto, deviceIdFromCookie);
 
-    if (result.newDeviceId) {
-      res.cookie('device_id', result.newDeviceId, {
-        httpOnly: true,
-        secure: true, // Cambiar a false en desarrollo local sin HTTPS si es necesario
-        sameSite: 'strict',
-        maxAge: 30 * 24 * 60 * 60 * 1000, // 30 días
-      });
-      delete result.newDeviceId;
-    }
+    this.handleDeviceIdCookie(result, res);
+
+    return result;
+  }
+
+  @Post('verify-2fa')
+  @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
+  async verify2FA(
+    @Body() dto: Verify2FADto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const result: any = await this.verify2FAUseCase.execute(dto);
+
+    this.handleDeviceIdCookie(result, res);
 
     return result;
   }
@@ -86,10 +94,22 @@ export class AuthController {
   verifyEmail(@Body('token') token: string) {
     return this.verifyEmailUseCase.execute(token);
   }
-  
+
   @Delete('account')
   @UseGuards(JwtAuthGuard)
   deleteAccount(@Request() req: any) {
     return this.deleteAccountUseCase.execute(req.user.userId);
+  }
+
+  private handleDeviceIdCookie(result: any, res: Response) {
+    if (result && result.newDeviceId) {
+      res.cookie('device_id', result.newDeviceId, {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'strict',
+        maxAge: 30 * 24 * 60 * 60 * 1000, // 30 días
+      });
+      delete result.newDeviceId;
+    }
   }
 }
