@@ -1,1 +1,0 @@
-{"version":3,"file":"sendgrid.config.js","sourceRoot":"","sources":["../../../src/config/sendgrid.config.ts"],"names":[],"mappings":";;;AAAA,2CAA4C;AAE/B,QAAA,cAAc,GAAG,IAAA,mBAAU,EAAC,UAAU,EAAE,GAAG,EAAE,CAAC,CAAC;IAC1D,MAAM,EAAE,OAAO,CAAC,GAAG,CAAC,gBAAgB;IACpC,SAAS,EAAE,OAAO,CAAC,GAAG,CAAC,mBAAmB;IAC1C,QAAQ,EAAE,OAAO,CAAC,GAAG,CAAC,kBAAkB;CACzC,CAAC,CAAC,CAAC"}
