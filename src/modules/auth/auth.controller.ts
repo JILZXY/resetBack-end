@@ -5,12 +5,13 @@ import {
   UsePipes,
   ValidationPipe,
   Get,
+  Delete,
   UseGuards,
   Request,
   Res,
   Req,
 } from '@nestjs/common';
-import { Response, Request as ExpressRequest } from 'express';
+import type { Response, Request as ExpressRequest } from 'express';
 import { RegisterUserUseCase } from './application/register-user.usecase';
 import { LoginUseCase } from './application/login.usecase';
 import { RegisterDto } from './infrastructure/dtos/register.dto';
@@ -19,6 +20,7 @@ import { GetProfileUseCase } from './application/get-profile.usecase';
 import { ForgotPasswordUseCase } from './application/forgot-password.usecase';
 import { ResetPasswordUseCase } from './application/reset-password.usecase';
 import { VerifyEmailUseCase } from './application/verify-email.usecase';
+import { DeleteAccountUseCase } from './application/delete-account.usecase';
 import { ResetPasswordDto } from './infrastructure/dtos/reset-password.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
@@ -31,6 +33,7 @@ export class AuthController {
     private readonly forgotPasswordUseCase: ForgotPasswordUseCase,
     private readonly resetPasswordUseCase: ResetPasswordUseCase,
     private readonly verifyEmailUseCase: VerifyEmailUseCase,
+    private readonly deleteAccountUseCase: DeleteAccountUseCase,
   ) {}
 
   @Post('register')
@@ -82,5 +85,11 @@ export class AuthController {
   @Post('verify-email')
   verifyEmail(@Body('token') token: string) {
     return this.verifyEmailUseCase.execute(token);
+  }
+  
+  @Delete('account')
+  @UseGuards(JwtAuthGuard)
+  deleteAccount(@Request() req: any) {
+    return this.deleteAccountUseCase.execute(req.user.userId);
   }
 }
