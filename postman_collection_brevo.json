@@ -1,0 +1,164 @@
+{
+  "info": {
+    "name": "ReSet App API - Brevo Test",
+    "description": "Prueba local de Brevo enviando a fullgamer494@gmail.com",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000/api/v1",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Inicio de Sesión",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const response = pm.response.json();",
+              "if (response && response.data && response.data.accessToken) {",
+              "    pm.collectionVariables.set('token', response.data.accessToken);",
+              "    console.log('Token guardado:', pm.collectionVariables.get('token'));",
+              "} else {",
+              "    console.log('No se encontró el token en la respuesta. Revisa el body resultante.');",
+              "    console.log('Body recibido:', JSON.stringify(response));",
+              "}"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"fullgamer494@hotmail.com\",\n  \"password\": \"qwerty123\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/auth/login",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "auth",
+            "login"
+          ]
+        }
+      }
+    },
+    {
+      "name": "2. Agregar Contacto (Apoyo)",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"contact_name\": \"Apoyo Estudiantil\",\n  \"email\": \"fullgamer494@gmail.com\",\n  \"phone\": \"555-1234\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/emergency/contacts",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "emergency",
+            "contacts"
+          ]
+        }
+      }
+    },
+    {
+      "name": "3. Obtener Mis Contactos",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/emergency/contacts",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "emergency",
+            "contacts"
+          ]
+        }
+      }
+    },
+    {
+      "name": "4. Disparar Alerta de Emergencia",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"resulted_in_relapse\": false,\n  \"resolution_notes\": \"Prueba local de alerta de emergencia usando Brevo.\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/emergency/alert",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "emergency",
+            "alert"
+          ]
+        }
+      }
+    }
+  ]
+}
