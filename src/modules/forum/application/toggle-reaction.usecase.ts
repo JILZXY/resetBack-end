@@ -15,7 +15,11 @@ export class ToggleReactionUseCase {
     private readonly notificationGateway: NotificationGateway,
   ) {}
 
-  async execute(userId: string, targetId: string, targetType: 'post' | 'comment') {
+  async execute(
+    userId: string,
+    targetId: string,
+    targetType: 'post' | 'comment',
+  ) {
     // Validar que el target existe y obtener su autor
     let targetAuthorId: string | undefined;
 
@@ -23,7 +27,11 @@ export class ToggleReactionUseCase {
       const post = await this.postRepo.findById(targetId);
       if (!post) {
         throw new HttpException(
-          { code: 'POST_NOT_FOUND', message: 'Post no encontrado', details: { targetId } },
+          {
+            code: 'POST_NOT_FOUND',
+            message: 'Post no encontrado',
+            details: { targetId },
+          },
           HttpStatus.NOT_FOUND,
         );
       }
@@ -32,7 +40,11 @@ export class ToggleReactionUseCase {
       const comment = await this.commentRepo.findById(targetId);
       if (!comment) {
         throw new HttpException(
-          { code: 'COMMENT_NOT_FOUND', message: 'Comentario no encontrado', details: { targetId } },
+          {
+            code: 'COMMENT_NOT_FOUND',
+            message: 'Comentario no encontrado',
+            details: { targetId },
+          },
           HttpStatus.NOT_FOUND,
         );
       }
@@ -40,7 +52,11 @@ export class ToggleReactionUseCase {
     }
 
     // Verificar si el usuario ya reaccionó
-    const existing = await this.reactionRepo.findOne(userId, targetId, targetType);
+    const existing = await this.reactionRepo.findOne(
+      userId,
+      targetId,
+      targetType,
+    );
 
     if (existing) {
       // Deshacer reacción
@@ -65,8 +81,9 @@ export class ToggleReactionUseCase {
 
       // Notificación al autor del target (fire-and-forget, sin auto-notificación)
       if (targetAuthorId && targetAuthorId !== userId) {
-        const notificationType = targetType === 'post' ? 'POST_REACTION' : 'COMMENT_REACTION';
-        
+        const notificationType =
+          targetType === 'post' ? 'POST_REACTION' : 'COMMENT_REACTION';
+
         this.notificationRepo
           .create({
             userId: targetAuthorId,
@@ -84,4 +101,3 @@ export class ToggleReactionUseCase {
     }
   }
 }
-

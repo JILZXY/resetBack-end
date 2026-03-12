@@ -7,7 +7,8 @@ import { CommentEntity } from '../../domain/comment.entity';
 @Injectable()
 export class CommentRepository {
   constructor(
-    @InjectModel(Comment.name) private readonly commentModel: Model<CommentDocument>,
+    @InjectModel(Comment.name)
+    private readonly commentModel: Model<CommentDocument>,
   ) {}
 
   async create(data: {
@@ -36,27 +37,31 @@ export class CommentRepository {
   }
 
   async findById(id: string): Promise<CommentEntity | null> {
-    const comment = await this.commentModel.findOne({ _id: id, isDeleted: false }).exec();
+    const comment = await this.commentModel
+      .findOne({ _id: id, isDeleted: false })
+      .exec();
     return comment ? this.toEntity(comment) : null;
   }
 
   async softDelete(id: string): Promise<void> {
-    await this.commentModel.findByIdAndUpdate(id, { $set: { isDeleted: true } }).exec();
+    await this.commentModel
+      .findByIdAndUpdate(id, { $set: { isDeleted: true } })
+      .exec();
   }
 
   async softDeleteByPostId(postId: string): Promise<void> {
     await this.commentModel
-      .updateMany(
-        { postId: postId },
-        { $set: { isDeleted: true } },
-      )
+      .updateMany({ postId: postId }, { $set: { isDeleted: true } })
       .exec();
   }
 
-  async update(id: string, data: Partial<{
-    content: string;
-    isEdited: boolean;
-  }>): Promise<CommentEntity | null> {
+  async update(
+    id: string,
+    data: Partial<{
+      content: string;
+      isEdited: boolean;
+    }>,
+  ): Promise<CommentEntity | null> {
     const comment = await this.commentModel
       .findByIdAndUpdate(id, { $set: data }, { new: true })
       .exec();

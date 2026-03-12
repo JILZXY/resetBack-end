@@ -21,7 +21,11 @@ export class CreateCommentUseCase {
 
     if (!post) {
       throw new HttpException(
-        { code: 'POST_NOT_FOUND', message: 'Post no encontrado', details: { postId } },
+        {
+          code: 'POST_NOT_FOUND',
+          message: 'Post no encontrado',
+          details: { postId },
+        },
         HttpStatus.NOT_FOUND,
       );
     }
@@ -57,7 +61,9 @@ export class CreateCommentUseCase {
     }
 
     // Notificaciones (fire-and-forget)
-    this.emitNotification(userId, postId, post.authorId, parentComment).catch(() => {});
+    this.emitNotification(userId, postId, post.authorId, parentComment).catch(
+      () => {},
+    );
 
     return comment;
   }
@@ -77,7 +83,10 @@ export class CreateCommentUseCase {
           type: 'REPLY',
           targetId: postId,
         });
-        this.notificationGateway.sendToUser(parentComment.authorId, notification);
+        this.notificationGateway.sendToUser(
+          parentComment.authorId,
+          notification,
+        );
       }
     } else {
       // Comentario directo en un post -> notificar al autor del post

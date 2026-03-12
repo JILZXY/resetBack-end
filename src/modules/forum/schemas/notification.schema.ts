@@ -13,7 +13,10 @@ export enum NotificationType {
   SPONSORSHIP_REJECTED = 'SPONSORSHIP_REJECTED',
 }
 
-@Schema({ collection: 'notifications', timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' } })
+@Schema({
+  collection: 'notifications',
+  timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' },
+})
 export class Notification {
   @Prop({ required: true })
   userId: string;

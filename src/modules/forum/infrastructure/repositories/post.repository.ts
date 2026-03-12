@@ -6,7 +6,9 @@ import { PostEntity } from '../../domain/post.entity';
 
 @Injectable()
 export class PostRepository {
-  constructor(@InjectModel(Post.name) private readonly postModel: Model<PostDocument>) {}
+  constructor(
+    @InjectModel(Post.name) private readonly postModel: Model<PostDocument>,
+  ) {}
 
   async create(data: {
     authorId: string;
@@ -27,7 +29,11 @@ export class PostRepository {
     return this.toEntity(post);
   }
 
-  async findAll(page: number, limit: number, tag?: string): Promise<PostEntity[]> {
+  async findAll(
+    page: number,
+    limit: number,
+    tag?: string,
+  ): Promise<PostEntity[]> {
     const filter: any = { isDeleted: false };
     if (tag) filter.tags = tag;
     const posts = await this.postModel
@@ -40,7 +46,9 @@ export class PostRepository {
   }
 
   async findById(id: string): Promise<PostEntity | null> {
-    const post = await this.postModel.findOne({ _id: id, isDeleted: false }).exec();
+    const post = await this.postModel
+      .findOne({ _id: id, isDeleted: false })
+      .exec();
     return post ? this.toEntity(post) : null;
   }
 
@@ -52,14 +60,17 @@ export class PostRepository {
     return posts.map((p) => this.toEntity(p));
   }
 
-  async update(id: string, data: Partial<{
-    title: string;
-    content: string;
-    tags: string[];
-    images: string[];
-    isDeleted: boolean;
-    isEdited: boolean;
-  }>): Promise<PostEntity | null> {
+  async update(
+    id: string,
+    data: Partial<{
+      title: string;
+      content: string;
+      tags: string[];
+      images: string[];
+      isDeleted: boolean;
+      isEdited: boolean;
+    }>,
+  ): Promise<PostEntity | null> {
     const post = await this.postModel
       .findByIdAndUpdate(id, { $set: data }, { new: true })
       .exec();
@@ -67,7 +78,9 @@ export class PostRepository {
   }
 
   async softDelete(id: string): Promise<void> {
-    await this.postModel.findByIdAndUpdate(id, { $set: { isDeleted: true } }).exec();
+    await this.postModel
+      .findByIdAndUpdate(id, { $set: { isDeleted: true } })
+      .exec();
   }
 
   async incrementReaction(id: string): Promise<PostEntity | null> {
@@ -85,7 +98,9 @@ export class PostRepository {
   }
 
   async incrementCommentCount(id: string): Promise<void> {
-    await this.postModel.findByIdAndUpdate(id, { $inc: { commentCount: 1 } }).exec();
+    await this.postModel
+      .findByIdAndUpdate(id, { $inc: { commentCount: 1 } })
+      .exec();
   }
 
   async decrementCommentCount(id: string): Promise<void> {

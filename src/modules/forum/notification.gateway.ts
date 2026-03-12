@@ -37,7 +37,8 @@ export class NotificationGateway
 
       const secret =
         this.configService.get<string>('JWT_SECRET') ||
-        this.configService.get<string>('jwt.secret') || '';
+        this.configService.get<string>('jwt.secret') ||
+        '';
 
       const payload = this.jwtService.verify(token, { secret });
 
@@ -46,7 +47,9 @@ export class NotificationGateway
       client.join(room);
       client.data.userId = payload.sub;
 
-      console.log(`[WS] Usuario ${payload.sub} conectado al namespace /notifications`);
+      console.log(
+        `[WS] Usuario ${payload.sub} conectado al namespace /notifications`,
+      );
     } catch {
       client.disconnect();
     }

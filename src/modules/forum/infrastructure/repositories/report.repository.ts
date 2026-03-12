@@ -7,7 +7,8 @@ import { ReportEntity } from '../../domain/report.entity';
 @Injectable()
 export class ReportRepository {
   constructor(
-    @InjectModel(Report.name) private readonly reportModel: Model<ReportDocument>,
+    @InjectModel(Report.name)
+    private readonly reportModel: Model<ReportDocument>,
   ) {}
 
   async create(data: {

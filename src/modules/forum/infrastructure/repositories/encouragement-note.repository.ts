@@ -1,7 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { EncouragementNote, EncouragementNoteDocument } from '../../schemas/encouragement-note.schema';
+import {
+  EncouragementNote,
+  EncouragementNoteDocument,
+} from '../../schemas/encouragement-note.schema';
 import { EncouragementNoteEntity } from '../../domain/encouragement-note.entity';
 
 @Injectable()
@@ -20,7 +23,9 @@ export class EncouragementNoteRepository {
     return this.toEntity(created);
   }
 
-  async findByReceiverId(receiverId: string): Promise<EncouragementNoteEntity[]> {
+  async findByReceiverId(
+    receiverId: string,
+  ): Promise<EncouragementNoteEntity[]> {
     const notes = await this.noteModel
       .find({ receiverId })
       .sort({ createdAt: -1 })
