@@ -13,7 +13,7 @@ export class TriggerAlertUseCase {
     private readonly prisma: PrismaService,
   ) {}
 
-  async execute(userId: string, dto: TriggerAlertDto) {
+  async execute(userId: string, dto: TriggerAlertDto = {}) {
     // 1. Delegar validaciones y creación de alerta a la función de DB
     let alertId: string;
     try {
