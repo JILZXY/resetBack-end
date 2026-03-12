@@ -9,14 +9,28 @@ import {
   Request,
   UsePipes,
   ValidationPipe,
-  Body,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { TriggerAlertUseCase } from './application/trigger-alert.usecase';
+import { AddContactUseCase } from './application/add-contact.usecase';
+import { ContactRepository } from './infrastructure/repositories/contact.repository';
+import { AlertRepository } from './infrastructure/repositories/alert.repository';
 import { TriggerAlertDto } from './infrastructure/dtos/trigger-alert.dto';
+import { CreateContactDto } from './infrastructure/dtos/create-contact.dto';
 
 @Controller('emergency')
+@UseGuards(JwtAuthGuard)
 export class EmergencyController {
+  constructor(
+    private readonly triggerAlert: TriggerAlertUseCase,
+    private readonly addContact: AddContactUseCase,
+    private readonly contactRepo: ContactRepository,
+    private readonly alertRepo: AlertRepository,
+  ) {}
+
+  @Post('contacts')
+  @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
+  createContact(@Request() req: any, @Body() dto: CreateContactDto) {
     return this.addContact.execute(req.user.userId, dto);
   }
 
