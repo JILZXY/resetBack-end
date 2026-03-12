@@ -11,7 +11,8 @@ export class CorrelationMetricsUseCase {
   constructor(
     private readonly prisma: PrismaService,
     @InjectModel(Post.name) private readonly postModel: Model<PostDocument>,
-    @InjectModel(Comment.name) private readonly commentModel: Model<CommentDocument>,
+    @InjectModel(Comment.name)
+    private readonly commentModel: Model<CommentDocument>,
   ) {}
 
   async execute(filter: MetricsFilterDto) {
@@ -30,8 +31,12 @@ export class CorrelationMetricsUseCase {
     const allUserIds = allUsersWithLogs.map((u) => u.user_id);
 
     // 2. Identificar usuarios del foro (tienen al menos 1 post o comentario)
-    const postAuthors = await this.postModel.distinct('authorId', { isDeleted: false });
-    const commentAuthors = await this.commentModel.distinct('authorId', { isDeleted: false });
+    const postAuthors = await this.postModel.distinct('authorId', {
+      isDeleted: false,
+    });
+    const commentAuthors = await this.commentModel.distinct('authorId', {
+      isDeleted: false,
+    });
     const forumUserIds = new Set<string>([...postAuthors, ...commentAuthors]);
 
     // 3. Separar en dos grupos
@@ -85,13 +90,29 @@ export class CorrelationMetricsUseCase {
     const logsWithCraving = logs.filter((l) => l.craving_level !== null);
     const logsWithEmotion = logs.filter((l) => l.emotional_state !== null);
 
-    const avgCraving = logsWithCraving.length > 0
-      ? Number((logsWithCraving.reduce((sum, l) => sum + l.craving_level!.level, 0) / logsWithCraving.length).toFixed(2))
-      : null;
+    const avgCraving =
+      logsWithCraving.length > 0
+        ? Number(
+            (
+              logsWithCraving.reduce(
+                (sum, l) => sum + l.craving_level!.level,
+                0,
+              ) / logsWithCraving.length
+            ).toFixed(2),
+          )
+        : null;
 
-    const avgEmotion = logsWithEmotion.length > 0
-      ? Number((logsWithEmotion.reduce((sum, l) => sum + l.emotional_state!.level, 0) / logsWithEmotion.length).toFixed(2))
-      : null;
+    const avgEmotion =
+      logsWithEmotion.length > 0
+        ? Number(
+            (
+              logsWithEmotion.reduce(
+                (sum, l) => sum + l.emotional_state!.level,
+                0,
+              ) / logsWithEmotion.length
+            ).toFixed(2),
+          )
+        : null;
 
     // Promedio de días de racha
     const streaks = await this.prisma.streak.findMany({
@@ -99,18 +120,28 @@ export class CorrelationMetricsUseCase {
       select: { day_counter: true },
     });
 
-    const avgStreakDays = streaks.length > 0
-      ? Number((streaks.reduce((sum, s) => sum + s.day_counter, 0) / streaks.length).toFixed(2))
-      : 0;
+    const avgStreakDays =
+      streaks.length > 0
+        ? Number(
+            (
+              streaks.reduce((sum, s) => sum + s.day_counter, 0) /
+              streaks.length
+            ).toFixed(2),
+          )
+        : 0;
 
     return {
-      avgLogsPerUser: userIds.length > 0 ? Number((totalLogs / userIds.length).toFixed(2)) : 0,
+      avgLogsPerUser:
+        userIds.length > 0
+          ? Number((totalLogs / userIds.length).toFixed(2))
+          : 0,
       avgCraving,
       avgEmotion,
       avgStreakDays,
-      relapseRate: totalLogs > 0
-        ? Number(((consumedLogs / totalLogs) * 100).toFixed(2))
-        : 0,
+      relapseRate:
+        totalLogs > 0
+          ? Number(((consumedLogs / totalLogs) * 100).toFixed(2))
+          : 0,
     };
   }
 }

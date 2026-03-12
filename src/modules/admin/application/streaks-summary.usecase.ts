@@ -51,9 +51,10 @@ export class StreaksSummaryUseCase {
     }
 
     // Tasa de recaída
-    const relapseRate = totalStreaks > 0
-      ? Number(((brokenStreaks / totalStreaks) * 100).toFixed(2))
-      : 0;
+    const relapseRate =
+      totalStreaks > 0
+        ? Number(((brokenStreaks / totalStreaks) * 100).toFixed(2))
+        : 0;
 
     return {
       summary: {

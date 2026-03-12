@@ -230,7 +230,7 @@ export type SupportContact = z.infer<typeof SupportContactSchema>
 /////////////////////////////////////////
 
 export const EmergencyAlertSchema = z.object({
-  id: z.uuid(),
+  id: z.string(),
   user_id: z.string(),
   user_addiction_id: z.string(),
   activated_at: z.coerce.date(),
@@ -1450,10 +1450,10 @@ export const EmergencyAlertOrderByWithRelationInputSchema: z.ZodType<Prisma.Emer
 });
 
 export const EmergencyAlertWhereUniqueInputSchema: z.ZodType<Prisma.EmergencyAlertWhereUniqueInput> = z.object({
-  id: z.uuid(),
+  id: z.string(),
 })
 .and(z.strictObject({
-  id: z.uuid().optional(),
+  id: z.string().optional(),
   AND: z.union([ z.lazy(() => EmergencyAlertWhereInputSchema), z.lazy(() => EmergencyAlertWhereInputSchema).array() ]).optional(),
   OR: z.lazy(() => EmergencyAlertWhereInputSchema).array().optional(),
   NOT: z.union([ z.lazy(() => EmergencyAlertWhereInputSchema), z.lazy(() => EmergencyAlertWhereInputSchema).array() ]).optional(),
@@ -2328,7 +2328,7 @@ export const SupportContactUncheckedUpdateManyInputSchema: z.ZodType<Prisma.Supp
 });
 
 export const EmergencyAlertCreateInputSchema: z.ZodType<Prisma.EmergencyAlertCreateInput> = z.strictObject({
-  id: z.uuid().optional(),
+  id: z.string().optional(),
   activated_at: z.coerce.date().optional(),
   resulted_in_relapse: z.boolean().optional(),
   resolution_notes: z.string().optional(),
@@ -2338,7 +2338,7 @@ export const EmergencyAlertCreateInputSchema: z.ZodType<Prisma.EmergencyAlertCre
 });
 
 export const EmergencyAlertUncheckedCreateInputSchema: z.ZodType<Prisma.EmergencyAlertUncheckedCreateInput> = z.strictObject({
-  id: z.uuid().optional(),
+  id: z.string().optional(),
   user_id: z.string(),
   user_addiction_id: z.string(),
   activated_at: z.coerce.date().optional(),
@@ -2348,7 +2348,7 @@ export const EmergencyAlertUncheckedCreateInputSchema: z.ZodType<Prisma.Emergenc
 });
 
 export const EmergencyAlertUpdateInputSchema: z.ZodType<Prisma.EmergencyAlertUpdateInput> = z.strictObject({
-  id: z.union([ z.uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   activated_at: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   resulted_in_relapse: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   resolution_notes: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
@@ -2358,7 +2358,7 @@ export const EmergencyAlertUpdateInputSchema: z.ZodType<Prisma.EmergencyAlertUpd
 });
 
 export const EmergencyAlertUncheckedUpdateInputSchema: z.ZodType<Prisma.EmergencyAlertUncheckedUpdateInput> = z.strictObject({
-  id: z.union([ z.uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   user_id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   user_addiction_id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   activated_at: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -2368,7 +2368,7 @@ export const EmergencyAlertUncheckedUpdateInputSchema: z.ZodType<Prisma.Emergenc
 });
 
 export const EmergencyAlertCreateManyInputSchema: z.ZodType<Prisma.EmergencyAlertCreateManyInput> = z.strictObject({
-  id: z.uuid().optional(),
+  id: z.string().optional(),
   user_id: z.string(),
   user_addiction_id: z.string(),
   activated_at: z.coerce.date().optional(),
@@ -2378,7 +2378,7 @@ export const EmergencyAlertCreateManyInputSchema: z.ZodType<Prisma.EmergencyAler
 });
 
 export const EmergencyAlertUpdateManyMutationInputSchema: z.ZodType<Prisma.EmergencyAlertUpdateManyMutationInput> = z.strictObject({
-  id: z.union([ z.uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   activated_at: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   resulted_in_relapse: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   resolution_notes: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
@@ -2386,7 +2386,7 @@ export const EmergencyAlertUpdateManyMutationInputSchema: z.ZodType<Prisma.Emerg
 });
 
 export const EmergencyAlertUncheckedUpdateManyInputSchema: z.ZodType<Prisma.EmergencyAlertUncheckedUpdateManyInput> = z.strictObject({
-  id: z.union([ z.uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   user_id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   user_addiction_id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   activated_at: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
@@ -4442,7 +4442,7 @@ export const SupportContactCreateManyUserInputEnvelopeSchema: z.ZodType<Prisma.S
 });
 
 export const EmergencyAlertCreateWithoutUserInputSchema: z.ZodType<Prisma.EmergencyAlertCreateWithoutUserInput> = z.strictObject({
-  id: z.uuid().optional(),
+  id: z.string().optional(),
   activated_at: z.coerce.date().optional(),
   resulted_in_relapse: z.boolean().optional(),
   resolution_notes: z.string().optional(),
@@ -4451,7 +4451,7 @@ export const EmergencyAlertCreateWithoutUserInputSchema: z.ZodType<Prisma.Emerge
 });
 
 export const EmergencyAlertUncheckedCreateWithoutUserInputSchema: z.ZodType<Prisma.EmergencyAlertUncheckedCreateWithoutUserInput> = z.strictObject({
-  id: z.uuid().optional(),
+  id: z.string().optional(),
   user_addiction_id: z.string(),
   activated_at: z.coerce.date().optional(),
   resulted_in_relapse: z.boolean().optional(),
@@ -4931,7 +4931,7 @@ export const StreakCreateManyAddictionInputEnvelopeSchema: z.ZodType<Prisma.Stre
 });
 
 export const EmergencyAlertCreateWithoutAddictionInputSchema: z.ZodType<Prisma.EmergencyAlertCreateWithoutAddictionInput> = z.strictObject({
-  id: z.uuid().optional(),
+  id: z.string().optional(),
   activated_at: z.coerce.date().optional(),
   resulted_in_relapse: z.boolean().optional(),
   resolution_notes: z.string().optional(),
@@ -4940,7 +4940,7 @@ export const EmergencyAlertCreateWithoutAddictionInputSchema: z.ZodType<Prisma.E
 });
 
 export const EmergencyAlertUncheckedCreateWithoutAddictionInputSchema: z.ZodType<Prisma.EmergencyAlertUncheckedCreateWithoutAddictionInput> = z.strictObject({
-  id: z.uuid().optional(),
+  id: z.string().optional(),
   user_id: z.string(),
   activated_at: z.coerce.date().optional(),
   resulted_in_relapse: z.boolean().optional(),
@@ -6188,7 +6188,7 @@ export const SupportContactCreateManyUserInputSchema: z.ZodType<Prisma.SupportCo
 });
 
 export const EmergencyAlertCreateManyUserInputSchema: z.ZodType<Prisma.EmergencyAlertCreateManyUserInput> = z.strictObject({
-  id: z.uuid().optional(),
+  id: z.string().optional(),
   user_addiction_id: z.string(),
   activated_at: z.coerce.date().optional(),
   resulted_in_relapse: z.boolean().optional(),
@@ -6380,7 +6380,7 @@ export const SupportContactUncheckedUpdateManyWithoutUserInputSchema: z.ZodType<
 });
 
 export const EmergencyAlertUpdateWithoutUserInputSchema: z.ZodType<Prisma.EmergencyAlertUpdateWithoutUserInput> = z.strictObject({
-  id: z.union([ z.uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   activated_at: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   resulted_in_relapse: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   resolution_notes: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
@@ -6389,7 +6389,7 @@ export const EmergencyAlertUpdateWithoutUserInputSchema: z.ZodType<Prisma.Emerge
 });
 
 export const EmergencyAlertUncheckedUpdateWithoutUserInputSchema: z.ZodType<Prisma.EmergencyAlertUncheckedUpdateWithoutUserInput> = z.strictObject({
-  id: z.union([ z.uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   user_addiction_id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   activated_at: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   resulted_in_relapse: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
@@ -6398,7 +6398,7 @@ export const EmergencyAlertUncheckedUpdateWithoutUserInputSchema: z.ZodType<Pris
 });
 
 export const EmergencyAlertUncheckedUpdateManyWithoutUserInputSchema: z.ZodType<Prisma.EmergencyAlertUncheckedUpdateManyWithoutUserInput> = z.strictObject({
-  id: z.union([ z.uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   user_addiction_id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   activated_at: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   resulted_in_relapse: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
@@ -6567,7 +6567,7 @@ export const StreakCreateManyAddictionInputSchema: z.ZodType<Prisma.StreakCreate
 });
 
 export const EmergencyAlertCreateManyAddictionInputSchema: z.ZodType<Prisma.EmergencyAlertCreateManyAddictionInput> = z.strictObject({
-  id: z.uuid().optional(),
+  id: z.string().optional(),
   user_id: z.string(),
   activated_at: z.coerce.date().optional(),
   resulted_in_relapse: z.boolean().optional(),
@@ -6608,7 +6608,7 @@ export const StreakUncheckedUpdateManyWithoutAddictionInputSchema: z.ZodType<Pri
 });
 
 export const EmergencyAlertUpdateWithoutAddictionInputSchema: z.ZodType<Prisma.EmergencyAlertUpdateWithoutAddictionInput> = z.strictObject({
-  id: z.union([ z.uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   activated_at: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   resulted_in_relapse: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
   resolution_notes: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
@@ -6617,7 +6617,7 @@ export const EmergencyAlertUpdateWithoutAddictionInputSchema: z.ZodType<Prisma.E
 });
 
 export const EmergencyAlertUncheckedUpdateWithoutAddictionInputSchema: z.ZodType<Prisma.EmergencyAlertUncheckedUpdateWithoutAddictionInput> = z.strictObject({
-  id: z.union([ z.uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   user_id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   activated_at: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   resulted_in_relapse: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),
@@ -6626,7 +6626,7 @@ export const EmergencyAlertUncheckedUpdateWithoutAddictionInputSchema: z.ZodType
 });
 
 export const EmergencyAlertUncheckedUpdateManyWithoutAddictionInputSchema: z.ZodType<Prisma.EmergencyAlertUncheckedUpdateManyWithoutAddictionInput> = z.strictObject({
-  id: z.union([ z.uuid(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
+  id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   user_id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   activated_at: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   resulted_in_relapse: z.union([ z.boolean(),z.lazy(() => BoolFieldUpdateOperationsInputSchema) ]).optional(),

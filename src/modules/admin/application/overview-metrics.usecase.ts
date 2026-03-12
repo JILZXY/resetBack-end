@@ -4,25 +4,31 @@ import { Model } from 'mongoose';
 import { PrismaService } from 'src/shared/database/prisma/prisma.service';
 import { Post, PostDocument } from '../../forum/schemas/post.schema';
 import { Comment, CommentDocument } from '../../forum/schemas/comment.schema';
-import { Reaction, ReactionDocument } from '../../forum/schemas/reaction.schema';
+import {
+  Reaction,
+  ReactionDocument,
+} from '../../forum/schemas/reaction.schema';
 
 @Injectable()
 export class OverviewMetricsUseCase {
   constructor(
     private readonly prisma: PrismaService,
     @InjectModel(Post.name) private readonly postModel: Model<PostDocument>,
-    @InjectModel(Comment.name) private readonly commentModel: Model<CommentDocument>,
-    @InjectModel(Reaction.name) private readonly reactionModel: Model<ReactionDocument>,
+    @InjectModel(Comment.name)
+    private readonly commentModel: Model<CommentDocument>,
+    @InjectModel(Reaction.name)
+    private readonly reactionModel: Model<ReactionDocument>,
   ) {}
 
   async execute() {
     // PostgreSQL metrics via Prisma
-    const [totalUsers, totalLogs, totalStreaks, activeStreaks] = await Promise.all([
-      this.prisma.user.count(),
-      this.prisma.dailyLog.count(),
-      this.prisma.streak.count(),
-      this.prisma.streak.count({ where: { status: 'active' } }),
-    ]);
+    const [totalUsers, totalLogs, totalStreaks, activeStreaks] =
+      await Promise.all([
+        this.prisma.user.count(),
+        this.prisma.dailyLog.count(),
+        this.prisma.streak.count(),
+        this.prisma.streak.count({ where: { status: 'active' } }),
+      ]);
 
     // MongoDB metrics via Mongoose
     const [totalPosts, totalComments, totalReactions] = await Promise.all([

@@ -58,9 +58,13 @@ export class LogsByAddictionUseCase {
         classification,
         totalUsers: ids.length,
         totalLogs,
-        avgLogsPerUser: ids.length > 0 ? Number((totalLogs / ids.length).toFixed(2)) : 0,
+        avgLogsPerUser:
+          ids.length > 0 ? Number((totalLogs / ids.length).toFixed(2)) : 0,
         consumedLogs,
-        relapseRate: totalLogs > 0 ? Number(((consumedLogs / totalLogs) * 100).toFixed(2)) : 0,
+        relapseRate:
+          totalLogs > 0
+            ? Number(((consumedLogs / totalLogs) * 100).toFixed(2))
+            : 0,
         activeLoggers: uniqueLoggers.length,
       });
     }
@@ -77,7 +81,8 @@ export class LogsByAddictionUseCase {
         addictionName: name,
         totalUsers: ids.length,
         totalLogs,
-        avgLogsPerUser: ids.length > 0 ? Number((totalLogs / ids.length).toFixed(2)) : 0,
+        avgLogsPerUser:
+          ids.length > 0 ? Number((totalLogs / ids.length).toFixed(2)) : 0,
       });
     }
 
