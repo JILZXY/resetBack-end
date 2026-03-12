@@ -13,6 +13,7 @@ import { ForgotPasswordUseCase } from './application/forgot-password.usecase';
 import { ResetPasswordUseCase } from './application/reset-password.usecase';
 import { VerifyEmailUseCase } from './application/verify-email.usecase';
 import { DeleteAccountUseCase } from './application/delete-account.usecase';
+import { Verify2FAUseCase } from './application/verify-2fa.usecase';
 import { PasswordResetTokenRepository } from './infrastructure/repositories/password-reset-token.repository';
 import { VerificationTokenRepository } from './infrastructure/repositories/verification-token.repository';
 import { TrustedDeviceRepository } from './infrastructure/repositories/trusted-device.repository';
@@ -42,6 +43,7 @@ import { TrustedDeviceRepository } from './infrastructure/repositories/trusted-d
     ResetPasswordUseCase,
     VerifyEmailUseCase,
     DeleteAccountUseCase,
+    Verify2FAUseCase,
     PasswordResetTokenRepository,
     VerificationTokenRepository,
     TrustedDeviceRepository,

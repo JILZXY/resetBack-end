@@ -2,6 +2,8 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserRepository } from '../infrastructure/repositories/user.repository';
 import { TrustedDeviceRepository } from '../infrastructure/repositories/trusted-device.repository';
+import { VerificationTokenRepository } from '../infrastructure/repositories/verification-token.repository';
+import { MailService } from 'src/shared/mail/mail.service';
 import { LoginDto } from '../infrastructure/dtos/login.dto';
 import * as bcrypt from 'bcrypt';
 import * as crypto from 'crypto';
@@ -12,6 +14,8 @@ export class LoginUseCase {
     private readonly userRepo: UserRepository,
     private readonly jwtService: JwtService,
     private readonly trustedDeviceRepo: TrustedDeviceRepository,
+    private readonly tokenRepo: VerificationTokenRepository,
+    private readonly mailService: MailService,
   ) {}
 
   async execute(dto: LoginDto, deviceIdFromCookie?: string) {
@@ -51,16 +55,6 @@ export class LoginUseCase {
         HttpStatus.FORBIDDEN,
       );
     }
-    if (!passwordMatch) {
-      throw new HttpException(
-        {
-          code: 'INVALID_CREDENTIALS',
-          message: 'Correo o contraseña incorrectos',
-          details: {},
-        },
-        HttpStatus.UNAUTHORIZED,
-      );
-    }
 
     // LÓGICA DE 2FA / TRUSTED DEVICE
     if (deviceIdFromCookie) {
@@ -71,18 +65,31 @@ export class LoginUseCase {
       }
     }
 
-    // Por ahora, permitimos el login pero marcamos que el 2FA podría ser necesario
-    // En una implementación completa, aquí lanzaríamos un error indicando 2FA_REQUIRED
-    const response = this.generateTokenResponse(user);
+    // El dispositivo NO es de confianza o no se proporcionó cookie
+    // Generar código 2FA de 6 dígitos
+    const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
+    const expiresAt = new Date();
+    expiresAt.setMinutes(expiresAt.getMinutes() + 10); // Expira en 10 min
 
-    // Si pidió recordar y NO tenía un dispositivo válido, generamos uno nuevo
-    if (dto.rememberMe) {
-        const newDeviceId = crypto.randomBytes(32).toString('hex');
-        await this.trustedDeviceRepo.create(user.id, newDeviceId, 'Dispositivo de confianza');
-        return { ...response, newDeviceId };
-    }
+    await this.tokenRepo.create(user.id, otpCode, expiresAt);
+    await this.mailService.send2FACode(user.email, otpCode);
 
-    return response;
+    // Generar un token temporal de MFA que expire rápido (p.ej. 15 min)
+    // Este token servirá para validar el paso 2 sin enviar el password de nuevo
+    const mfaToken = this.jwtService.sign(
+      { 
+        sub: user.id, 
+        type: 'mfa_challenge', 
+        rememberMe: dto.rememberMe 
+      },
+      { expiresIn: '15m' }
+    );
+
+    return {
+      code: '2FA_REQUIRED',
+      message: 'Se ha enviado un código de seguridad a tu correo electrónico',
+      mfaToken,
+    };
   }
 
   private generateTokenResponse(user: any) {
