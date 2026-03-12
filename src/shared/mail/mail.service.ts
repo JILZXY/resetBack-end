@@ -219,6 +219,22 @@ export class MailService {
     return this.sendEmail(to, subject, this.getBaseTemplate('Recuperación', content));
   }
 
+  async send2FACode(to: string, code: string) {
+    const subject = 'Tu código de seguridad ReSet';
+    const content = `
+      <h2>Código de Verificación</h2>
+      <p>Has intentado iniciar sesión desde un nuevo dispositivo o necesitas confirmar tu identidad.</p>
+      <div style="text-align: center; margin: 30px 0;">
+        <div style="display: inline-block; padding: 20px 40px; background-color: #f8fafc; border: 2px dashed #cbd5e1; border-radius: 8px;">
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 32px; font-weight: 700; color: #0d9488; letter-spacing: 0.2em;">${code}</span>
+        </div>
+      </div>
+      <p>Este código expirará en <strong>10 minutos</strong>.</p>
+      <p style="font-size: 14px; color: #64748b;">Si no intentaste iniciar sesión, te recomendamos cambiar tu contraseña de inmediato.</p>
+    `;
+    return this.sendEmail(to, subject, this.getBaseTemplate('Seguridad', content));
+  }
+
   async sendFarewellEmail(to: string, userName: string) {
     const subject = 'Cuenta eliminada correctamente - ReSet';
     const content = `
