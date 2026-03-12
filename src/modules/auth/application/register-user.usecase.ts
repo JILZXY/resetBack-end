@@ -1,11 +1,18 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { UserRepository } from '../infrastructure/repositories/user.repository';
 import { RegisterDto } from '../infrastructure/dtos/register.dto';
+import { VerificationTokenRepository } from '../infrastructure/repositories/verification-token.repository';
+import { MailService } from 'src/shared/mail/mail.service';
 import * as bcrypt from 'bcrypt';
+import * as crypto from 'crypto';
 
 @Injectable()
 export class RegisterUserUseCase {
-  constructor(private readonly userRepo: UserRepository) {}
+  constructor(
+    private readonly userRepo: UserRepository,
+    private readonly tokenRepo: VerificationTokenRepository,
+    private readonly mailService: MailService,
+  ) {}
 
   async execute(dto: RegisterDto) {
     const existing = await this.userRepo.findByEmail(dto.email);
@@ -27,10 +34,18 @@ export class RegisterUserUseCase {
       name: dto.name,
       email: dto.email,
       passwordHash,
-      role: dto.role,
-      addictionName: dto.addictionName,
       classification: dto.classification,
     });
+
+    // GENERAR TOKEN DE VERIFICACIÓN
+    const token = crypto.randomBytes(32).toString('hex');
+    const expiresAt = new Date();
+    expiresAt.setHours(expiresAt.getHours() + 24); // Expira en 24 horas
+
+    await this.tokenRepo.create(user.id, token, expiresAt);
+    
+    // ENVIAR COREO DE VERIFICACIÓN VIA BREVO
+    await this.mailService.sendVerificationEmail(user.email, token);
 
     return {
       id: user.id,
