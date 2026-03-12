@@ -28,7 +28,8 @@ export class TriggerAlertUseCase {
         throw new HttpException(
           {
             code: 'NO_CONTACTS_FOUND',
-            message: 'No tienes contactos de apoyo activos. Agrega al menos uno antes de activar una alerta',
+            message:
+              'No tienes contactos de apoyo activos. Agrega al menos uno antes de activar una alerta',
             details: {},
           },
           HttpStatus.NOT_FOUND,
@@ -51,17 +52,32 @@ export class TriggerAlertUseCase {
     const contacts = await this.contactRepo.findAllByUserId(userId);
     const user = await this.prisma.user.findUnique({ where: { id: userId } });
 
-    await Promise.all(
-      contacts
-        .filter((c) => c.email)
-        .map((contact) =>
-          this.notificationService.sendEmergencyAlert(
-            contact.email!,
-            user?.name ?? 'Un usuario',
-            dto.resolution_notes,
+    try {
+      await Promise.all(
+        contacts
+          .filter((c) => c.email)
+          .map((contact) =>
+            this.notificationService.sendEmergencyAlert(
+              contact.email!,
+              user?.name ?? 'Un usuario',
+              dto.resolution_notes,
+            ),
           ),
-        ),
-    );
+      );
+    } catch (notificationError: any) {
+      throw new HttpException(
+        {
+          code: 'NOTIFICATION_FAILURE',
+          message:
+            'La alerta fue registrada pero hubo un error al enviar las notificaciones',
+          details: {
+            alertId,
+            error: notificationError?.message || 'Error desconocido',
+          },
+        },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
 
     return {
       alertId,
