@@ -72,6 +72,7 @@ let RegisterUserUseCase = class RegisterUserUseCase {
             name: dto.name,
             email: dto.email,
             passwordHash,
+            addictionName: dto.addictionName,
             classification: dto.classification,
         });
         const token = crypto.randomBytes(32).toString('hex');

@@ -42,73 +42,52 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.LoginUseCase = void 0;
+exports.Verify2FAUseCase = void 0;
 const common_1 = require("@nestjs/common");
 const jwt_1 = require("@nestjs/jwt");
-const user_repository_1 = require("../infrastructure/repositories/user.repository");
-const trusted_device_repository_1 = require("../infrastructure/repositories/trusted-device.repository");
 const verification_token_repository_1 = require("../infrastructure/repositories/verification-token.repository");
-const mail_service_1 = require("../../../shared/mail/mail.service");
-const bcrypt = __importStar(require("bcrypt"));
-let LoginUseCase = class LoginUseCase {
-    userRepo;
+const trusted_device_repository_1 = require("../infrastructure/repositories/trusted-device.repository");
+const user_repository_1 = require("../infrastructure/repositories/user.repository");
+const crypto = __importStar(require("crypto"));
+let Verify2FAUseCase = class Verify2FAUseCase {
     jwtService;
-    trustedDeviceRepo;
     tokenRepo;
-    mailService;
-    constructor(userRepo, jwtService, trustedDeviceRepo, tokenRepo, mailService) {
-        this.userRepo = userRepo;
+    trustedDeviceRepo;
+    userRepo;
+    constructor(jwtService, tokenRepo, trustedDeviceRepo, userRepo) {
         this.jwtService = jwtService;
-        this.trustedDeviceRepo = trustedDeviceRepo;
         this.tokenRepo = tokenRepo;
-        this.mailService = mailService;
+        this.trustedDeviceRepo = trustedDeviceRepo;
+        this.userRepo = userRepo;
     }
-    async execute(dto, deviceIdFromCookie) {
-        const user = await this.userRepo.findByEmail(dto.email);
+    async execute(dto) {
+        let payload;
+        try {
+            payload = this.jwtService.verify(dto.mfaToken);
+        }
+        catch (e) {
+            throw new common_1.HttpException({ code: 'INVALID_MFA_TOKEN', message: 'El token de desafío ha expirado o es inválido' }, common_1.HttpStatus.UNAUTHORIZED);
+        }
+        if (payload.type !== 'mfa_challenge') {
+            throw new common_1.HttpException({ code: 'INVALID_MFA_TOKEN', message: 'Token de desafío inválido' }, common_1.HttpStatus.UNAUTHORIZED);
+        }
+        const userId = payload.sub;
+        const tokenRecord = await this.tokenRepo.findByToken(dto.code);
+        if (!tokenRecord || tokenRecord.user_id !== userId) {
+            throw new common_1.HttpException({ code: 'INVALID_OTP_CODE', message: 'El código ingresado es incorrecto o ha expirado' }, common_1.HttpStatus.BAD_REQUEST);
+        }
+        const user = await this.userRepo.findById(userId);
         if (!user) {
-            throw new common_1.HttpException({
-                code: 'INVALID_CREDENTIALS',
-                message: 'Correo o contraseña incorrectos',
-                details: {},
-            }, common_1.HttpStatus.UNAUTHORIZED);
+            throw new common_1.HttpException('Usuario no encontrado', common_1.HttpStatus.NOT_FOUND);
         }
-        const passwordMatch = await bcrypt.compare(dto.password, user.passwordHash);
-        if (!passwordMatch) {
-            throw new common_1.HttpException({
-                code: 'INVALID_CREDENTIALS',
-                message: 'Correo o contraseña incorrectos',
-                details: {},
-            }, common_1.HttpStatus.UNAUTHORIZED);
+        await this.tokenRepo.delete(tokenRecord.id);
+        const response = this.generateTokenResponse(user);
+        let newDeviceId;
+        if (payload.rememberMe) {
+            newDeviceId = crypto.randomBytes(32).toString('hex');
+            await this.trustedDeviceRepo.create(user.id, newDeviceId, 'Dispositivo de confianza');
         }
-        if (!user.isVerified) {
-            throw new common_1.HttpException({
-                code: 'EMAIL_NOT_VERIFIED',
-                message: 'Debes verificar tu correo electrónico antes de iniciar sesión',
-                details: { email: user.email },
-            }, common_1.HttpStatus.FORBIDDEN);
-        }
-        if (deviceIdFromCookie) {
-            const isTrusted = await this.trustedDeviceRepo.findValidDevice(user.id, deviceIdFromCookie);
-            if (isTrusted) {
-                await this.trustedDeviceRepo.updateLastUsed(isTrusted.id);
-                return this.generateTokenResponse(user);
-            }
-        }
-        const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
-        const expiresAt = new Date();
-        expiresAt.setMinutes(expiresAt.getMinutes() + 10);
-        await this.tokenRepo.create(user.id, otpCode, expiresAt);
-        await this.mailService.send2FACode(user.email, otpCode);
-        const mfaToken = this.jwtService.sign({
-            sub: user.id,
-            type: 'mfa_challenge',
-            rememberMe: dto.rememberMe
-        }, { expiresIn: '15m' });
-        return {
-            code: '2FA_REQUIRED',
-            message: 'Se ha enviado un código de seguridad a tu correo electrónico',
-            mfaToken,
-        };
+        return { ...response, newDeviceId };
     }
     generateTokenResponse(user) {
         const payload = { sub: user.id, email: user.email, role: user.role };
@@ -125,13 +104,12 @@ let LoginUseCase = class LoginUseCase {
         };
     }
 };
-exports.LoginUseCase = LoginUseCase;
-exports.LoginUseCase = LoginUseCase = __decorate([
+exports.Verify2FAUseCase = Verify2FAUseCase;
+exports.Verify2FAUseCase = Verify2FAUseCase = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [user_repository_1.UserRepository,
-        jwt_1.JwtService,
-        trusted_device_repository_1.TrustedDeviceRepository,
+    __metadata("design:paramtypes", [jwt_1.JwtService,
         verification_token_repository_1.VerificationTokenRepository,
-        mail_service_1.MailService])
-], LoginUseCase);
-//# sourceMappingURL=login.usecase.js.map
+        trusted_device_repository_1.TrustedDeviceRepository,
+        user_repository_1.UserRepository])
+], Verify2FAUseCase);
+//# sourceMappingURL=verify-2fa.usecase.js.map

@@ -68,6 +68,19 @@ export class UserRepository {
       },
     });
 
+    // Si es ADICTO, inicializar su primer Streak
+    if (role === 'ADICTO' && user.addictions?.[0]) {
+      await this.prisma.streak.create({
+        data: {
+          user_id: user.id,
+          user_addiction_id: user.addictions[0].id,
+          started_at: new Date(),
+          day_counter: 0,
+          status: 'active',
+        },
+      });
+    }
+
     // Actualizar avatar_url dinámico basado en el ID generado
     const updatedUser = await this.prisma.user.update({
       where: { id: user.id },

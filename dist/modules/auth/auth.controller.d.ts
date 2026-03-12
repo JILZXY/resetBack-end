@@ -1,8 +1,10 @@
 import type { Response, Request as ExpressRequest } from 'express';
 import { RegisterUserUseCase } from './application/register-user.usecase';
 import { LoginUseCase } from './application/login.usecase';
+import { Verify2FAUseCase } from './application/verify-2fa.usecase';
 import { RegisterDto } from './infrastructure/dtos/register.dto';
 import { LoginDto } from './infrastructure/dtos/login.dto';
+import { Verify2FADto } from './infrastructure/dtos/verify-2fa.dto';
 import { GetProfileUseCase } from './application/get-profile.usecase';
 import { ForgotPasswordUseCase } from './application/forgot-password.usecase';
 import { ResetPasswordUseCase } from './application/reset-password.usecase';
@@ -12,12 +14,13 @@ import { ResetPasswordDto } from './infrastructure/dtos/reset-password.dto';
 export declare class AuthController {
     private readonly registerUseCase;
     private readonly loginUseCase;
+    private readonly verify2FAUseCase;
     private readonly getProfileUseCase;
     private readonly forgotPasswordUseCase;
     private readonly resetPasswordUseCase;
     private readonly verifyEmailUseCase;
     private readonly deleteAccountUseCase;
-    constructor(registerUseCase: RegisterUserUseCase, loginUseCase: LoginUseCase, getProfileUseCase: GetProfileUseCase, forgotPasswordUseCase: ForgotPasswordUseCase, resetPasswordUseCase: ResetPasswordUseCase, verifyEmailUseCase: VerifyEmailUseCase, deleteAccountUseCase: DeleteAccountUseCase);
+    constructor(registerUseCase: RegisterUserUseCase, loginUseCase: LoginUseCase, verify2FAUseCase: Verify2FAUseCase, getProfileUseCase: GetProfileUseCase, forgotPasswordUseCase: ForgotPasswordUseCase, resetPasswordUseCase: ResetPasswordUseCase, verifyEmailUseCase: VerifyEmailUseCase, deleteAccountUseCase: DeleteAccountUseCase);
     register(dto: RegisterDto): Promise<{
         id: string;
         name: string;
@@ -28,6 +31,7 @@ export declare class AuthController {
         createdAt: Date;
     }>;
     login(dto: LoginDto, req: ExpressRequest, res: Response): Promise<any>;
+    verify2FA(dto: Verify2FADto, res: Response): Promise<any>;
     getProfile(req: any): Promise<{
         id: string;
         name: string;
@@ -50,4 +54,5 @@ export declare class AuthController {
     deleteAccount(req: any): Promise<{
         message: string;
     }>;
+    private handleDeviceIdCookie;
 }
