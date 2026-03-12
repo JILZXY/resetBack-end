@@ -177,22 +177,34 @@ let MailService = MailService_1 = class MailService {
       </html>
     `;
     }
+    getPrimaryFrontendUrl() {
+        const urls = this.configService.get('app.frontendUrl') || '';
+        const urlList = urls.split(',').map((u) => u.trim());
+        const isProd = this.configService.get('app.nodeEnv') === 'production';
+        if (isProd) {
+            const prodUrl = urlList.find((u) => u.startsWith('https') && !u.includes('localhost'));
+            return prodUrl || urlList[0] || 'https://reset-app.tech';
+        }
+        return urlList[0] || 'http://localhost:3000';
+    }
     async sendVerificationEmail(to, token) {
         const subject = 'Verifica tu correo electrónico - ReSet';
+        const frontendUrl = this.getPrimaryFrontendUrl();
         const content = `
       <h2>Confirma tu identidad</h2>
       <p>Gracias por iniciar tu proceso en <strong>ReSet</strong>. Para asegurar tu cuenta, por favor utiliza el siguiente enlace de verificación:</p>
       <div class="button-container">
-        <a href="${this.configService.get('FRONTEND_URL')}/verify-email?token=${token}" class="button">Verificar mi Cuenta</a>
+        <a href="${frontendUrl}/verify-email?token=${token}" class="button">Verificar mi Cuenta</a>
       </div>
       <p style="margin-top: 30px;">Si el botón no funciona, copia y pega este enlace en tu navegador:</p>
-      <p style="font-size: 12px; color: #64748b;">${this.configService.get('FRONTEND_URL')}/verify-email?token=${token}</p>
+      <p style="font-size: 12px; color: #64748b;">${frontendUrl}/verify-email?token=${token}</p>
     `;
         return this.sendEmail(to, subject, this.getBaseTemplate('Verificación', content));
     }
     async sendPasswordReset(to, token) {
         const subject = 'Restablecer tu contraseña - ReSet';
-        const resetUrl = `${this.configService.get('FRONTEND_URL')}/reset-password?token=${token}`;
+        const frontendUrl = this.getPrimaryFrontendUrl();
+        const resetUrl = `${frontendUrl}/reset-password?token=${token}`;
         const content = `
       <h2>Recuperación de Acceso</h2>
       <p>Has solicitado restablecer tu contraseña. Entendemos que estos momentos pueden ser difíciles, estamos aquí para facilitarte el camino.</p>

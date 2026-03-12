@@ -169,23 +169,44 @@ export class MailService {
     `;
   }
 
+  /**
+   * Obtiene la URL principal del frontend eliminando duplicados (como localhost en prod)
+   */
+  public getPrimaryFrontendUrl(): string {
+    const urls = this.configService.get<string>('app.frontendUrl') || '';
+    const urlList = urls.split(',').map((u) => u.trim());
+    const isProd = this.configService.get<string>('app.nodeEnv') === 'production';
+
+    if (isProd) {
+      // En producción, preferimos la URL que no sea localhost
+      const prodUrl = urlList.find((u) => u.startsWith('https') && !u.includes('localhost'));
+      return prodUrl || urlList[0] || 'https://reset-app.tech';
+    }
+
+    return urlList[0] || 'http://localhost:3000';
+  }
+
+
+
   async sendVerificationEmail(to: string, token: string) {
     const subject = 'Verifica tu correo electrónico - ReSet';
+    const frontendUrl = this.getPrimaryFrontendUrl();
     const content = `
       <h2>Confirma tu identidad</h2>
       <p>Gracias por iniciar tu proceso en <strong>ReSet</strong>. Para asegurar tu cuenta, por favor utiliza el siguiente enlace de verificación:</p>
       <div class="button-container">
-        <a href="${this.configService.get<string>('FRONTEND_URL')}/verify-email?token=${token}" class="button">Verificar mi Cuenta</a>
+        <a href="${frontendUrl}/verify-email?token=${token}" class="button">Verificar mi Cuenta</a>
       </div>
       <p style="margin-top: 30px;">Si el botón no funciona, copia y pega este enlace en tu navegador:</p>
-      <p style="font-size: 12px; color: #64748b;">${this.configService.get<string>('FRONTEND_URL')}/verify-email?token=${token}</p>
+      <p style="font-size: 12px; color: #64748b;">${frontendUrl}/verify-email?token=${token}</p>
     `;
     return this.sendEmail(to, subject, this.getBaseTemplate('Verificación', content));
   }
 
   async sendPasswordReset(to: string, token: string) {
     const subject = 'Restablecer tu contraseña - ReSet';
-    const resetUrl = `${this.configService.get<string>('FRONTEND_URL')}/reset-password?token=${token}`;
+    const frontendUrl = this.getPrimaryFrontendUrl();
+    const resetUrl = `${frontendUrl}/reset-password?token=${token}`;
     const content = `
       <h2>Recuperación de Acceso</h2>
       <p>Has solicitado restablecer tu contraseña. Entendemos que estos momentos pueden ser difíciles, estamos aquí para facilitarte el camino.</p>
