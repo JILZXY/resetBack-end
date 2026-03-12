@@ -4,18 +4,20 @@ import { IoAdapter } from '@nestjs/platform-socket.io';
 import { AppModule } from './app.module';
 import { GlobalExceptionFilter } from './shared/filters/http-exception.filter';
 import { TransformInterceptor } from './shared/interceptors/transform.interceptor';
+import cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
 
+  app.use(cookieParser());
   app.setGlobalPrefix('api/v1');
   app.useGlobalFilters(new GlobalExceptionFilter());
   app.useGlobalInterceptors(new TransformInterceptor());
 
   const frontendUrls = configService.get<string>('app.frontendUrl');
   const allowedOrigins = frontendUrls
-    ? frontendUrls.split(',').map(url => url.trim())
+    ? frontendUrls.split(',').map((url) => url.trim())
     : [];
 
   app.enableCors({
