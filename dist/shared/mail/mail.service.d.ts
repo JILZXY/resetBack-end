@@ -8,5 +8,6 @@ export declare class MailService {
     getPrimaryFrontendUrl(): string;
     sendVerificationEmail(to: string, token: string): Promise<void>;
     sendPasswordReset(to: string, token: string): Promise<void>;
+    send2FACode(to: string, code: string): Promise<void>;
     sendFarewellEmail(to: string, userName: string): Promise<void>;
 }

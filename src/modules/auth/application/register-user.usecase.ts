@@ -34,6 +34,7 @@ export class RegisterUserUseCase {
       name: dto.name,
       email: dto.email,
       passwordHash,
+      addictionName: dto.addictionName,
       classification: dto.classification,
     });
 

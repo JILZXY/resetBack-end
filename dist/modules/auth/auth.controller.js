@@ -16,8 +16,10 @@ exports.AuthController = void 0;
 const common_1 = require("@nestjs/common");
 const register_user_usecase_1 = require("./application/register-user.usecase");
 const login_usecase_1 = require("./application/login.usecase");
+const verify_2fa_usecase_1 = require("./application/verify-2fa.usecase");
 const register_dto_1 = require("./infrastructure/dtos/register.dto");
 const login_dto_1 = require("./infrastructure/dtos/login.dto");
+const verify_2fa_dto_1 = require("./infrastructure/dtos/verify-2fa.dto");
 const get_profile_usecase_1 = require("./application/get-profile.usecase");
 const forgot_password_usecase_1 = require("./application/forgot-password.usecase");
 const reset_password_usecase_1 = require("./application/reset-password.usecase");
@@ -28,14 +30,16 @@ const jwt_auth_guard_1 = require("./guards/jwt-auth.guard");
 let AuthController = class AuthController {
     registerUseCase;
     loginUseCase;
+    verify2FAUseCase;
     getProfileUseCase;
     forgotPasswordUseCase;
     resetPasswordUseCase;
     verifyEmailUseCase;
     deleteAccountUseCase;
-    constructor(registerUseCase, loginUseCase, getProfileUseCase, forgotPasswordUseCase, resetPasswordUseCase, verifyEmailUseCase, deleteAccountUseCase) {
+    constructor(registerUseCase, loginUseCase, verify2FAUseCase, getProfileUseCase, forgotPasswordUseCase, resetPasswordUseCase, verifyEmailUseCase, deleteAccountUseCase) {
         this.registerUseCase = registerUseCase;
         this.loginUseCase = loginUseCase;
+        this.verify2FAUseCase = verify2FAUseCase;
         this.getProfileUseCase = getProfileUseCase;
         this.forgotPasswordUseCase = forgotPasswordUseCase;
         this.resetPasswordUseCase = resetPasswordUseCase;
@@ -48,15 +52,12 @@ let AuthController = class AuthController {
     async login(dto, req, res) {
         const deviceIdFromCookie = req.cookies['device_id'];
         const result = await this.loginUseCase.execute(dto, deviceIdFromCookie);
-        if (result.newDeviceId) {
-            res.cookie('device_id', result.newDeviceId, {
-                httpOnly: true,
-                secure: true,
-                sameSite: 'strict',
-                maxAge: 30 * 24 * 60 * 60 * 1000,
-            });
-            delete result.newDeviceId;
-        }
+        this.handleDeviceIdCookie(result, res);
+        return result;
+    }
+    async verify2FA(dto, res) {
+        const result = await this.verify2FAUseCase.execute(dto);
+        this.handleDeviceIdCookie(result, res);
         return result;
     }
     getProfile(req) {
@@ -73,6 +74,17 @@ let AuthController = class AuthController {
     }
     deleteAccount(req) {
         return this.deleteAccountUseCase.execute(req.user.userId);
+    }
+    handleDeviceIdCookie(result, res) {
+        if (result && result.newDeviceId) {
+            res.cookie('device_id', result.newDeviceId, {
+                httpOnly: true,
+                secure: true,
+                sameSite: 'strict',
+                maxAge: 30 * 24 * 60 * 60 * 1000,
+            });
+            delete result.newDeviceId;
+        }
     }
 };
 exports.AuthController = AuthController;
@@ -94,6 +106,15 @@ __decorate([
     __metadata("design:paramtypes", [login_dto_1.LoginDto, Object, Object]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "login", null);
+__decorate([
+    (0, common_1.Post)('verify-2fa'),
+    (0, common_1.UsePipes)(new common_1.ValidationPipe({ whitelist: true, forbidNonWhitelisted: true })),
+    __param(0, (0, common_1.Body)()),
+    __param(1, (0, common_1.Res)({ passthrough: true })),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [verify_2fa_dto_1.Verify2FADto, Object]),
+    __metadata("design:returntype", Promise)
+], AuthController.prototype, "verify2FA", null);
 __decorate([
     (0, common_1.Get)('profile'),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
@@ -136,6 +157,7 @@ exports.AuthController = AuthController = __decorate([
     (0, common_1.Controller)('auth'),
     __metadata("design:paramtypes", [register_user_usecase_1.RegisterUserUseCase,
         login_usecase_1.LoginUseCase,
+        verify_2fa_usecase_1.Verify2FAUseCase,
         get_profile_usecase_1.GetProfileUseCase,
         forgot_password_usecase_1.ForgotPasswordUseCase,
         reset_password_usecase_1.ResetPasswordUseCase,
