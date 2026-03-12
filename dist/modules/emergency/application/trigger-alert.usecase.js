@@ -24,7 +24,7 @@ let TriggerAlertUseCase = class TriggerAlertUseCase {
         this.notificationService = notificationService;
         this.prisma = prisma;
     }
-    async execute(userId, dto) {
+    async execute(userId, dto = {}) {
         let alertId;
         try {
             const result = await this.prisma.$queryRaw(client_1.Prisma.sql `SELECT emergency.fn_trigger_alert(${userId}::uuid) AS alert_id`);

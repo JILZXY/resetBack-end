@@ -15,20 +15,20 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.EmergencyController = void 0;
 const common_1 = require("@nestjs/common");
 const jwt_auth_guard_1 = require("../auth/guards/jwt-auth.guard");
-const add_contact_usecase_1 = require("./application/add-contact.usecase");
 const trigger_alert_usecase_1 = require("./application/trigger-alert.usecase");
+const add_contact_usecase_1 = require("./application/add-contact.usecase");
 const contact_repository_1 = require("./infrastructure/repositories/contact.repository");
 const alert_repository_1 = require("./infrastructure/repositories/alert.repository");
-const create_contact_dto_1 = require("./infrastructure/dtos/create-contact.dto");
 const trigger_alert_dto_1 = require("./infrastructure/dtos/trigger-alert.dto");
+const create_contact_dto_1 = require("./infrastructure/dtos/create-contact.dto");
 let EmergencyController = class EmergencyController {
-    addContact;
     triggerAlert;
+    addContact;
     contactRepo;
     alertRepo;
-    constructor(addContact, triggerAlert, contactRepo, alertRepo) {
-        this.addContact = addContact;
+    constructor(triggerAlert, addContact, contactRepo, alertRepo) {
         this.triggerAlert = triggerAlert;
+        this.addContact = addContact;
         this.contactRepo = contactRepo;
         this.alertRepo = alertRepo;
     }
@@ -97,8 +97,8 @@ __decorate([
 exports.EmergencyController = EmergencyController = __decorate([
     (0, common_1.Controller)('emergency'),
     (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
-    __metadata("design:paramtypes", [add_contact_usecase_1.AddContactUseCase,
-        trigger_alert_usecase_1.TriggerAlertUseCase,
+    __metadata("design:paramtypes", [trigger_alert_usecase_1.TriggerAlertUseCase,
+        add_contact_usecase_1.AddContactUseCase,
         contact_repository_1.ContactRepository,
         alert_repository_1.AlertRepository])
 ], EmergencyController);
