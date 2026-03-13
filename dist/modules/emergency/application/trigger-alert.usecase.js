@@ -48,6 +48,20 @@ let TriggerAlertUseCase = class TriggerAlertUseCase {
             }
             throw new common_1.HttpException(msg, common_1.HttpStatus.INTERNAL_SERVER_ERROR);
         }
+        if (dto.resultedInRelapse !== undefined || dto.resolutionNotes) {
+            try {
+                await this.prisma.emergencyAlert.update({
+                    where: { id: alertId },
+                    data: {
+                        resulted_in_relapse: dto.resultedInRelapse,
+                        resolution_notes: dto.resolutionNotes,
+                    },
+                });
+            }
+            catch (updateError) {
+                console.error('Error updating alert notes:', updateError);
+            }
+        }
         const contacts = await this.contactRepo.findAllByUserId(userId);
         const user = await this.prisma.user.findUnique({ where: { id: userId } });
         try {
