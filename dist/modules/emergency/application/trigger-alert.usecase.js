@@ -53,7 +53,7 @@ let TriggerAlertUseCase = class TriggerAlertUseCase {
         try {
             await Promise.all(contacts
                 .filter((c) => c.email)
-                .map((contact) => this.notificationService.sendEmergencyAlert(contact.email, user?.name ?? 'Un usuario', dto.resolution_notes)));
+                .map((contact) => this.notificationService.sendEmergencyAlert(contact.email, user?.name ?? 'Un usuario', dto.resolutionNotes)));
         }
         catch (notificationError) {
             throw new common_1.HttpException({

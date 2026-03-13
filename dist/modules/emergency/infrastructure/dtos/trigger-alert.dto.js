@@ -12,18 +12,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.TriggerAlertDto = void 0;
 const class_validator_1 = require("class-validator");
 class TriggerAlertDto {
-    resulted_in_relapse;
-    resolution_notes;
+    resultedInRelapse;
+    resolutionNotes;
 }
 exports.TriggerAlertDto = TriggerAlertDto;
 __decorate([
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsBoolean)(),
     __metadata("design:type", Boolean)
-], TriggerAlertDto.prototype, "resulted_in_relapse", void 0);
+], TriggerAlertDto.prototype, "resultedInRelapse", void 0);
 __decorate([
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
-], TriggerAlertDto.prototype, "resolution_notes", void 0);
+], TriggerAlertDto.prototype, "resolutionNotes", void 0);
 //# sourceMappingURL=trigger-alert.dto.js.map

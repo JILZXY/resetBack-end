@@ -12,12 +12,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateContactDto = void 0;
 const class_validator_1 = require("class-validator");
 class CreateContactDto {
-    contact_name;
+    contactName;
     phone;
     email;
     relationship;
-    custom_relationship;
-    priority_order;
+    customRelationship;
+    priorityOrder;
 }
 exports.CreateContactDto = CreateContactDto;
 __decorate([
@@ -25,7 +25,7 @@ __decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.MaxLength)(100),
     __metadata("design:type", String)
-], CreateContactDto.prototype, "contact_name", void 0);
+], CreateContactDto.prototype, "contactName", void 0);
 __decorate([
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsString)(),
@@ -47,12 +47,12 @@ __decorate([
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
-], CreateContactDto.prototype, "custom_relationship", void 0);
+], CreateContactDto.prototype, "customRelationship", void 0);
 __decorate([
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsInt)(),
     (0, class_validator_1.Min)(1),
     (0, class_validator_1.Max)(5),
     __metadata("design:type", Number)
-], CreateContactDto.prototype, "priority_order", void 0);
+], CreateContactDto.prototype, "priorityOrder", void 0);
 //# sourceMappingURL=create-contact.dto.js.map

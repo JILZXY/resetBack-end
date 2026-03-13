@@ -35,12 +35,12 @@ export class AddContactUseCase {
     try {
       return await this.contactRepo.create({
         userId,
-        contactName: dto.contact_name,
+        contactName: dto.contactName,
         phone: dto.phone,
         email: dto.email,
         relationship: dto.relationship,
-        customRelationship: dto.custom_relationship,
-        priorityOrder: dto.priority_order,
+        customRelationship: dto.customRelationship,
+        priorityOrder: dto.priorityOrder,
       });
     } catch (error) {
       if (error.code === 'P2002') {
