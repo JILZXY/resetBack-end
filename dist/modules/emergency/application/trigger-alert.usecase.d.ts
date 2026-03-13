@@ -7,7 +7,7 @@ export declare class TriggerAlertUseCase {
     private readonly notificationService;
     private readonly prisma;
     constructor(contactRepo: ContactRepository, notificationService: NotificationService, prisma: PrismaService);
-    execute(userId: string, dto: TriggerAlertDto): Promise<{
+    execute(userId: string, dto?: TriggerAlertDto): Promise<{
         alertId: string;
         notifiedContacts: number;
     }>;
