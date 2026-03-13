@@ -58,6 +58,16 @@ export class NotificationRepository {
       .exec();
   }
 
+  async markAsReadByCriteria(criteria: {
+    userId: string;
+    actorId?: string;
+    type?: string;
+  }): Promise<void> {
+    await this.notificationModel
+      .updateMany(criteria, { $set: { isRead: true } })
+      .exec();
+  }
+
   async markAllAsRead(userId: string): Promise<void> {
     await this.notificationModel
       .updateMany({ userId, isRead: false }, { $set: { isRead: true } })

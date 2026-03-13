@@ -33,6 +33,11 @@ let AcceptSponsorshipUseCase = class AcceptSponsorshipUseCase {
             }, common_1.HttpStatus.NOT_FOUND);
         }
         const sponsorship = await this.sponsorshipRepo.accept(pending.id);
+        await this.notificationRepo.markAsReadByCriteria({
+            userId: userId,
+            actorId: pending.addictId,
+            type: 'SPONSORSHIP_REQUEST',
+        });
         this.notifyAddict(userId, pending.addictId).catch(() => { });
         return {
             message: 'Solicitud de apadrinamiento aceptada exitosamente',

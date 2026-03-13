@@ -87,10 +87,8 @@ let LoginUseCase = class LoginUseCase {
                 details: { email: user.email },
             }, common_1.HttpStatus.FORBIDDEN);
         }
-        console.log('[LoginUseCase] deviceIdFromCookie received:', deviceIdFromCookie);
         if (deviceIdFromCookie) {
             const isTrusted = await this.trustedDeviceRepo.findValidDevice(user.id, deviceIdFromCookie);
-            console.log('[LoginUseCase] isTrusted check result:', !!isTrusted);
             if (isTrusted) {
                 await this.trustedDeviceRepo.updateLastUsed(isTrusted.id);
                 return this.generateTokenResponse(user);

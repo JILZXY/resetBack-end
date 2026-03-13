@@ -52,10 +52,7 @@ export class AuthController {
     @Req() req: ExpressRequest,
     @Res({ passthrough: true }) res: Response,
   ) {
-    console.log('[AuthController] All cookies received:', req.cookies);
     const deviceIdFromCookie = req.cookies['device_id'];
-    console.log('[AuthController] Login attempt - DeviceID from cookie:', deviceIdFromCookie);
-    
     const result: any = await this.loginUseCase.execute(dto, deviceIdFromCookie);
 
     this.handleDeviceIdCookie(result, res);
@@ -71,7 +68,6 @@ export class AuthController {
   ) {
     const result: any = await this.verify2FAUseCase.execute(dto);
 
-    console.log('[AuthController] Verify2FA - Generate newDeviceId:', !!result.newDeviceId);
     this.handleDeviceIdCookie(result, res);
 
     return result;
@@ -107,8 +103,6 @@ export class AuthController {
 
   private handleDeviceIdCookie(result: any, res: Response) {
     if (result && result.newDeviceId) {
-      console.log('[AuthController] Setting device_id cookie:', result.newDeviceId);
-      
       res.cookie('device_id', result.newDeviceId, {
         httpOnly: true,
         secure: true,

@@ -14,5 +14,10 @@ export declare class NotificationRepository {
     markAsRead(id: string): Promise<void>;
     private toEntity;
     countUnread(userId: string): Promise<number>;
+    markAsReadByCriteria(criteria: {
+        userId: string;
+        actorId?: string;
+        type?: string;
+    }): Promise<void>;
     markAllAsRead(userId: string): Promise<void>;
 }

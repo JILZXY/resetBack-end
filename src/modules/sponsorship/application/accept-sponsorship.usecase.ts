@@ -29,6 +29,13 @@ export class AcceptSponsorshipUseCase {
     // Aceptar la solicitud
     const sponsorship = await this.sponsorshipRepo.accept(pending.id);
 
+    // Limpiar notificación de solicitud para el padrino
+    await this.notificationRepo.markAsReadByCriteria({
+      userId: userId,
+      actorId: pending.addictId,
+      type: 'SPONSORSHIP_REQUEST',
+    });
+
     // Notificar al adicto (fire-and-forget)
     this.notifyAddict(userId, pending.addictId).catch(() => {});
 

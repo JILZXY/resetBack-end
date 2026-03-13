@@ -50,16 +50,13 @@ let AuthController = class AuthController {
         return this.registerUseCase.execute(dto);
     }
     async login(dto, req, res) {
-        console.log('[AuthController] All cookies received:', req.cookies);
         const deviceIdFromCookie = req.cookies['device_id'];
-        console.log('[AuthController] Login attempt - DeviceID from cookie:', deviceIdFromCookie);
         const result = await this.loginUseCase.execute(dto, deviceIdFromCookie);
         this.handleDeviceIdCookie(result, res);
         return result;
     }
     async verify2FA(dto, res) {
         const result = await this.verify2FAUseCase.execute(dto);
-        console.log('[AuthController] Verify2FA - Generate newDeviceId:', !!result.newDeviceId);
         this.handleDeviceIdCookie(result, res);
         return result;
     }
@@ -80,7 +77,6 @@ let AuthController = class AuthController {
     }
     handleDeviceIdCookie(result, res) {
         if (result && result.newDeviceId) {
-            console.log('[AuthController] Setting device_id cookie:', result.newDeviceId);
             res.cookie('device_id', result.newDeviceId, {
                 httpOnly: true,
                 secure: true,
