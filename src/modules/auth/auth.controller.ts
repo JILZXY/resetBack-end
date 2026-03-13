@@ -53,6 +53,8 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ) {
     const deviceIdFromCookie = req.cookies['device_id'];
+    console.log('[AuthController] Login attempt - DeviceID from cookie:', deviceIdFromCookie);
+    
     const result: any = await this.loginUseCase.execute(dto, deviceIdFromCookie);
 
     this.handleDeviceIdCookie(result, res);
@@ -68,6 +70,7 @@ export class AuthController {
   ) {
     const result: any = await this.verify2FAUseCase.execute(dto);
 
+    console.log('[AuthController] Verify2FA - Generate newDeviceId:', !!result.newDeviceId);
     this.handleDeviceIdCookie(result, res);
 
     return result;
@@ -103,12 +106,12 @@ export class AuthController {
 
   private handleDeviceIdCookie(result: any, res: Response) {
     if (result && result.newDeviceId) {
-      const isProduction = process.env.NODE_ENV === 'production';
+      console.log('[AuthController] Setting device_id cookie');
       
       res.cookie('device_id', result.newDeviceId, {
         httpOnly: true,
-        secure: isProduction,
-        sameSite: 'lax',
+        secure: true, // Requerido para sameSite: 'none'
+        sameSite: 'none', // Permite cookies entre dominios
         maxAge: 30 * 24 * 60 * 60 * 1000, // 30 días
       });
       delete result.newDeviceId;

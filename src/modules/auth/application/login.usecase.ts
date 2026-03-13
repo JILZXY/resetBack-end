@@ -57,8 +57,10 @@ export class LoginUseCase {
     }
 
     // LÓGICA DE 2FA / TRUSTED DEVICE
+    console.log('[LoginUseCase] deviceIdFromCookie received:', deviceIdFromCookie);
     if (deviceIdFromCookie) {
       const isTrusted = await this.trustedDeviceRepo.findValidDevice(user.id, deviceIdFromCookie);
+      console.log('[LoginUseCase] isTrusted check result:', !!isTrusted);
       if (isTrusted) {
         await this.trustedDeviceRepo.updateLastUsed(isTrusted.id);
         return this.generateTokenResponse(user);
