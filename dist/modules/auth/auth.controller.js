@@ -77,10 +77,11 @@ let AuthController = class AuthController {
     }
     handleDeviceIdCookie(result, res) {
         if (result && result.newDeviceId) {
+            const isProduction = process.env.NODE_ENV === 'production';
             res.cookie('device_id', result.newDeviceId, {
                 httpOnly: true,
-                secure: true,
-                sameSite: 'strict',
+                secure: isProduction,
+                sameSite: 'lax',
                 maxAge: 30 * 24 * 60 * 60 * 1000,
             });
             delete result.newDeviceId;
