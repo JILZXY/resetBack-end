@@ -48,6 +48,22 @@ export class TriggerAlertUseCase {
       throw new HttpException(msg, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    // 1.5. Actualizar la alerta con los datos adicionales del DTO si existen
+    if (dto.resultedInRelapse !== undefined || dto.resolutionNotes) {
+      try {
+        await this.prisma.emergencyAlert.update({
+          where: { id: alertId },
+          data: {
+            resulted_in_relapse: dto.resultedInRelapse,
+            resolution_notes: dto.resolutionNotes,
+          },
+        });
+      } catch (updateError) {
+        // No bloqueamos el flujo principal si falla el guardado de notas
+        console.error('Error updating alert notes:', updateError);
+      }
+    }
+
     // 2. Enviar notificaciones por correo (responsabilidad del backend)
     const contacts = await this.contactRepo.findAllByUserId(userId);
     const user = await this.prisma.user.findUnique({ where: { id: userId } });
