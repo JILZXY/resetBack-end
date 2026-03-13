@@ -52,6 +52,7 @@ export class AuthController {
     @Req() req: ExpressRequest,
     @Res({ passthrough: true }) res: Response,
   ) {
+    console.log('[AuthController] All cookies received:', req.cookies);
     const deviceIdFromCookie = req.cookies['device_id'];
     console.log('[AuthController] Login attempt - DeviceID from cookie:', deviceIdFromCookie);
     
@@ -106,12 +107,13 @@ export class AuthController {
 
   private handleDeviceIdCookie(result: any, res: Response) {
     if (result && result.newDeviceId) {
-      console.log('[AuthController] Setting device_id cookie');
+      console.log('[AuthController] Setting device_id cookie:', result.newDeviceId);
       
       res.cookie('device_id', result.newDeviceId, {
         httpOnly: true,
-        secure: true, // Requerido para sameSite: 'none'
-        sameSite: 'none', // Permite cookies entre dominios
+        secure: true,
+        sameSite: 'none',
+        partitioned: true, // Importante para CHIPS (cookies cross-site modernas)
         maxAge: 30 * 24 * 60 * 60 * 1000, // 30 días
       });
       delete result.newDeviceId;
