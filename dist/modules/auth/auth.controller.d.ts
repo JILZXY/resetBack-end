@@ -41,6 +41,7 @@ export declare class AuthController {
         avatarUrl: string;
         createdAt: Date;
         addiction: any;
+        sponsor: any;
     }>;
     forgotPassword(email: string): Promise<{
         message: string;

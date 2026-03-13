@@ -33,6 +33,11 @@ let RejectSponsorshipUseCase = class RejectSponsorshipUseCase {
             }, common_1.HttpStatus.NOT_FOUND);
         }
         await this.sponsorshipRepo.reject(pending.id);
+        await this.notificationRepo.markAsReadByCriteria({
+            userId: userId,
+            actorId: pending.addictId,
+            type: 'SPONSORSHIP_REQUEST',
+        });
         this.notifyAddict(userId, pending.addictId).catch(() => { });
         return { message: 'Solicitud de apadrinamiento rechazada' };
     }

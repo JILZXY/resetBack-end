@@ -57,6 +57,11 @@ let NotificationRepository = class NotificationRepository {
             .countDocuments({ userId, isRead: false })
             .exec();
     }
+    async markAsReadByCriteria(criteria) {
+        await this.notificationModel
+            .updateMany(criteria, { $set: { isRead: true } })
+            .exec();
+    }
     async markAllAsRead(userId) {
         await this.notificationModel
             .updateMany({ userId, isRead: false }, { $set: { isRead: true } })
