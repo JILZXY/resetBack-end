@@ -90,16 +90,19 @@ export class RequestSponsorshipUseCase {
     sponsorEmail: string,
   ) {
     // Notificación in-app
+    const actor = await this.userRepo.findById(actorId);
+
     const notification = await this.notificationRepo.create({
       userId: sponsorId,
-      actorId,
+      actorId: actorId,
+      actorName: actor?.name,
+      actorAvatarUrl: actor?.avatarUrl,
       type: 'SPONSORSHIP_REQUEST',
       targetId: sponsorId,
     });
     this.notificationGateway.sendToUser(sponsorId, notification);
 
     // Notificación por email
-    const actor = await this.userRepo.findById(actorId);
     await this.emailService.sendEmergencyAlert(
       sponsorEmail,
       actor?.name ?? 'Un usuario',

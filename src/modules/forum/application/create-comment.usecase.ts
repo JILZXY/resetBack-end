@@ -74,12 +74,16 @@ export class CreateCommentUseCase {
     postAuthorId: string,
     parentComment: any,
   ) {
+    const actor = await this.prisma.user.findUnique({ where: { id: actorId } });
+
     if (parentComment) {
       // Respuesta a un comentario -> notificar al autor del comentario padre
       if (parentComment.authorId && parentComment.authorId !== actorId) {
         const notification = await this.notificationRepo.create({
           userId: parentComment.authorId,
           actorId,
+          actorName: actor?.name,
+          actorAvatarUrl: (actor as any)?.avatar_url,
           type: 'REPLY',
           targetId: postId,
         });
@@ -94,6 +98,8 @@ export class CreateCommentUseCase {
         const notification = await this.notificationRepo.create({
           userId: postAuthorId,
           actorId,
+          actorName: actor?.name,
+          actorAvatarUrl: (actor as any)?.avatar_url,
           type: 'COMMENT',
           targetId: postId,
         });

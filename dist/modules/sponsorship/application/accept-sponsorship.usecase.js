@@ -14,14 +14,17 @@ const common_1 = require("@nestjs/common");
 const sponsorship_repository_1 = require("../infrastructure/repositories/sponsorship.repository");
 const notification_repository_1 = require("../../forum/infrastructure/repositories/notification.repository");
 const notification_gateway_1 = require("../../forum/notification.gateway");
+const user_repository_1 = require("../../auth/infrastructure/repositories/user.repository");
 let AcceptSponsorshipUseCase = class AcceptSponsorshipUseCase {
     sponsorshipRepo;
     notificationRepo;
     notificationGateway;
-    constructor(sponsorshipRepo, notificationRepo, notificationGateway) {
+    userRepo;
+    constructor(sponsorshipRepo, notificationRepo, notificationGateway, userRepo) {
         this.sponsorshipRepo = sponsorshipRepo;
         this.notificationRepo = notificationRepo;
         this.notificationGateway = notificationGateway;
+        this.userRepo = userRepo;
     }
     async execute(userId) {
         const pending = await this.sponsorshipRepo.findPendingBySponsorId(userId);
@@ -45,9 +48,12 @@ let AcceptSponsorshipUseCase = class AcceptSponsorshipUseCase {
         };
     }
     async notifyAddict(sponsorId, addictId) {
+        const actor = await this.userRepo.findById(sponsorId);
         const notification = await this.notificationRepo.create({
             userId: addictId,
             actorId: sponsorId,
+            actorName: actor?.name,
+            actorAvatarUrl: actor?.avatarUrl,
             type: 'SPONSORSHIP_ACCEPTED',
             targetId: addictId,
         });
@@ -59,6 +65,7 @@ exports.AcceptSponsorshipUseCase = AcceptSponsorshipUseCase = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [sponsorship_repository_1.SponsorshipRepository,
         notification_repository_1.NotificationRepository,
-        notification_gateway_1.NotificationGateway])
+        notification_gateway_1.NotificationGateway,
+        user_repository_1.UserRepository])
 ], AcceptSponsorshipUseCase);
 //# sourceMappingURL=accept-sponsorship.usecase.js.map

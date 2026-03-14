@@ -9,6 +9,8 @@ export declare class NotificationRepository {
         actorId: string;
         type: string;
         targetId: string;
+        actorName?: string;
+        actorAvatarUrl?: string;
     }): Promise<NotificationEntity>;
     findByUserId(userId: string): Promise<NotificationEntity[]>;
     markAsRead(id: string): Promise<void>;
