@@ -14,6 +14,8 @@ export declare class Notification {
     actorId: string;
     type: NotificationType;
     targetId: string;
+    actorName?: string;
+    actorAvatarUrl?: string;
     isRead: boolean;
 }
 export declare const NotificationSchema: import("mongoose").Schema<Notification, import("mongoose").Model<Notification, any, any, any, (import("mongoose").Document<unknown, any, Notification, any, import("mongoose").DefaultSchemaOptions> & Notification & {
@@ -63,6 +65,24 @@ export declare const NotificationSchema: import("mongoose").Schema<Notification,
         id: string;
     }> | undefined;
     targetId?: import("mongoose").SchemaDefinitionProperty<string, Notification, import("mongoose").Document<unknown, {}, Notification, {
+        id: string;
+    }, import("mongoose").DefaultSchemaOptions> & Omit<Notification & {
+        _id: import("mongoose").Types.ObjectId;
+    } & {
+        __v: number;
+    }, "id"> & {
+        id: string;
+    }> | undefined;
+    actorName?: import("mongoose").SchemaDefinitionProperty<string | undefined, Notification, import("mongoose").Document<unknown, {}, Notification, {
+        id: string;
+    }, import("mongoose").DefaultSchemaOptions> & Omit<Notification & {
+        _id: import("mongoose").Types.ObjectId;
+    } & {
+        __v: number;
+    }, "id"> & {
+        id: string;
+    }> | undefined;
+    actorAvatarUrl?: import("mongoose").SchemaDefinitionProperty<string | undefined, Notification, import("mongoose").Document<unknown, {}, Notification, {
         id: string;
     }, import("mongoose").DefaultSchemaOptions> & Omit<Notification & {
         _id: import("mongoose").Types.ObjectId;

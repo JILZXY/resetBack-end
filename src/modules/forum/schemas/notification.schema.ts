@@ -30,6 +30,12 @@ export class Notification {
   @Prop({ required: true })
   targetId: string;
 
+  @Prop({ required: false })
+  actorName?: string;
+
+  @Prop({ required: false })
+  actorAvatarUrl?: string;
+
   @Prop({ default: false })
   isRead: boolean;
 }

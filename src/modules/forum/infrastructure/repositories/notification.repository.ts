@@ -19,6 +19,8 @@ export class NotificationRepository {
     actorId: string;
     type: string;
     targetId: string;
+    actorName?: string;
+    actorAvatarUrl?: string;
   }): Promise<NotificationEntity> {
     const notification = await this.notificationModel.create(data);
     return this.toEntity(notification);
@@ -47,6 +49,8 @@ export class NotificationRepository {
     entity.actorId = raw.actorId;
     entity.type = raw.type;
     entity.targetId = raw.targetId;
+    entity.actorName = (raw as any).actorName;
+    entity.actorAvatarUrl = (raw as any).actorAvatarUrl;
     entity.isRead = raw.isRead;
     entity.createdAt = (raw as any).createdAt;
     return entity;

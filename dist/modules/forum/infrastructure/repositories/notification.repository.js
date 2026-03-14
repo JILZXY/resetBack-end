@@ -48,6 +48,8 @@ let NotificationRepository = class NotificationRepository {
         entity.actorId = raw.actorId;
         entity.type = raw.type;
         entity.targetId = raw.targetId;
+        entity.actorName = raw.actorName;
+        entity.actorAvatarUrl = raw.actorAvatarUrl;
         entity.isRead = raw.isRead;
         entity.createdAt = raw.createdAt;
         return entity;

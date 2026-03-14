@@ -26,6 +26,8 @@ let Notification = class Notification {
     actorId;
     type;
     targetId;
+    actorName;
+    actorAvatarUrl;
     isRead;
 };
 exports.Notification = Notification;
@@ -45,6 +47,14 @@ __decorate([
     (0, mongoose_1.Prop)({ required: true }),
     __metadata("design:type", String)
 ], Notification.prototype, "targetId", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ required: false }),
+    __metadata("design:type", String)
+], Notification.prototype, "actorName", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ required: false }),
+    __metadata("design:type", String)
+], Notification.prototype, "actorAvatarUrl", void 0);
 __decorate([
     (0, mongoose_1.Prop)({ default: false }),
     __metadata("design:type", Boolean)

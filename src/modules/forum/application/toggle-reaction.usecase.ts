@@ -5,6 +5,8 @@ import { CommentRepository } from '../infrastructure/repositories/comment.reposi
 import { NotificationRepository } from '../infrastructure/repositories/notification.repository';
 import { NotificationGateway } from '../notification.gateway';
 
+import { PrismaService } from 'src/shared/database/prisma/prisma.service';
+
 @Injectable()
 export class ToggleReactionUseCase {
   constructor(
@@ -13,6 +15,7 @@ export class ToggleReactionUseCase {
     private readonly commentRepo: CommentRepository,
     private readonly notificationRepo: NotificationRepository,
     private readonly notificationGateway: NotificationGateway,
+    private readonly prisma: PrismaService,
   ) {}
 
   async execute(
@@ -81,14 +84,15 @@ export class ToggleReactionUseCase {
 
       // Notificación al autor del target (fire-and-forget, sin auto-notificación)
       if (targetAuthorId && targetAuthorId !== userId) {
-        const notificationType =
-          targetType === 'post' ? 'POST_REACTION' : 'COMMENT_REACTION';
+        const actor = await this.prisma.user.findUnique({ where: { id: userId } });
 
         this.notificationRepo
           .create({
             userId: targetAuthorId,
             actorId: userId,
-            type: notificationType,
+            actorName: actor?.name,
+            actorAvatarUrl: (actor as any)?.avatar_url,
+            type: 'REACTION',
             targetId,
           })
           .then((notification) => {

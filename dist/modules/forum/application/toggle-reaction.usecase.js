@@ -16,18 +16,21 @@ const post_repository_1 = require("../infrastructure/repositories/post.repositor
 const comment_repository_1 = require("../infrastructure/repositories/comment.repository");
 const notification_repository_1 = require("../infrastructure/repositories/notification.repository");
 const notification_gateway_1 = require("../notification.gateway");
+const prisma_service_1 = require("../../../shared/database/prisma/prisma.service");
 let ToggleReactionUseCase = class ToggleReactionUseCase {
     reactionRepo;
     postRepo;
     commentRepo;
     notificationRepo;
     notificationGateway;
-    constructor(reactionRepo, postRepo, commentRepo, notificationRepo, notificationGateway) {
+    prisma;
+    constructor(reactionRepo, postRepo, commentRepo, notificationRepo, notificationGateway, prisma) {
         this.reactionRepo = reactionRepo;
         this.postRepo = postRepo;
         this.commentRepo = commentRepo;
         this.notificationRepo = notificationRepo;
         this.notificationGateway = notificationGateway;
+        this.prisma = prisma;
     }
     async execute(userId, targetId, targetType) {
         let targetAuthorId;
@@ -73,12 +76,14 @@ let ToggleReactionUseCase = class ToggleReactionUseCase {
                 await this.commentRepo.incrementReaction(targetId);
             }
             if (targetAuthorId && targetAuthorId !== userId) {
-                const notificationType = targetType === 'post' ? 'POST_REACTION' : 'COMMENT_REACTION';
+                const actor = await this.prisma.user.findUnique({ where: { id: userId } });
                 this.notificationRepo
                     .create({
                     userId: targetAuthorId,
                     actorId: userId,
-                    type: notificationType,
+                    actorName: actor?.name,
+                    actorAvatarUrl: actor?.avatar_url,
+                    type: 'REACTION',
                     targetId,
                 })
                     .then((notification) => {
@@ -97,6 +102,7 @@ exports.ToggleReactionUseCase = ToggleReactionUseCase = __decorate([
         post_repository_1.PostRepository,
         comment_repository_1.CommentRepository,
         notification_repository_1.NotificationRepository,
-        notification_gateway_1.NotificationGateway])
+        notification_gateway_1.NotificationGateway,
+        prisma_service_1.PrismaService])
 ], ToggleReactionUseCase);
 //# sourceMappingURL=toggle-reaction.usecase.js.map
