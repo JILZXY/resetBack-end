@@ -26,10 +26,10 @@ let AddContactUseCase = class AddContactUseCase {
                 details: { current_count: count, max_allowed: 5 },
             }, common_1.HttpStatus.CONFLICT);
         }
-        if (!dto.phone && !dto.email) {
+        if (!dto.email) {
             throw new common_1.HttpException({
-                code: 'CONTACT_MISSING_REACH',
-                message: 'El contacto debe tener al menos un teléfono o correo electrónico',
+                code: 'CONTACT_MISSING_EMAIL',
+                message: 'El contacto debe tener un correo electrónico',
                 details: {},
             }, common_1.HttpStatus.BAD_REQUEST);
         }
@@ -37,7 +37,6 @@ let AddContactUseCase = class AddContactUseCase {
             return await this.contactRepo.create({
                 userId,
                 contactName: dto.contactName,
-                phone: dto.phone,
                 email: dto.email,
                 relationship: dto.relationship,
                 customRelationship: dto.customRelationship,

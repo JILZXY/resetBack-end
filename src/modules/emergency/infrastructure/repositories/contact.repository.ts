@@ -30,7 +30,6 @@ export class ContactRepository {
   async create(data: {
     userId: string;
     contactName: string;
-    phone?: string;
     email?: string;
     relationship?: string;
     customRelationship?: string;
@@ -40,7 +39,6 @@ export class ContactRepository {
       data: {
         user_id: data.userId,
         contact_name: data.contactName,
-        phone: data.phone ?? undefined,
         email: data.email ?? undefined,
         relationship: data.relationship ?? undefined,
         custom_relationship: data.customRelationship ?? undefined,
@@ -62,7 +60,6 @@ export class ContactRepository {
     entity.id = raw.id;
     entity.userId = raw.user_id;
     entity.contactName = raw.contact_name;
-    entity.phone = raw.phone;
     entity.email = raw.email;
     entity.relationship = raw.relationship;
     entity.customRelationship = raw.custom_relationship;

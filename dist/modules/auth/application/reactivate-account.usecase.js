@@ -52,24 +52,36 @@ let ReactivateAccountUseCase = class ReactivateAccountUseCase {
         this.userRepo = userRepo;
     }
     async execute(dto) {
-        const user = await this.userRepo.findByEmailIncludeDeleted(dto.email);
-        if (!user || !user.isDeleted) {
-            throw new common_1.HttpException({
-                code: 'USER_NOT_FOUND',
-                message: 'Usuario no encontrado o la cuenta ya está activa',
-            }, common_1.HttpStatus.NOT_FOUND);
+        try {
+            const user = await this.userRepo.findByEmailIncludeDeleted(dto.email);
+            if (!user || !user.isDeleted) {
+                throw new common_1.HttpException({
+                    code: 'USER_NOT_FOUND',
+                    message: 'Usuario no encontrado o la cuenta ya está activa',
+                }, common_1.HttpStatus.NOT_FOUND);
+            }
+            const isPasswordValid = await bcrypt.compare(dto.password, user.passwordHash);
+            if (!isPasswordValid) {
+                throw new common_1.HttpException({
+                    code: 'INVALID_CREDENTIALS',
+                    message: 'Contraseña incorrecta',
+                }, common_1.HttpStatus.UNAUTHORIZED);
+            }
+            await this.userRepo.reactivate(user.id);
+            return {
+                message: 'Cuenta reactivada correctamente. Ahora puedes iniciar sesión.',
+            };
         }
-        const isPasswordValid = await bcrypt.compare(dto.password, user.passwordHash);
-        if (!isPasswordValid) {
+        catch (error) {
+            if (error instanceof common_1.HttpException)
+                throw error;
+            console.error('Reactivate account error:', error);
             throw new common_1.HttpException({
-                code: 'INVALID_CREDENTIALS',
-                message: 'Contraseña incorrecta',
-            }, common_1.HttpStatus.UNAUTHORIZED);
+                code: 'INTERNAL_ERROR',
+                message: 'Error interno al reactivar la cuenta',
+                details: error.message
+            }, common_1.HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        await this.userRepo.reactivate(user.id);
-        return {
-            message: 'Cuenta reactivada correctamente. Ahora puedes iniciar sesión.',
-        };
     }
 };
 exports.ReactivateAccountUseCase = ReactivateAccountUseCase;
