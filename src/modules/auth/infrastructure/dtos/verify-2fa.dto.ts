@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, Length } from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsOptional, IsString, Length } from 'class-validator';
 
 export class Verify2FADto {
   @IsNotEmpty()
@@ -9,4 +9,8 @@ export class Verify2FADto {
   @IsString()
   @Length(6, 6, { message: 'El código debe tener 6 dígitos' })
   code: string;
+
+  @IsOptional()
+  @IsBoolean()
+  rememberMe?: boolean;
 }

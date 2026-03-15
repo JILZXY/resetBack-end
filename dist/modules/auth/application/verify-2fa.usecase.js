@@ -83,7 +83,7 @@ let Verify2FAUseCase = class Verify2FAUseCase {
         await this.tokenRepo.delete(tokenRecord.id);
         const response = this.generateTokenResponse(user);
         let newDeviceId;
-        if (payload.rememberMe) {
+        if (payload.rememberMe || dto.rememberMe) {
             newDeviceId = crypto.randomBytes(32).toString('hex');
             await this.trustedDeviceRepo.create(user.id, newDeviceId, 'Dispositivo de confianza');
         }

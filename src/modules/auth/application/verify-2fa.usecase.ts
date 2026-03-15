@@ -54,9 +54,9 @@ export class Verify2FAUseCase {
 
     const response = this.generateTokenResponse(user);
 
-    // Si marcó "recordar dispositivo", generar uno nuevo
+    // Si marcó "recordar dispositivo" (en el login inicial o en esta pantalla), generar uno nuevo
     let newDeviceId: string | undefined;
-    if (payload.rememberMe) {
+    if (payload.rememberMe || dto.rememberMe) {
       newDeviceId = crypto.randomBytes(32).toString('hex');
       await this.trustedDeviceRepo.create(user.id, newDeviceId, 'Dispositivo de confianza');
     }
