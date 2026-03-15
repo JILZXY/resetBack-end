@@ -48,6 +48,8 @@ let NotificationRepository = class NotificationRepository {
         entity.actorId = raw.actorId;
         entity.type = raw.type;
         entity.targetId = raw.targetId;
+        entity.actorName = raw.actorName;
+        entity.actorAvatarUrl = raw.actorAvatarUrl;
         entity.isRead = raw.isRead;
         entity.createdAt = raw.createdAt;
         return entity;
@@ -55,6 +57,11 @@ let NotificationRepository = class NotificationRepository {
     async countUnread(userId) {
         return this.notificationModel
             .countDocuments({ userId, isRead: false })
+            .exec();
+    }
+    async markAsReadByCriteria(criteria) {
+        await this.notificationModel
+            .updateMany(criteria, { $set: { isRead: true } })
             .exec();
     }
     async markAllAsRead(userId) {

@@ -1,7 +1,9 @@
 import { UserRepository } from '../infrastructure/repositories/user.repository';
+import { PrismaService } from 'src/shared/database/prisma/prisma.service';
 export declare class GetProfileUseCase {
     private readonly userRepo;
-    constructor(userRepo: UserRepository);
+    private readonly prisma;
+    constructor(userRepo: UserRepository, prisma: PrismaService);
     execute(userId: string): Promise<{
         id: string;
         name: string;
@@ -11,5 +13,6 @@ export declare class GetProfileUseCase {
         avatarUrl: string;
         createdAt: Date;
         addiction: any;
+        sponsor: any;
     }>;
 }

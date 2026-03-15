@@ -5,6 +5,8 @@ export declare class NotificationEntity {
     actorId: string;
     type: string;
     targetId: string;
+    actorName?: string;
+    actorAvatarUrl?: string;
     isRead: boolean;
     createdAt: Date;
 }

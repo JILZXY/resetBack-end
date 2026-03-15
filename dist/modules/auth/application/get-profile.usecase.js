@@ -12,15 +12,45 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.GetProfileUseCase = void 0;
 const common_1 = require("@nestjs/common");
 const user_repository_1 = require("../infrastructure/repositories/user.repository");
+const prisma_service_1 = require("../../../shared/database/prisma/prisma.service");
 let GetProfileUseCase = class GetProfileUseCase {
     userRepo;
-    constructor(userRepo) {
+    prisma;
+    constructor(userRepo, prisma) {
         this.userRepo = userRepo;
+        this.prisma = prisma;
     }
     async execute(userId) {
         const user = await this.userRepo.findById(userId);
         if (!user) {
             throw new common_1.HttpException('Usuario no encontrado', common_1.HttpStatus.NOT_FOUND);
+        }
+        let sponsor = null;
+        if (user.role === 'ADICTO') {
+            const sponsorship = await this.prisma.sponsorship.findFirst({
+                where: {
+                    addict_id: userId,
+                    status: 'ACTIVE',
+                },
+                include: {
+                    sponsor: {
+                        select: {
+                            id: true,
+                            name: true,
+                            email: true,
+                            avatar_url: true,
+                        },
+                    },
+                },
+            });
+            if (sponsorship?.sponsor) {
+                sponsor = {
+                    id: sponsorship.sponsor.id,
+                    name: sponsorship.sponsor.name,
+                    email: sponsorship.sponsor.email,
+                    avatarUrl: sponsorship.sponsor.avatar_url,
+                };
+            }
         }
         return {
             id: user.id,
@@ -31,12 +61,14 @@ let GetProfileUseCase = class GetProfileUseCase {
             avatarUrl: user.avatarUrl,
             createdAt: user.createdAt,
             addiction: user.addictions?.[0] ?? null,
+            sponsor,
         };
     }
 };
 exports.GetProfileUseCase = GetProfileUseCase;
 exports.GetProfileUseCase = GetProfileUseCase = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [user_repository_1.UserRepository])
+    __metadata("design:paramtypes", [user_repository_1.UserRepository,
+        prisma_service_1.PrismaService])
 ], GetProfileUseCase);
 //# sourceMappingURL=get-profile.usecase.js.map
