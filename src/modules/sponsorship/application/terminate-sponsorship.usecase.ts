@@ -27,10 +27,10 @@ export class TerminateSponsorshipUseCase {
       );
     }
 
-    // El padrino o el ahijado pueden dar por terminada la relación
-    if (sponsorship.sponsorId !== userId && sponsorship.addictId !== userId) {
+    // Solo el ahijado puede dar por terminada la relación de apadrinamiento libremente
+    if (sponsorship.addictId !== userId) {
       throw new HttpException(
-        'No tienes permisos para terminar esta relación',
+        'Solo el ahijado puede terminar esta relación de apadrinamiento',
         HttpStatus.FORBIDDEN,
       );
     }
