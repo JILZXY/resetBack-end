@@ -43,16 +43,29 @@ let BecomeAddictUseCase = class BecomeAddictUseCase {
                     },
                 });
             }
-            const addiction = await tx.userAddiction.create({
-                data: {
+            const addiction = await tx.userAddiction.upsert({
+                where: { user_id: userId },
+                update: {
+                    custom_name: dto.addictionName,
+                    classification: dto.classification ?? '',
+                    is_active: true,
+                },
+                create: {
                     user_id: userId,
                     custom_name: dto.addictionName,
                     classification: dto.classification ?? '',
                     is_active: true,
                 },
             });
-            await tx.streak.create({
-                data: {
+            await tx.streak.upsert({
+                where: { user_id: userId },
+                update: {
+                    user_addiction_id: addiction.id,
+                    started_at: new Date(),
+                    day_counter: 0,
+                    status: 'active',
+                },
+                create: {
                     user_id: userId,
                     user_addiction_id: addiction.id,
                     started_at: new Date(),

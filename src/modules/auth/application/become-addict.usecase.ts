@@ -38,9 +38,15 @@ export class BecomeAddictUseCase {
         });
       }
 
-      // 2. Crear su registro de adicción
-      const addiction = await tx.userAddiction.create({
-        data: {
+      // 2. Crear o actualizar su registro de adicción (evita error de duplicado si ya existía antes de ser padrino)
+      const addiction = await tx.userAddiction.upsert({
+        where: { user_id: userId },
+        update: {
+          custom_name: dto.addictionName,
+          classification: dto.classification ?? '',
+          is_active: true,
+        },
+        create: {
           user_id: userId,
           custom_name: dto.addictionName,
           classification: dto.classification ?? '',
@@ -48,9 +54,16 @@ export class BecomeAddictUseCase {
         },
       });
 
-      // 3. Inicializar su streak
-      await tx.streak.create({
-        data: {
+      // 3. Inicializar o resetear su racha
+      await tx.streak.upsert({
+        where: { user_id: userId }, // Streak tiene @unique en user_id
+        update: {
+          user_addiction_id: addiction.id,
+          started_at: new Date(),
+          day_counter: 0,
+          status: 'active',
+        },
+        create: {
           user_id: userId,
           user_addiction_id: addiction.id,
           started_at: new Date(),

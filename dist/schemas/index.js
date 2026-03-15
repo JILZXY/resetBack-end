@@ -50,7 +50,7 @@ exports.SponsorshipScalarFieldEnumSchema = zod_1.z.enum(['id', 'sponsor_id', 'ad
 exports.DailyLogScalarFieldEnumSchema = zod_1.z.enum(['id', 'user_id', 'log_date', 'consumed', 'craving_level_id', 'emotional_state_id', 'triggers', 'notes', 'created_at']);
 exports.StreakEventScalarFieldEnumSchema = zod_1.z.enum(['id', 'streak_id', 'emergency_alert_id', 'event_type', 'event_date', 'days_achieved', 'avg_craving_period', 'avg_emotion_period', 'created_at']);
 exports.LogAbsenceScalarFieldEnumSchema = zod_1.z.enum(['id', 'user_id', 'streak_id', 'last_log_date', 'detected_at', 'absence_hours', 'event_generated', 'streak_event_id']);
-exports.SupportContactScalarFieldEnumSchema = zod_1.z.enum(['id', 'user_id', 'contact_name', 'phone', 'email', 'relationship', 'custom_relationship', 'is_active', 'priority_order', 'created_at', 'updated_at']);
+exports.SupportContactScalarFieldEnumSchema = zod_1.z.enum(['id', 'user_id', 'contact_name', 'email', 'relationship', 'custom_relationship', 'is_active', 'priority_order', 'created_at', 'updated_at']);
 exports.EmergencyAlertScalarFieldEnumSchema = zod_1.z.enum(['id', 'user_id', 'user_addiction_id', 'activated_at', 'resulted_in_relapse', 'resolution_notes', 'created_at']);
 exports.StreakScalarFieldEnumSchema = zod_1.z.enum(['id', 'user_id', 'user_addiction_id', 'status', 'started_at', 'day_counter', 'last_log_date', 'updated_at']);
 exports.SortOrderSchema = zod_1.z.enum(['asc', 'desc']);
@@ -165,7 +165,6 @@ exports.SupportContactSchema = zod_1.z.object({
     id: zod_1.z.string(),
     user_id: zod_1.z.string(),
     contact_name: zod_1.z.string(),
-    phone: zod_1.z.string(),
     email: zod_1.z.string(),
     relationship: zod_1.z.string(),
     custom_relationship: zod_1.z.string(),
@@ -480,7 +479,6 @@ exports.SupportContactSelectSchema = zod_1.z.object({
     id: zod_1.z.boolean().optional(),
     user_id: zod_1.z.boolean().optional(),
     contact_name: zod_1.z.boolean().optional(),
-    phone: zod_1.z.boolean().optional(),
     email: zod_1.z.boolean().optional(),
     relationship: zod_1.z.boolean().optional(),
     custom_relationship: zod_1.z.boolean().optional(),
@@ -1407,7 +1405,6 @@ exports.SupportContactWhereInputSchema = zod_1.z.strictObject({
     id: zod_1.z.union([zod_1.z.lazy(() => exports.UuidFilterSchema), zod_1.z.string()]).optional(),
     user_id: zod_1.z.union([zod_1.z.lazy(() => exports.UuidFilterSchema), zod_1.z.string()]).optional(),
     contact_name: zod_1.z.union([zod_1.z.lazy(() => exports.StringFilterSchema), zod_1.z.string()]).optional(),
-    phone: zod_1.z.union([zod_1.z.lazy(() => exports.StringFilterSchema), zod_1.z.string()]).optional(),
     email: zod_1.z.union([zod_1.z.lazy(() => exports.StringFilterSchema), zod_1.z.string()]).optional(),
     relationship: zod_1.z.union([zod_1.z.lazy(() => exports.StringFilterSchema), zod_1.z.string()]).optional(),
     custom_relationship: zod_1.z.union([zod_1.z.lazy(() => exports.StringFilterSchema), zod_1.z.string()]).optional(),
@@ -1421,7 +1418,6 @@ exports.SupportContactOrderByWithRelationInputSchema = zod_1.z.strictObject({
     id: zod_1.z.lazy(() => exports.SortOrderSchema).optional(),
     user_id: zod_1.z.lazy(() => exports.SortOrderSchema).optional(),
     contact_name: zod_1.z.lazy(() => exports.SortOrderSchema).optional(),
-    phone: zod_1.z.lazy(() => exports.SortOrderSchema).optional(),
     email: zod_1.z.lazy(() => exports.SortOrderSchema).optional(),
     relationship: zod_1.z.lazy(() => exports.SortOrderSchema).optional(),
     custom_relationship: zod_1.z.lazy(() => exports.SortOrderSchema).optional(),
@@ -1451,7 +1447,6 @@ exports.SupportContactWhereUniqueInputSchema = zod_1.z.union([
     NOT: zod_1.z.union([zod_1.z.lazy(() => exports.SupportContactWhereInputSchema), zod_1.z.lazy(() => exports.SupportContactWhereInputSchema).array()]).optional(),
     user_id: zod_1.z.union([zod_1.z.lazy(() => exports.UuidFilterSchema), zod_1.z.string()]).optional(),
     contact_name: zod_1.z.union([zod_1.z.lazy(() => exports.StringFilterSchema), zod_1.z.string()]).optional(),
-    phone: zod_1.z.union([zod_1.z.lazy(() => exports.StringFilterSchema), zod_1.z.string()]).optional(),
     email: zod_1.z.union([zod_1.z.lazy(() => exports.StringFilterSchema), zod_1.z.string()]).optional(),
     relationship: zod_1.z.union([zod_1.z.lazy(() => exports.StringFilterSchema), zod_1.z.string()]).optional(),
     custom_relationship: zod_1.z.union([zod_1.z.lazy(() => exports.StringFilterSchema), zod_1.z.string()]).optional(),
@@ -1465,7 +1460,6 @@ exports.SupportContactOrderByWithAggregationInputSchema = zod_1.z.strictObject({
     id: zod_1.z.lazy(() => exports.SortOrderSchema).optional(),
     user_id: zod_1.z.lazy(() => exports.SortOrderSchema).optional(),
     contact_name: zod_1.z.lazy(() => exports.SortOrderSchema).optional(),
-    phone: zod_1.z.lazy(() => exports.SortOrderSchema).optional(),
     email: zod_1.z.lazy(() => exports.SortOrderSchema).optional(),
     relationship: zod_1.z.lazy(() => exports.SortOrderSchema).optional(),
     custom_relationship: zod_1.z.lazy(() => exports.SortOrderSchema).optional(),
@@ -1486,7 +1480,6 @@ exports.SupportContactScalarWhereWithAggregatesInputSchema = zod_1.z.strictObjec
     id: zod_1.z.union([zod_1.z.lazy(() => exports.UuidWithAggregatesFilterSchema), zod_1.z.string()]).optional(),
     user_id: zod_1.z.union([zod_1.z.lazy(() => exports.UuidWithAggregatesFilterSchema), zod_1.z.string()]).optional(),
     contact_name: zod_1.z.union([zod_1.z.lazy(() => exports.StringWithAggregatesFilterSchema), zod_1.z.string()]).optional(),
-    phone: zod_1.z.union([zod_1.z.lazy(() => exports.StringWithAggregatesFilterSchema), zod_1.z.string()]).optional(),
     email: zod_1.z.union([zod_1.z.lazy(() => exports.StringWithAggregatesFilterSchema), zod_1.z.string()]).optional(),
     relationship: zod_1.z.union([zod_1.z.lazy(() => exports.StringWithAggregatesFilterSchema), zod_1.z.string()]).optional(),
     custom_relationship: zod_1.z.union([zod_1.z.lazy(() => exports.StringWithAggregatesFilterSchema), zod_1.z.string()]).optional(),
@@ -2438,7 +2431,6 @@ exports.LogAbsenceUncheckedUpdateManyInputSchema = zod_1.z.strictObject({
 exports.SupportContactCreateInputSchema = zod_1.z.strictObject({
     id: zod_1.z.string().optional(),
     contact_name: zod_1.z.string(),
-    phone: zod_1.z.string().optional(),
     email: zod_1.z.string().optional(),
     relationship: zod_1.z.string().optional(),
     custom_relationship: zod_1.z.string().optional(),
@@ -2452,7 +2444,6 @@ exports.SupportContactUncheckedCreateInputSchema = zod_1.z.strictObject({
     id: zod_1.z.string().optional(),
     user_id: zod_1.z.string(),
     contact_name: zod_1.z.string(),
-    phone: zod_1.z.string().optional(),
     email: zod_1.z.string().optional(),
     relationship: zod_1.z.string().optional(),
     custom_relationship: zod_1.z.string().optional(),
@@ -2464,7 +2455,6 @@ exports.SupportContactUncheckedCreateInputSchema = zod_1.z.strictObject({
 exports.SupportContactUpdateInputSchema = zod_1.z.strictObject({
     id: zod_1.z.union([zod_1.z.string(), zod_1.z.lazy(() => exports.StringFieldUpdateOperationsInputSchema)]).optional(),
     contact_name: zod_1.z.union([zod_1.z.string(), zod_1.z.lazy(() => exports.StringFieldUpdateOperationsInputSchema)]).optional(),
-    phone: zod_1.z.union([zod_1.z.string(), zod_1.z.lazy(() => exports.StringFieldUpdateOperationsInputSchema)]).optional(),
     email: zod_1.z.union([zod_1.z.string(), zod_1.z.lazy(() => exports.StringFieldUpdateOperationsInputSchema)]).optional(),
     relationship: zod_1.z.union([zod_1.z.string(), zod_1.z.lazy(() => exports.StringFieldUpdateOperationsInputSchema)]).optional(),
     custom_relationship: zod_1.z.union([zod_1.z.string(), zod_1.z.lazy(() => exports.StringFieldUpdateOperationsInputSchema)]).optional(),
@@ -2478,7 +2468,6 @@ exports.SupportContactUncheckedUpdateInputSchema = zod_1.z.strictObject({
     id: zod_1.z.union([zod_1.z.string(), zod_1.z.lazy(() => exports.StringFieldUpdateOperationsInputSchema)]).optional(),
     user_id: zod_1.z.union([zod_1.z.string(), zod_1.z.lazy(() => exports.StringFieldUpdateOperationsInputSchema)]).optional(),
     contact_name: zod_1.z.union([zod_1.z.string(), zod_1.z.lazy(() => exports.StringFieldUpdateOperationsInputSchema)]).optional(),
-    phone: zod_1.z.union([zod_1.z.string(), zod_1.z.lazy(() => exports.StringFieldUpdateOperationsInputSchema)]).optional(),
     email: zod_1.z.union([zod_1.z.string(), zod_1.z.lazy(() => exports.StringFieldUpdateOperationsInputSchema)]).optional(),
     relationship: zod_1.z.union([zod_1.z.string(), zod_1.z.lazy(() => exports.StringFieldUpdateOperationsInputSchema)]).optional(),
     custom_relationship: zod_1.z.union([zod_1.z.string(), zod_1.z.lazy(() => exports.StringFieldUpdateOperationsInputSchema)]).optional(),
@@ -2491,7 +2480,6 @@ exports.SupportContactCreateManyInputSchema = zod_1.z.strictObject({
     id: zod_1.z.string().optional(),
     user_id: zod_1.z.string(),
     contact_name: zod_1.z.string(),
-    phone: zod_1.z.string().optional(),
     email: zod_1.z.string().optional(),
     relationship: zod_1.z.string().optional(),
     custom_relationship: zod_1.z.string().optional(),
@@ -2503,7 +2491,6 @@ exports.SupportContactCreateManyInputSchema = zod_1.z.strictObject({
 exports.SupportContactUpdateManyMutationInputSchema = zod_1.z.strictObject({
     id: zod_1.z.union([zod_1.z.string(), zod_1.z.lazy(() => exports.StringFieldUpdateOperationsInputSchema)]).optional(),
     contact_name: zod_1.z.union([zod_1.z.string(), zod_1.z.lazy(() => exports.StringFieldUpdateOperationsInputSchema)]).optional(),
-    phone: zod_1.z.union([zod_1.z.string(), zod_1.z.lazy(() => exports.StringFieldUpdateOperationsInputSchema)]).optional(),
     email: zod_1.z.union([zod_1.z.string(), zod_1.z.lazy(() => exports.StringFieldUpdateOperationsInputSchema)]).optional(),
     relationship: zod_1.z.union([zod_1.z.string(), zod_1.z.lazy(() => exports.StringFieldUpdateOperationsInputSchema)]).optional(),
     custom_relationship: zod_1.z.union([zod_1.z.string(), zod_1.z.lazy(() => exports.StringFieldUpdateOperationsInputSchema)]).optional(),
@@ -2516,7 +2503,6 @@ exports.SupportContactUncheckedUpdateManyInputSchema = zod_1.z.strictObject({
     id: zod_1.z.union([zod_1.z.string(), zod_1.z.lazy(() => exports.StringFieldUpdateOperationsInputSchema)]).optional(),
     user_id: zod_1.z.union([zod_1.z.string(), zod_1.z.lazy(() => exports.StringFieldUpdateOperationsInputSchema)]).optional(),
     contact_name: zod_1.z.union([zod_1.z.string(), zod_1.z.lazy(() => exports.StringFieldUpdateOperationsInputSchema)]).optional(),
-    phone: zod_1.z.union([zod_1.z.string(), zod_1.z.lazy(() => exports.StringFieldUpdateOperationsInputSchema)]).optional(),
     email: zod_1.z.union([zod_1.z.string(), zod_1.z.lazy(() => exports.StringFieldUpdateOperationsInputSchema)]).optional(),
     relationship: zod_1.z.union([zod_1.z.string(), zod_1.z.lazy(() => exports.StringFieldUpdateOperationsInputSchema)]).optional(),
     custom_relationship: zod_1.z.union([zod_1.z.string(), zod_1.z.lazy(() => exports.StringFieldUpdateOperationsInputSchema)]).optional(),
@@ -3335,7 +3321,6 @@ exports.SupportContactCountOrderByAggregateInputSchema = zod_1.z.strictObject({
     id: zod_1.z.lazy(() => exports.SortOrderSchema).optional(),
     user_id: zod_1.z.lazy(() => exports.SortOrderSchema).optional(),
     contact_name: zod_1.z.lazy(() => exports.SortOrderSchema).optional(),
-    phone: zod_1.z.lazy(() => exports.SortOrderSchema).optional(),
     email: zod_1.z.lazy(() => exports.SortOrderSchema).optional(),
     relationship: zod_1.z.lazy(() => exports.SortOrderSchema).optional(),
     custom_relationship: zod_1.z.lazy(() => exports.SortOrderSchema).optional(),
@@ -3351,7 +3336,6 @@ exports.SupportContactMaxOrderByAggregateInputSchema = zod_1.z.strictObject({
     id: zod_1.z.lazy(() => exports.SortOrderSchema).optional(),
     user_id: zod_1.z.lazy(() => exports.SortOrderSchema).optional(),
     contact_name: zod_1.z.lazy(() => exports.SortOrderSchema).optional(),
-    phone: zod_1.z.lazy(() => exports.SortOrderSchema).optional(),
     email: zod_1.z.lazy(() => exports.SortOrderSchema).optional(),
     relationship: zod_1.z.lazy(() => exports.SortOrderSchema).optional(),
     custom_relationship: zod_1.z.lazy(() => exports.SortOrderSchema).optional(),
@@ -3364,7 +3348,6 @@ exports.SupportContactMinOrderByAggregateInputSchema = zod_1.z.strictObject({
     id: zod_1.z.lazy(() => exports.SortOrderSchema).optional(),
     user_id: zod_1.z.lazy(() => exports.SortOrderSchema).optional(),
     contact_name: zod_1.z.lazy(() => exports.SortOrderSchema).optional(),
-    phone: zod_1.z.lazy(() => exports.SortOrderSchema).optional(),
     email: zod_1.z.lazy(() => exports.SortOrderSchema).optional(),
     relationship: zod_1.z.lazy(() => exports.SortOrderSchema).optional(),
     custom_relationship: zod_1.z.lazy(() => exports.SortOrderSchema).optional(),
@@ -4685,7 +4668,6 @@ exports.SponsorshipCreateManyAddictInputEnvelopeSchema = zod_1.z.strictObject({
 exports.SupportContactCreateWithoutUserInputSchema = zod_1.z.strictObject({
     id: zod_1.z.string().optional(),
     contact_name: zod_1.z.string(),
-    phone: zod_1.z.string().optional(),
     email: zod_1.z.string().optional(),
     relationship: zod_1.z.string().optional(),
     custom_relationship: zod_1.z.string().optional(),
@@ -4697,7 +4679,6 @@ exports.SupportContactCreateWithoutUserInputSchema = zod_1.z.strictObject({
 exports.SupportContactUncheckedCreateWithoutUserInputSchema = zod_1.z.strictObject({
     id: zod_1.z.string().optional(),
     contact_name: zod_1.z.string(),
-    phone: zod_1.z.string().optional(),
     email: zod_1.z.string().optional(),
     relationship: zod_1.z.string().optional(),
     custom_relationship: zod_1.z.string().optional(),
@@ -4967,7 +4948,6 @@ exports.SupportContactScalarWhereInputSchema = zod_1.z.strictObject({
     id: zod_1.z.union([zod_1.z.lazy(() => exports.UuidFilterSchema), zod_1.z.string()]).optional(),
     user_id: zod_1.z.union([zod_1.z.lazy(() => exports.UuidFilterSchema), zod_1.z.string()]).optional(),
     contact_name: zod_1.z.union([zod_1.z.lazy(() => exports.StringFilterSchema), zod_1.z.string()]).optional(),
-    phone: zod_1.z.union([zod_1.z.lazy(() => exports.StringFilterSchema), zod_1.z.string()]).optional(),
     email: zod_1.z.union([zod_1.z.lazy(() => exports.StringFilterSchema), zod_1.z.string()]).optional(),
     relationship: zod_1.z.union([zod_1.z.lazy(() => exports.StringFilterSchema), zod_1.z.string()]).optional(),
     custom_relationship: zod_1.z.union([zod_1.z.lazy(() => exports.StringFilterSchema), zod_1.z.string()]).optional(),
@@ -6960,7 +6940,6 @@ exports.SponsorshipCreateManyAddictInputSchema = zod_1.z.strictObject({
 exports.SupportContactCreateManyUserInputSchema = zod_1.z.strictObject({
     id: zod_1.z.string().optional(),
     contact_name: zod_1.z.string(),
-    phone: zod_1.z.string().optional(),
     email: zod_1.z.string().optional(),
     relationship: zod_1.z.string().optional(),
     custom_relationship: zod_1.z.string().optional(),
@@ -7130,7 +7109,6 @@ exports.SponsorshipUncheckedUpdateManyWithoutAddictInputSchema = zod_1.z.strictO
 exports.SupportContactUpdateWithoutUserInputSchema = zod_1.z.strictObject({
     id: zod_1.z.union([zod_1.z.string(), zod_1.z.lazy(() => exports.StringFieldUpdateOperationsInputSchema)]).optional(),
     contact_name: zod_1.z.union([zod_1.z.string(), zod_1.z.lazy(() => exports.StringFieldUpdateOperationsInputSchema)]).optional(),
-    phone: zod_1.z.union([zod_1.z.string(), zod_1.z.lazy(() => exports.StringFieldUpdateOperationsInputSchema)]).optional(),
     email: zod_1.z.union([zod_1.z.string(), zod_1.z.lazy(() => exports.StringFieldUpdateOperationsInputSchema)]).optional(),
     relationship: zod_1.z.union([zod_1.z.string(), zod_1.z.lazy(() => exports.StringFieldUpdateOperationsInputSchema)]).optional(),
     custom_relationship: zod_1.z.union([zod_1.z.string(), zod_1.z.lazy(() => exports.StringFieldUpdateOperationsInputSchema)]).optional(),
@@ -7142,7 +7120,6 @@ exports.SupportContactUpdateWithoutUserInputSchema = zod_1.z.strictObject({
 exports.SupportContactUncheckedUpdateWithoutUserInputSchema = zod_1.z.strictObject({
     id: zod_1.z.union([zod_1.z.string(), zod_1.z.lazy(() => exports.StringFieldUpdateOperationsInputSchema)]).optional(),
     contact_name: zod_1.z.union([zod_1.z.string(), zod_1.z.lazy(() => exports.StringFieldUpdateOperationsInputSchema)]).optional(),
-    phone: zod_1.z.union([zod_1.z.string(), zod_1.z.lazy(() => exports.StringFieldUpdateOperationsInputSchema)]).optional(),
     email: zod_1.z.union([zod_1.z.string(), zod_1.z.lazy(() => exports.StringFieldUpdateOperationsInputSchema)]).optional(),
     relationship: zod_1.z.union([zod_1.z.string(), zod_1.z.lazy(() => exports.StringFieldUpdateOperationsInputSchema)]).optional(),
     custom_relationship: zod_1.z.union([zod_1.z.string(), zod_1.z.lazy(() => exports.StringFieldUpdateOperationsInputSchema)]).optional(),
@@ -7154,7 +7131,6 @@ exports.SupportContactUncheckedUpdateWithoutUserInputSchema = zod_1.z.strictObje
 exports.SupportContactUncheckedUpdateManyWithoutUserInputSchema = zod_1.z.strictObject({
     id: zod_1.z.union([zod_1.z.string(), zod_1.z.lazy(() => exports.StringFieldUpdateOperationsInputSchema)]).optional(),
     contact_name: zod_1.z.union([zod_1.z.string(), zod_1.z.lazy(() => exports.StringFieldUpdateOperationsInputSchema)]).optional(),
-    phone: zod_1.z.union([zod_1.z.string(), zod_1.z.lazy(() => exports.StringFieldUpdateOperationsInputSchema)]).optional(),
     email: zod_1.z.union([zod_1.z.string(), zod_1.z.lazy(() => exports.StringFieldUpdateOperationsInputSchema)]).optional(),
     relationship: zod_1.z.union([zod_1.z.string(), zod_1.z.lazy(() => exports.StringFieldUpdateOperationsInputSchema)]).optional(),
     custom_relationship: zod_1.z.union([zod_1.z.string(), zod_1.z.lazy(() => exports.StringFieldUpdateOperationsInputSchema)]).optional(),

@@ -30,7 +30,7 @@ let GetProfileUseCase = class GetProfileUseCase {
             const sponsorship = await this.prisma.sponsorship.findFirst({
                 where: {
                     addict_id: userId,
-                    status: 'ACTIVE',
+                    status: { in: ['ACTIVE', 'PENDING'] },
                     sponsor: {
                         is_deleted: false,
                     },
@@ -53,6 +53,7 @@ let GetProfileUseCase = class GetProfileUseCase {
                     email: sponsorship.sponsor.email,
                     avatarUrl: sponsorship.sponsor.avatar_url,
                     sponsorshipId: sponsorship.id,
+                    status: sponsorship.status,
                 };
             }
         }
