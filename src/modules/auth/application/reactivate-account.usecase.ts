@@ -43,8 +43,7 @@ export class ReactivateAccountUseCase {
       throw new HttpException(
         {
           code: 'INTERNAL_ERROR',
-          message: 'Error interno al reactivar la cuenta',
-          details: error.message
+          message: 'Error interno al reactivar la cuenta'
         },
         HttpStatus.INTERNAL_SERVER_ERROR,
       );

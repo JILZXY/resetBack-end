@@ -78,8 +78,7 @@ let ReactivateAccountUseCase = class ReactivateAccountUseCase {
             console.error('Reactivate account error:', error);
             throw new common_1.HttpException({
                 code: 'INTERNAL_ERROR',
-                message: 'Error interno al reactivar la cuenta',
-                details: error.message
+                message: 'Error interno al reactivar la cuenta'
             }, common_1.HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
