@@ -8,6 +8,8 @@ class NotificationEntity {
     actorId;
     type;
     targetId;
+    actorName;
+    actorAvatarUrl;
     isRead;
     createdAt;
 }

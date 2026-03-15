@@ -14,14 +14,17 @@ const common_1 = require("@nestjs/common");
 const sponsorship_repository_1 = require("../infrastructure/repositories/sponsorship.repository");
 const notification_repository_1 = require("../../forum/infrastructure/repositories/notification.repository");
 const notification_gateway_1 = require("../../forum/notification.gateway");
+const user_repository_1 = require("../../auth/infrastructure/repositories/user.repository");
 let RejectSponsorshipUseCase = class RejectSponsorshipUseCase {
     sponsorshipRepo;
     notificationRepo;
     notificationGateway;
-    constructor(sponsorshipRepo, notificationRepo, notificationGateway) {
+    userRepo;
+    constructor(sponsorshipRepo, notificationRepo, notificationGateway, userRepo) {
         this.sponsorshipRepo = sponsorshipRepo;
         this.notificationRepo = notificationRepo;
         this.notificationGateway = notificationGateway;
+        this.userRepo = userRepo;
     }
     async execute(userId) {
         const pending = await this.sponsorshipRepo.findPendingBySponsorId(userId);
@@ -33,13 +36,21 @@ let RejectSponsorshipUseCase = class RejectSponsorshipUseCase {
             }, common_1.HttpStatus.NOT_FOUND);
         }
         await this.sponsorshipRepo.reject(pending.id);
+        await this.notificationRepo.markAsReadByCriteria({
+            userId: userId,
+            actorId: pending.addictId,
+            type: 'SPONSORSHIP_REQUEST',
+        });
         this.notifyAddict(userId, pending.addictId).catch(() => { });
         return { message: 'Solicitud de apadrinamiento rechazada' };
     }
     async notifyAddict(sponsorId, addictId) {
+        const actor = await this.userRepo.findById(sponsorId);
         const notification = await this.notificationRepo.create({
             userId: addictId,
             actorId: sponsorId,
+            actorName: actor?.name,
+            actorAvatarUrl: actor?.avatarUrl,
             type: 'SPONSORSHIP_REJECTED',
             targetId: addictId,
         });
@@ -51,6 +62,7 @@ exports.RejectSponsorshipUseCase = RejectSponsorshipUseCase = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [sponsorship_repository_1.SponsorshipRepository,
         notification_repository_1.NotificationRepository,
-        notification_gateway_1.NotificationGateway])
+        notification_gateway_1.NotificationGateway,
+        user_repository_1.UserRepository])
 ], RejectSponsorshipUseCase);
 //# sourceMappingURL=reject-sponsorship.usecase.js.map

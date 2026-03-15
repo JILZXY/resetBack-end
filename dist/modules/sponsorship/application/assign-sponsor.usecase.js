@@ -69,14 +69,16 @@ let RequestSponsorshipUseCase = class RequestSponsorshipUseCase {
         };
     }
     async notifySponsorship(actorId, sponsorId, sponsorEmail) {
+        const actor = await this.userRepo.findById(actorId);
         const notification = await this.notificationRepo.create({
             userId: sponsorId,
-            actorId,
+            actorId: actorId,
+            actorName: actor?.name,
+            actorAvatarUrl: actor?.avatarUrl,
             type: 'SPONSORSHIP_REQUEST',
             targetId: sponsorId,
         });
         this.notificationGateway.sendToUser(sponsorId, notification);
-        const actor = await this.userRepo.findById(actorId);
         await this.emailService.sendEmergencyAlert(sponsorEmail, actor?.name ?? 'Un usuario', 'Ha solicitado ser tu ahijado. Entra a la app para revisar la solicitud.');
     }
 };

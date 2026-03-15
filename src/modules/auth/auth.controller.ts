@@ -106,7 +106,8 @@ export class AuthController {
       res.cookie('device_id', result.newDeviceId, {
         httpOnly: true,
         secure: true,
-        sameSite: 'strict',
+        sameSite: 'none',
+        partitioned: true, // Importante para CHIPS (cookies cross-site modernas)
         maxAge: 30 * 24 * 60 * 60 * 1000, // 30 días
       });
       delete result.newDeviceId;
