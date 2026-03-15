@@ -20,7 +20,7 @@ export declare class PrismaService implements OnModuleInit, OnModuleDestroy {
     get sponsorship(): import("@prisma/client").Prisma.SponsorshipDelegate<import("@prisma/client/runtime/client").DefaultArgs, import("@prisma/client").Prisma.PrismaClientOptions>;
     get streakEvent(): import("@prisma/client").Prisma.StreakEventDelegate<import("@prisma/client/runtime/client").DefaultArgs, import("@prisma/client").Prisma.PrismaClientOptions>;
     get logAbsence(): import("@prisma/client").Prisma.LogAbsenceDelegate<import("@prisma/client/runtime/client").DefaultArgs, import("@prisma/client").Prisma.PrismaClientOptions>;
-    get passwordResetToken(): import("@prisma/client").Prisma.PasswordResetTokenDelegate<import("@prisma/client/runtime/client").DefaultArgs, import("@prisma/client").Prisma.PrismaClientOptions>;
-    get trustedDevice(): import("@prisma/client").Prisma.TrustedDeviceDelegate<import("@prisma/client/runtime/client").DefaultArgs, import("@prisma/client").Prisma.PrismaClientOptions>;
-    get verificationToken(): import("@prisma/client").Prisma.VerificationTokenDelegate<import("@prisma/client/runtime/client").DefaultArgs, import("@prisma/client").Prisma.PrismaClientOptions>;
+    get passwordResetToken(): any;
+    get trustedDevice(): any;
+    get verificationToken(): any;
 }
