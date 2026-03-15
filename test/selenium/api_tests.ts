@@ -172,9 +172,9 @@ async function runApiTests() {
       '/emergency/contacts',
       'POST',
       {
-        contact_name: 'Final Support ' + Date.now(),
+        contactName: 'Final Support ' + Date.now(),
         email: 'final@example.com',
-        phone: '911-FINAL',
+        relationship: 'amigo',
       },
     );
 

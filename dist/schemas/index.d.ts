@@ -120,7 +120,6 @@ export declare const SupportContactScalarFieldEnumSchema: z.ZodEnum<{
     user_id: "user_id";
     is_active: "is_active";
     contact_name: "contact_name";
-    phone: "phone";
     relationship: "relationship";
     custom_relationship: "custom_relationship";
     priority_order: "priority_order";
@@ -294,7 +293,6 @@ export declare const SupportContactSchema: z.ZodObject<{
     id: z.ZodString;
     user_id: z.ZodString;
     contact_name: z.ZodString;
-    phone: z.ZodString;
     email: z.ZodString;
     relationship: z.ZodString;
     custom_relationship: z.ZodString;

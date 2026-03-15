@@ -55,7 +55,7 @@ export const StreakEventScalarFieldEnumSchema = z.enum(['id','streak_id','emerge
 
 export const LogAbsenceScalarFieldEnumSchema = z.enum(['id','user_id','streak_id','last_log_date','detected_at','absence_hours','event_generated','streak_event_id']);
 
-export const SupportContactScalarFieldEnumSchema = z.enum(['id','user_id','contact_name','phone','email','relationship','custom_relationship','is_active','priority_order','created_at','updated_at']);
+export const SupportContactScalarFieldEnumSchema = z.enum(['id','user_id','contact_name','email','relationship','custom_relationship','is_active','priority_order','created_at','updated_at']);
 
 export const EmergencyAlertScalarFieldEnumSchema = z.enum(['id','user_id','user_addiction_id','activated_at','resulted_in_relapse','resolution_notes','created_at']);
 
@@ -267,7 +267,6 @@ export const SupportContactSchema = z.object({
   id: z.string(),
   user_id: z.string(),
   contact_name: z.string(),
-  phone: z.string(),
   email: z.string(),
   relationship: z.string(),
   custom_relationship: z.string(),
@@ -684,7 +683,6 @@ export const SupportContactSelectSchema: z.ZodType<Prisma.SupportContactSelect> 
   id: z.boolean().optional(),
   user_id: z.boolean().optional(),
   contact_name: z.boolean().optional(),
-  phone: z.boolean().optional(),
   email: z.boolean().optional(),
   relationship: z.boolean().optional(),
   custom_relationship: z.boolean().optional(),
@@ -1686,7 +1684,6 @@ export const SupportContactWhereInputSchema: z.ZodType<Prisma.SupportContactWher
   id: z.union([ z.lazy(() => UuidFilterSchema), z.string() ]).optional(),
   user_id: z.union([ z.lazy(() => UuidFilterSchema), z.string() ]).optional(),
   contact_name: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
-  phone: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
   email: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
   relationship: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
   custom_relationship: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
@@ -1701,7 +1698,6 @@ export const SupportContactOrderByWithRelationInputSchema: z.ZodType<Prisma.Supp
   id: z.lazy(() => SortOrderSchema).optional(),
   user_id: z.lazy(() => SortOrderSchema).optional(),
   contact_name: z.lazy(() => SortOrderSchema).optional(),
-  phone: z.lazy(() => SortOrderSchema).optional(),
   email: z.lazy(() => SortOrderSchema).optional(),
   relationship: z.lazy(() => SortOrderSchema).optional(),
   custom_relationship: z.lazy(() => SortOrderSchema).optional(),
@@ -1732,7 +1728,6 @@ export const SupportContactWhereUniqueInputSchema: z.ZodType<Prisma.SupportConta
   NOT: z.union([ z.lazy(() => SupportContactWhereInputSchema), z.lazy(() => SupportContactWhereInputSchema).array() ]).optional(),
   user_id: z.union([ z.lazy(() => UuidFilterSchema), z.string() ]).optional(),
   contact_name: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
-  phone: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
   email: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
   relationship: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
   custom_relationship: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
@@ -1747,7 +1742,6 @@ export const SupportContactOrderByWithAggregationInputSchema: z.ZodType<Prisma.S
   id: z.lazy(() => SortOrderSchema).optional(),
   user_id: z.lazy(() => SortOrderSchema).optional(),
   contact_name: z.lazy(() => SortOrderSchema).optional(),
-  phone: z.lazy(() => SortOrderSchema).optional(),
   email: z.lazy(() => SortOrderSchema).optional(),
   relationship: z.lazy(() => SortOrderSchema).optional(),
   custom_relationship: z.lazy(() => SortOrderSchema).optional(),
@@ -1769,7 +1763,6 @@ export const SupportContactScalarWhereWithAggregatesInputSchema: z.ZodType<Prism
   id: z.union([ z.lazy(() => UuidWithAggregatesFilterSchema), z.string() ]).optional(),
   user_id: z.union([ z.lazy(() => UuidWithAggregatesFilterSchema), z.string() ]).optional(),
   contact_name: z.union([ z.lazy(() => StringWithAggregatesFilterSchema), z.string() ]).optional(),
-  phone: z.union([ z.lazy(() => StringWithAggregatesFilterSchema), z.string() ]).optional(),
   email: z.union([ z.lazy(() => StringWithAggregatesFilterSchema), z.string() ]).optional(),
   relationship: z.union([ z.lazy(() => StringWithAggregatesFilterSchema), z.string() ]).optional(),
   custom_relationship: z.union([ z.lazy(() => StringWithAggregatesFilterSchema), z.string() ]).optional(),
@@ -2809,7 +2802,6 @@ export const LogAbsenceUncheckedUpdateManyInputSchema: z.ZodType<Prisma.LogAbsen
 export const SupportContactCreateInputSchema: z.ZodType<Prisma.SupportContactCreateInput> = z.strictObject({
   id: z.string().optional(),
   contact_name: z.string(),
-  phone: z.string().optional(),
   email: z.string().optional(),
   relationship: z.string().optional(),
   custom_relationship: z.string().optional(),
@@ -2824,7 +2816,6 @@ export const SupportContactUncheckedCreateInputSchema: z.ZodType<Prisma.SupportC
   id: z.string().optional(),
   user_id: z.string(),
   contact_name: z.string(),
-  phone: z.string().optional(),
   email: z.string().optional(),
   relationship: z.string().optional(),
   custom_relationship: z.string().optional(),
@@ -2837,7 +2828,6 @@ export const SupportContactUncheckedCreateInputSchema: z.ZodType<Prisma.SupportC
 export const SupportContactUpdateInputSchema: z.ZodType<Prisma.SupportContactUpdateInput> = z.strictObject({
   id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   contact_name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  phone: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   email: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   relationship: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   custom_relationship: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
@@ -2852,7 +2842,6 @@ export const SupportContactUncheckedUpdateInputSchema: z.ZodType<Prisma.SupportC
   id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   user_id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   contact_name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  phone: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   email: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   relationship: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   custom_relationship: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
@@ -2866,7 +2855,6 @@ export const SupportContactCreateManyInputSchema: z.ZodType<Prisma.SupportContac
   id: z.string().optional(),
   user_id: z.string(),
   contact_name: z.string(),
-  phone: z.string().optional(),
   email: z.string().optional(),
   relationship: z.string().optional(),
   custom_relationship: z.string().optional(),
@@ -2879,7 +2867,6 @@ export const SupportContactCreateManyInputSchema: z.ZodType<Prisma.SupportContac
 export const SupportContactUpdateManyMutationInputSchema: z.ZodType<Prisma.SupportContactUpdateManyMutationInput> = z.strictObject({
   id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   contact_name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  phone: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   email: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   relationship: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   custom_relationship: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
@@ -2893,7 +2880,6 @@ export const SupportContactUncheckedUpdateManyInputSchema: z.ZodType<Prisma.Supp
   id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   user_id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   contact_name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  phone: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   email: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   relationship: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   custom_relationship: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
@@ -3816,7 +3802,6 @@ export const SupportContactCountOrderByAggregateInputSchema: z.ZodType<Prisma.Su
   id: z.lazy(() => SortOrderSchema).optional(),
   user_id: z.lazy(() => SortOrderSchema).optional(),
   contact_name: z.lazy(() => SortOrderSchema).optional(),
-  phone: z.lazy(() => SortOrderSchema).optional(),
   email: z.lazy(() => SortOrderSchema).optional(),
   relationship: z.lazy(() => SortOrderSchema).optional(),
   custom_relationship: z.lazy(() => SortOrderSchema).optional(),
@@ -3834,7 +3819,6 @@ export const SupportContactMaxOrderByAggregateInputSchema: z.ZodType<Prisma.Supp
   id: z.lazy(() => SortOrderSchema).optional(),
   user_id: z.lazy(() => SortOrderSchema).optional(),
   contact_name: z.lazy(() => SortOrderSchema).optional(),
-  phone: z.lazy(() => SortOrderSchema).optional(),
   email: z.lazy(() => SortOrderSchema).optional(),
   relationship: z.lazy(() => SortOrderSchema).optional(),
   custom_relationship: z.lazy(() => SortOrderSchema).optional(),
@@ -3848,7 +3832,6 @@ export const SupportContactMinOrderByAggregateInputSchema: z.ZodType<Prisma.Supp
   id: z.lazy(() => SortOrderSchema).optional(),
   user_id: z.lazy(() => SortOrderSchema).optional(),
   contact_name: z.lazy(() => SortOrderSchema).optional(),
-  phone: z.lazy(() => SortOrderSchema).optional(),
   email: z.lazy(() => SortOrderSchema).optional(),
   relationship: z.lazy(() => SortOrderSchema).optional(),
   custom_relationship: z.lazy(() => SortOrderSchema).optional(),
@@ -5331,7 +5314,6 @@ export const SponsorshipCreateManyAddictInputEnvelopeSchema: z.ZodType<Prisma.Sp
 export const SupportContactCreateWithoutUserInputSchema: z.ZodType<Prisma.SupportContactCreateWithoutUserInput> = z.strictObject({
   id: z.string().optional(),
   contact_name: z.string(),
-  phone: z.string().optional(),
   email: z.string().optional(),
   relationship: z.string().optional(),
   custom_relationship: z.string().optional(),
@@ -5344,7 +5326,6 @@ export const SupportContactCreateWithoutUserInputSchema: z.ZodType<Prisma.Suppor
 export const SupportContactUncheckedCreateWithoutUserInputSchema: z.ZodType<Prisma.SupportContactUncheckedCreateWithoutUserInput> = z.strictObject({
   id: z.string().optional(),
   contact_name: z.string(),
-  phone: z.string().optional(),
   email: z.string().optional(),
   relationship: z.string().optional(),
   custom_relationship: z.string().optional(),
@@ -5659,7 +5640,6 @@ export const SupportContactScalarWhereInputSchema: z.ZodType<Prisma.SupportConta
   id: z.union([ z.lazy(() => UuidFilterSchema), z.string() ]).optional(),
   user_id: z.union([ z.lazy(() => UuidFilterSchema), z.string() ]).optional(),
   contact_name: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
-  phone: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
   email: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
   relationship: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
   custom_relationship: z.union([ z.lazy(() => StringFilterSchema), z.string() ]).optional(),
@@ -7843,7 +7823,6 @@ export const SponsorshipCreateManyAddictInputSchema: z.ZodType<Prisma.Sponsorshi
 export const SupportContactCreateManyUserInputSchema: z.ZodType<Prisma.SupportContactCreateManyUserInput> = z.strictObject({
   id: z.string().optional(),
   contact_name: z.string(),
-  phone: z.string().optional(),
   email: z.string().optional(),
   relationship: z.string().optional(),
   custom_relationship: z.string().optional(),
@@ -8032,7 +8011,6 @@ export const SponsorshipUncheckedUpdateManyWithoutAddictInputSchema: z.ZodType<P
 export const SupportContactUpdateWithoutUserInputSchema: z.ZodType<Prisma.SupportContactUpdateWithoutUserInput> = z.strictObject({
   id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   contact_name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  phone: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   email: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   relationship: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   custom_relationship: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
@@ -8045,7 +8023,6 @@ export const SupportContactUpdateWithoutUserInputSchema: z.ZodType<Prisma.Suppor
 export const SupportContactUncheckedUpdateWithoutUserInputSchema: z.ZodType<Prisma.SupportContactUncheckedUpdateWithoutUserInput> = z.strictObject({
   id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   contact_name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  phone: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   email: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   relationship: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   custom_relationship: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
@@ -8058,7 +8035,6 @@ export const SupportContactUncheckedUpdateWithoutUserInputSchema: z.ZodType<Pris
 export const SupportContactUncheckedUpdateManyWithoutUserInputSchema: z.ZodType<Prisma.SupportContactUncheckedUpdateManyWithoutUserInput> = z.strictObject({
   id: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   contact_name: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  phone: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   email: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   relationship: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   custom_relationship: z.union([ z.string(),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
