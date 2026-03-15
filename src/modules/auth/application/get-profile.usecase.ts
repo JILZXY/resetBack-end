@@ -41,6 +41,7 @@ export class GetProfileUseCase {
           name: sponsorship.sponsor.name,
           email: sponsorship.sponsor.email,
           avatarUrl: sponsorship.sponsor.avatar_url,
+          sponsorshipId: sponsorship.id,
         };
       }
     }
