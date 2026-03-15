@@ -18,42 +18,40 @@ let GraduateSponsorUseCase = class GraduateSponsorUseCase {
     constructor(prisma) {
         this.prisma = prisma;
     }
-    async execute(userId) {
-        const user = await this.prisma.user.findUnique({
-            where: { id: userId },
+    async execute(sponsorId, addictId) {
+        const addict = await this.prisma.user.findUnique({
+            where: { id: addictId },
             include: {
                 addictions: true,
             },
         });
-        if (!user) {
-            throw new common_1.HttpException('Usuario no encontrado', common_1.HttpStatus.NOT_FOUND);
+        if (!addict) {
+            throw new common_1.HttpException('Adicto no encontrado', common_1.HttpStatus.NOT_FOUND);
         }
-        if (user.role !== 'ADICTO') {
-            throw new common_1.HttpException('Solo los pacientes pueden graduarse a padrinos', common_1.HttpStatus.BAD_REQUEST);
+        if (addict.role !== 'ADICTO') {
+            throw new common_1.HttpException('Solo los adictos pueden graduarse a padrinos', common_1.HttpStatus.BAD_REQUEST);
         }
         const activeSponsorship = await this.prisma.sponsorship.findFirst({
             where: {
-                addict_id: userId,
+                addict_id: addictId,
+                sponsor_id: sponsorId,
                 status: 'ACTIVE',
             },
         });
+        if (!activeSponsorship) {
+            throw new common_1.HttpException('No tienes permiso para graduar a este usuario. Debe ser tu ahijado activo.', common_1.HttpStatus.FORBIDDEN);
+        }
         const sponsorCode = nanoid(8).toUpperCase();
         await this.prisma.$transaction(async (tx) => {
-            if (activeSponsorship) {
-                await tx.sponsorship.update({
-                    where: { id: activeSponsorship.id },
-                    data: {
-                        status: 'INACTIVE',
-                        ended_at: new Date(),
-                        termination_reason: 'Graduación a Padrino',
-                    },
-                });
-            }
-            const addictions = Array.isArray(user.addictions)
-                ? user.addictions
-                : user.addictions
-                    ? [user.addictions]
-                    : [];
+            await tx.sponsorship.update({
+                where: { id: activeSponsorship.id },
+                data: {
+                    status: 'INACTIVE',
+                    ended_at: new Date(),
+                    termination_reason: 'Graduación a Padrino (Otorgada por el Padrino)',
+                },
+            });
+            const addictions = addict.addictions ?? [];
             for (const addiction of addictions) {
                 if (addiction.is_active) {
                     await tx.userAddiction.update({
@@ -63,7 +61,7 @@ let GraduateSponsorUseCase = class GraduateSponsorUseCase {
                 }
             }
             await tx.user.update({
-                where: { id: userId },
+                where: { id: addictId },
                 data: {
                     role: 'PADRINO',
                     sponsor_code: sponsorCode,
@@ -71,7 +69,8 @@ let GraduateSponsorUseCase = class GraduateSponsorUseCase {
             });
         });
         return {
-            message: 'Te has graduado como Padrino exitosamente',
+            message: '¡Felicidades! Tu ahijado se ha graduado como Padrino exitosamente',
+            addictName: addict.name,
             sponsorCode,
         };
     }

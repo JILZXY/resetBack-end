@@ -15,6 +15,7 @@ import type { Response, Request as ExpressRequest } from 'express';
 import { RegisterUserUseCase } from './application/register-user.usecase';
 import { LoginUseCase } from './application/login.usecase';
 import { Verify2FAUseCase } from './application/verify-2fa.usecase';
+import { BecomeAddictUseCase } from './application/become-addict.usecase';
 import { RegisterDto } from './infrastructure/dtos/register.dto';
 import { LoginDto } from './infrastructure/dtos/login.dto';
 import { Verify2FADto } from './infrastructure/dtos/verify-2fa.dto';
@@ -24,6 +25,9 @@ import { ResetPasswordUseCase } from './application/reset-password.usecase';
 import { VerifyEmailUseCase } from './application/verify-email.usecase';
 import { DeleteAccountUseCase } from './application/delete-account.usecase';
 import { ResetPasswordDto } from './infrastructure/dtos/reset-password.dto';
+import { BecomeAddictDto } from './infrastructure/dtos/become-addict.dto';
+import { ReactivateDto } from './infrastructure/dtos/reactivate.dto';
+import { ReactivateAccountUseCase } from './application/reactivate-account.usecase';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 @Controller('auth')
@@ -37,6 +41,8 @@ export class AuthController {
     private readonly resetPasswordUseCase: ResetPasswordUseCase,
     private readonly verifyEmailUseCase: VerifyEmailUseCase,
     private readonly deleteAccountUseCase: DeleteAccountUseCase,
+    private readonly becomeAddictUseCase: BecomeAddictUseCase,
+    private readonly reactivateAccountUseCase: ReactivateAccountUseCase,
   ) { }
 
   @Post('register')
@@ -99,6 +105,19 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   deleteAccount(@Request() req: any) {
     return this.deleteAccountUseCase.execute(req.user.userId);
+  }
+  
+  @Post('relapse')
+  @UseGuards(JwtAuthGuard)
+  @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
+  relapse(@Request() req: any, @Body() dto: BecomeAddictDto) {
+    return this.becomeAddictUseCase.execute(req.user.userId, dto);
+  }
+
+  @Post('reactivate')
+  @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
+  reactivate(@Body() dto: ReactivateDto) {
+    return this.reactivateAccountUseCase.execute(dto);
   }
 
   private handleDeviceIdCookie(result: any, res: Response) {

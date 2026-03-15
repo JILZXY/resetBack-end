@@ -42,68 +42,39 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.RegisterUserUseCase = void 0;
+exports.ReactivateAccountUseCase = void 0;
 const common_1 = require("@nestjs/common");
 const user_repository_1 = require("../infrastructure/repositories/user.repository");
-const verification_token_repository_1 = require("../infrastructure/repositories/verification-token.repository");
-const mail_service_1 = require("../../../shared/mail/mail.service");
 const bcrypt = __importStar(require("bcrypt"));
-const crypto = __importStar(require("crypto"));
-let RegisterUserUseCase = class RegisterUserUseCase {
+let ReactivateAccountUseCase = class ReactivateAccountUseCase {
     userRepo;
-    tokenRepo;
-    mailService;
-    constructor(userRepo, tokenRepo, mailService) {
+    constructor(userRepo) {
         this.userRepo = userRepo;
-        this.tokenRepo = tokenRepo;
-        this.mailService = mailService;
     }
     async execute(dto) {
-        const existing = await this.userRepo.findByEmailIncludeDeleted(dto.email);
-        if (existing) {
-            if (existing.isDeleted) {
-                throw new common_1.HttpException({
-                    code: 'ACCOUNT_DEACTIVATED',
-                    message: 'Esta cuenta ha sido desactivada. ¿Deseas reactivarla?',
-                    details: { email: dto.email },
-                }, common_1.HttpStatus.FORBIDDEN);
-            }
+        const user = await this.userRepo.findByEmailIncludeDeleted(dto.email);
+        if (!user || !user.isDeleted) {
             throw new common_1.HttpException({
-                code: 'EMAIL_ALREADY_EXISTS',
-                message: 'Ya existe una cuenta con este correo electrónico',
-                details: { email: dto.email },
-            }, common_1.HttpStatus.CONFLICT);
+                code: 'USER_NOT_FOUND',
+                message: 'Usuario no encontrado o la cuenta ya está activa',
+            }, common_1.HttpStatus.NOT_FOUND);
         }
-        const passwordHash = await bcrypt.hash(dto.password, 10);
-        const user = await this.userRepo.create({
-            name: dto.name,
-            email: dto.email,
-            passwordHash,
-            role: dto.role,
-            addictionName: dto.addictionName,
-            classification: dto.classification,
-        });
-        const token = crypto.randomBytes(32).toString('hex');
-        const expiresAt = new Date();
-        expiresAt.setHours(expiresAt.getHours() + 24);
-        await this.tokenRepo.create(user.id, token, expiresAt);
-        await this.mailService.sendVerificationEmail(user.email, token);
+        const isPasswordValid = await bcrypt.compare(dto.password, user.passwordHash);
+        if (!isPasswordValid) {
+            throw new common_1.HttpException({
+                code: 'INVALID_CREDENTIALS',
+                message: 'Contraseña incorrecta',
+            }, common_1.HttpStatus.UNAUTHORIZED);
+        }
+        await this.userRepo.reactivate(user.id);
         return {
-            id: user.id,
-            name: user.name,
-            email: user.email,
-            role: user.role,
-            sponsorCode: user.sponsorCode,
-            avatarUrl: user.avatarUrl,
-            createdAt: user.createdAt,
+            message: 'Cuenta reactivada correctamente. Ahora puedes iniciar sesión.',
         };
     }
 };
-exports.RegisterUserUseCase = RegisterUserUseCase;
-exports.RegisterUserUseCase = RegisterUserUseCase = __decorate([
+exports.ReactivateAccountUseCase = ReactivateAccountUseCase;
+exports.ReactivateAccountUseCase = ReactivateAccountUseCase = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [user_repository_1.UserRepository,
-        verification_token_repository_1.VerificationTokenRepository,
-        mail_service_1.MailService])
-], RegisterUserUseCase);
-//# sourceMappingURL=register-user.usecase.js.map
+    __metadata("design:paramtypes", [user_repository_1.UserRepository])
+], ReactivateAccountUseCase);
+//# sourceMappingURL=reactivate-account.usecase.js.map

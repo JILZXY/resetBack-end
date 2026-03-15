@@ -15,9 +15,19 @@ export class RegisterUserUseCase {
   ) {}
 
   async execute(dto: RegisterDto) {
-    const existing = await this.userRepo.findByEmail(dto.email);
+    const existing = await this.userRepo.findByEmailIncludeDeleted(dto.email);
 
     if (existing) {
+      if (existing.isDeleted) {
+        throw new HttpException(
+          {
+            code: 'ACCOUNT_DEACTIVATED',
+            message: 'Esta cuenta ha sido desactivada. ¿Deseas reactivarla?',
+            details: { email: dto.email },
+          },
+          HttpStatus.FORBIDDEN,
+        );
+      }
       throw new HttpException(
         {
           code: 'EMAIL_ALREADY_EXISTS',

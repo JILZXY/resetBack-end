@@ -4,6 +4,7 @@ export declare class UserRepository {
     private readonly prisma;
     constructor(prisma: PrismaService);
     findByEmail(email: string): Promise<UserEntity | null>;
+    findByEmailIncludeDeleted(email: string): Promise<UserEntity | null>;
     findById(id: string): Promise<UserEntity | null>;
     findBySponsorCode(code: string): Promise<UserEntity | null>;
     create(data: {
@@ -15,5 +16,6 @@ export declare class UserRepository {
         classification?: string;
     }): Promise<UserEntity>;
     softDelete(id: string): Promise<void>;
+    reactivate(id: string): Promise<void>;
     private toEntity;
 }

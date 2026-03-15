@@ -13,6 +13,7 @@ class UserEntity {
     twoFactorEnabled;
     createdAt;
     updatedAt;
+    isDeleted;
     addictions;
 }
 exports.UserEntity = UserEntity;

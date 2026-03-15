@@ -6,6 +6,7 @@ import { GraduateSponsorUseCase } from './application/graduate-sponsor.usecase';
 import { GetGodchildProfileUseCase } from './application/get-godchild-profile.usecase';
 import { RequestSponsorshipDto } from './infrastructure/dtos/request-sponsorship.dto';
 import { TerminateSponsorshipDto } from './infrastructure/dtos/terminate-sponsorship.dto';
+import { GraduateAddictDto } from './infrastructure/dtos/graduate-addict.dto';
 export declare class SponsorshipController {
     private readonly requestUseCase;
     private readonly acceptUseCase;
@@ -29,8 +30,9 @@ export declare class SponsorshipController {
         message: string;
         sponsorshipId: string;
     }>;
-    graduate(req: any): Promise<{
+    graduate(req: any, dto: GraduateAddictDto): Promise<{
         message: string;
+        addictName: string;
         sponsorCode: any;
     }>;
     godchildProfile(req: any): Promise<{

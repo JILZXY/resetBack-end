@@ -10,5 +10,6 @@ export class UserEntity {
   twoFactorEnabled: boolean;
   createdAt: Date;
   updatedAt: Date;
+  isDeleted: boolean;
   addictions?: any[];
 }

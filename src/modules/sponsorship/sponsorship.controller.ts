@@ -8,6 +8,8 @@ import {
   UseGuards,
   Request,
   HttpCode,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { RequestSponsorshipUseCase } from './application/assign-sponsor.usecase';
 import { AcceptSponsorshipUseCase } from './application/accept-sponsorship.usecase';
@@ -17,6 +19,7 @@ import { GraduateSponsorUseCase } from './application/graduate-sponsor.usecase';
 import { GetGodchildProfileUseCase } from './application/get-godchild-profile.usecase';
 import { RequestSponsorshipDto } from './infrastructure/dtos/request-sponsorship.dto';
 import { TerminateSponsorshipDto } from './infrastructure/dtos/terminate-sponsorship.dto';
+import { GraduateAddictDto } from './infrastructure/dtos/graduate-addict.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @Controller('sponsorships')
@@ -64,8 +67,9 @@ export class SponsorshipController {
 
   @Post('graduate')
   @HttpCode(200)
-  async graduate(@Request() req: any) {
-    return await this.graduateUseCase.execute(req.user.userId);
+  @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
+  async graduate(@Request() req: any, @Body() dto: GraduateAddictDto) {
+    return await this.graduateUseCase.execute(req.user.userId, dto.addictId);
   }
 
   @Get('godchild/profile')
