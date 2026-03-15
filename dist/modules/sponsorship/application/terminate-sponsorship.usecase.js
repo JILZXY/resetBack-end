@@ -25,8 +25,8 @@ let TerminateSponsorshipUseCase = class TerminateSponsorshipUseCase {
         if (sponsorship.status !== 'ACTIVE') {
             throw new common_1.HttpException('La relación no está activa', common_1.HttpStatus.BAD_REQUEST);
         }
-        if (sponsorship.sponsorId !== userId && sponsorship.addictId !== userId) {
-            throw new common_1.HttpException('No tienes permisos para terminar esta relación', common_1.HttpStatus.FORBIDDEN);
+        if (sponsorship.addictId !== userId) {
+            throw new common_1.HttpException('Solo el ahijado puede terminar esta relación de apadrinamiento', common_1.HttpStatus.FORBIDDEN);
         }
         const reason = dto.reason || 'Terminación voluntaria';
         await this.sponsorshipRepo.setInactive(sponsorshipId, reason);
