@@ -1,11 +1,11 @@
-import { IsBoolean, IsOptional, IsString } from 'class-validator';
+import { IsOptional, IsString, IsBoolean } from 'class-validator';
 
 export class TriggerAlertDto {
   @IsOptional()
   @IsBoolean()
-  resulted_in_relapse?: boolean;
+  resultedInRelapse?: boolean;
 
   @IsOptional()
   @IsString()
-  resolution_notes?: string;
+  resolutionNotes?: string;
 }

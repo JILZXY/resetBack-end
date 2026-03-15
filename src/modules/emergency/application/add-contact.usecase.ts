@@ -20,25 +20,38 @@ export class AddContactUseCase {
       );
     }
 
-    if (!dto.phone && !dto.email) {
+    if (!dto.email) {
       throw new HttpException(
         {
-          code: 'CONTACT_MISSING_REACH',
-          message: 'El contacto debe tener al menos un teléfono o correo electrónico',
+          code: 'CONTACT_MISSING_EMAIL',
+          message: 'El contacto debe tener un correo electrónico',
           details: {},
         },
         HttpStatus.BAD_REQUEST,
       );
     }
 
-    return this.contactRepo.create({
-      userId,
-      contactName: dto.contact_name,
-      phone: dto.phone,
-      email: dto.email,
-      relationship: dto.relationship,
-      customRelationship: dto.custom_relationship,
-      priorityOrder: dto.priority_order,
-    });
+    try {
+      return await this.contactRepo.create({
+        userId,
+        contactName: dto.contactName,
+        email: dto.email,
+        relationship: dto.relationship,
+        customRelationship: dto.customRelationship,
+        priorityOrder: dto.priorityOrder,
+      });
+    } catch (error) {
+      if (error.code === 'P2002') {
+        throw new HttpException(
+          {
+            code: 'DUPLICATE_CONTACT_EMAIL',
+            message: 'Ya tienes un contacto registrado con este correo electrónico',
+            details: { email: dto.email },
+          },
+          HttpStatus.CONFLICT,
+        );
+      }
+      throw error;
+    }
   }
 }

@@ -9,6 +9,8 @@ export class PostEntity {
   tags: string[];
   reactionUps: number;
   commentCount: number;
+  isDeleted: boolean;
+  isEdited: boolean;
   createdAt: Date;
   updatedAt: Date;
 }

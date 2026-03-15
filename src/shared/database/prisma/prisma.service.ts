@@ -17,9 +17,10 @@ export class PrismaService implements OnModuleInit, OnModuleDestroy {
 
     this.prisma = new PrismaClient({
       adapter,
-      log: this.config.get<string>('app.nodeEnv') === 'development' 
-        ? ['query', 'info', 'warn', 'error'] 
-        : ['error'],
+      log:
+        this.config.get<string>('app.nodeEnv') === 'development'
+          ? ['query', 'info', 'warn', 'error']
+          : ['error'],
     });
   }
 
@@ -35,6 +36,14 @@ export class PrismaService implements OnModuleInit, OnModuleDestroy {
 
   get $transaction() {
     return this.prisma.$transaction.bind(this.prisma);
+  }
+
+  get $queryRaw() {
+    return this.prisma.$queryRaw.bind(this.prisma);
+  }
+
+  get $queryRawUnsafe() {
+    return this.prisma.$queryRawUnsafe.bind(this.prisma);
   }
 
   // Exponer métodos de acceso
@@ -80,5 +89,17 @@ export class PrismaService implements OnModuleInit, OnModuleDestroy {
 
   get logAbsence() {
     return this.prisma.logAbsence;
+  }
+
+  get passwordResetToken() {
+    return this.prisma.passwordResetToken;
+  }
+
+  get trustedDevice() {
+    return this.prisma.trustedDevice;
+  }
+
+  get verificationToken() {
+    return this.prisma.verificationToken;
   }
 }

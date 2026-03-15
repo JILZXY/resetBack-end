@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { PrismaService } from 'src/shared/database/prisma/prisma.service';
 import { StreakEntity } from '../../domain/streak.entity';
 
@@ -30,7 +31,10 @@ export class StreakRepository {
     return this.toEntity(streak);
   }
 
-  async incrementDay(streakId: string, lastLogDate: Date): Promise<StreakEntity> {
+  async incrementDay(
+    streakId: string,
+    lastLogDate: Date,
+  ): Promise<StreakEntity> {
     const streak = await this.prisma.streak.update({
       where: { id: streakId },
       data: {
@@ -39,6 +43,7 @@ export class StreakRepository {
         status: 'active',
       },
     });
+
     return this.toEntity(streak);
   }
 
@@ -49,9 +54,10 @@ export class StreakRepository {
         day_counter: 0,
         started_at: newStartedAt,
         last_log_date: newStartedAt,
-        status: 'reset',
+        status: 'broken',
       },
     });
+
     return this.toEntity(streak);
   }
 

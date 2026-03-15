@@ -1,4 +1,13 @@
-import { IsEmail, IsNotEmpty, IsString, MinLength, MaxLength, IsOptional, IsIn, ValidateIf } from 'class-validator';
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsString,
+  MinLength,
+  MaxLength,
+  IsOptional,
+  IsIn,
+  ValidateIf,
+} from 'class-validator';
 
 export class RegisterDto {
   @IsNotEmpty({ message: 'El nombre es obligatorio' })
@@ -19,7 +28,9 @@ export class RegisterDto {
   role?: string;
 
   @ValidateIf((o) => o.role === 'ADICTO' || !o.role)
-  @IsNotEmpty({ message: 'El nombre de la adicción es obligatorio para pacientes' })
+  @IsNotEmpty({
+    message: 'El nombre de la adicción es obligatorio para pacientes',
+  })
   @IsString()
   @MaxLength(100)
   addictionName?: string;

@@ -14,20 +14,29 @@ export class DeleteCommentUseCase {
 
     if (!comment) {
       throw new HttpException(
-        { code: 'COMMENT_NOT_FOUND', message: 'Comentario no encontrado', details: { commentId } },
+        {
+          code: 'COMMENT_NOT_FOUND',
+          message: 'Comentario no encontrado',
+          details: { commentId },
+        },
         HttpStatus.NOT_FOUND,
       );
     }
 
     if (comment.authorId !== userId) {
       throw new HttpException(
-        { code: 'FORBIDDEN', message: 'No tienes permiso para eliminar este comentario', details: {} },
+        {
+          code: 'FORBIDDEN',
+          message: 'No tienes permiso para eliminar este comentario',
+          details: {},
+        },
         HttpStatus.FORBIDDEN,
       );
     }
 
+    // Borrado lógico en vez de físico
     await Promise.all([
-      this.commentRepo.delete(commentId),
+      this.commentRepo.softDelete(commentId),
       this.postRepo.decrementCommentCount(comment.postId),
     ]);
 

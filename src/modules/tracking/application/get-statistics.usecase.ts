@@ -13,19 +13,25 @@ export class GetStatisticsUseCase {
     const targetUserId = requestedUserId || userId;
 
     if (userId !== targetUserId) {
-      const isActiveSponsor = await this.sponsorRepo.checkActiveSponsorship(userId, targetUserId);
+      const isActiveSponsor = await this.sponsorRepo.checkActiveSponsorship(
+        userId,
+        targetUserId,
+      );
       if (!isActiveSponsor) {
-        throw new HttpException('No tienes permisos para ver las estadísticas de este usuario', HttpStatus.FORBIDDEN);
+        throw new HttpException(
+          'No tienes permisos para ver las estadísticas de este usuario',
+          HttpStatus.FORBIDDEN,
+        );
       }
     }
 
     const stats = await this.logRepo.getStatistics(targetUserId);
     return {
-      totalLogs: stats.total_logs,
-      relapseCount: stats.relapse_count,
-      soberDays: stats.total_logs - stats.relapse_count,
+      dayCounter: stats.day_counter,
       averageCraving: stats.avg_craving,
       averageEmotionalState: stats.avg_emotion,
+      streakStatus: stats.streak_status,
+      totalRelapses: stats.total_relapses,
     };
   }
 }

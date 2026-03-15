@@ -14,21 +14,30 @@ export class DeletePostUseCase {
 
     if (!post) {
       throw new HttpException(
-        { code: 'POST_NOT_FOUND', message: 'Post no encontrado', details: { postId } },
+        {
+          code: 'POST_NOT_FOUND',
+          message: 'Post no encontrado',
+          details: { postId },
+        },
         HttpStatus.NOT_FOUND,
       );
     }
 
     if (post.authorId !== userId) {
       throw new HttpException(
-        { code: 'FORBIDDEN', message: 'No tienes permiso para eliminar este post', details: {} },
+        {
+          code: 'FORBIDDEN',
+          message: 'No tienes permiso para eliminar este post',
+          details: {},
+        },
         HttpStatus.FORBIDDEN,
       );
     }
 
+    // Borrado lógico en vez de físico
     await Promise.all([
-      this.postRepo.delete(postId),
-      this.commentRepo.deleteByPostId(postId),
+      this.postRepo.softDelete(postId),
+      this.commentRepo.softDeleteByPostId(postId),
     ]);
 
     return { message: 'Post eliminado correctamente' };
