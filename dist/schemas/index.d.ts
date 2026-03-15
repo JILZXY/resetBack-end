@@ -18,11 +18,11 @@ export declare const UserScalarFieldEnumSchema: z.ZodEnum<{
     created_at: "created_at";
     updated_at: "updated_at";
     sponsor_code: "sponsor_code";
-    is_deleted: "is_deleted";
     avatar_url: "avatar_url";
-    deleted_at: "deleted_at";
     is_verified: "is_verified";
     two_factor_enabled: "two_factor_enabled";
+    is_deleted: "is_deleted";
+    deleted_at: "deleted_at";
 }>;
 export declare const PasswordResetTokenScalarFieldEnumSchema: z.ZodEnum<{
     id: "id";
