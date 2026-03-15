@@ -28,8 +28,11 @@ export class GetGodchildProfileUseCase {
     const addictId = sponsorship.addictId;
 
     // Obtener datos del ahijado (excluyendo campos sensibles)
-    const user = await this.prisma.user.findUnique({
-      where: { id: addictId },
+    const user = await this.prisma.user.findFirst({
+      where: { 
+        id: addictId,
+        is_deleted: false,
+      },
       select: {
         id: true,
         name: true,

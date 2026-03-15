@@ -9,7 +9,6 @@ export declare class ContactRepository {
     create(data: {
         userId: string;
         contactName: string;
-        phone?: string;
         email?: string;
         relationship?: string;
         customRelationship?: string;

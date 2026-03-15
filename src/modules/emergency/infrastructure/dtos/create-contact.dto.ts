@@ -17,11 +17,6 @@ export class CreateContactDto {
   contactName: string;
 
   @IsOptional()
-  @IsString()
-  @MaxLength(20)
-  phone?: string;
-
-  @IsOptional()
   @IsEmail()
   @MaxLength(150)
   email?: string;

@@ -31,6 +31,9 @@ let GetProfileUseCase = class GetProfileUseCase {
                 where: {
                     addict_id: userId,
                     status: 'ACTIVE',
+                    sponsor: {
+                        is_deleted: false,
+                    },
                 },
                 include: {
                     sponsor: {

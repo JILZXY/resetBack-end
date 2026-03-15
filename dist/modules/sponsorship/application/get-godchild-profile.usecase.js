@@ -30,8 +30,11 @@ let GetGodchildProfileUseCase = class GetGodchildProfileUseCase {
             }, common_1.HttpStatus.NOT_FOUND);
         }
         const addictId = sponsorship.addictId;
-        const user = await this.prisma.user.findUnique({
-            where: { id: addictId },
+        const user = await this.prisma.user.findFirst({
+            where: {
+                id: addictId,
+                is_deleted: false,
+            },
             select: {
                 id: true,
                 name: true,

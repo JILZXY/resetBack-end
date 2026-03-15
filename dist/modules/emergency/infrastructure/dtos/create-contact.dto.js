@@ -13,7 +13,6 @@ exports.CreateContactDto = void 0;
 const class_validator_1 = require("class-validator");
 class CreateContactDto {
     contactName;
-    phone;
     email;
     relationship;
     customRelationship;
@@ -26,12 +25,6 @@ __decorate([
     (0, class_validator_1.MaxLength)(100),
     __metadata("design:type", String)
 ], CreateContactDto.prototype, "contactName", void 0);
-__decorate([
-    (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsString)(),
-    (0, class_validator_1.MaxLength)(20),
-    __metadata("design:type", String)
-], CreateContactDto.prototype, "phone", void 0);
 __decorate([
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsEmail)(),

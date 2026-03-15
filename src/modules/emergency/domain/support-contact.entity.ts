@@ -2,7 +2,6 @@ export class SupportContactEntity {
   id: string;
   userId: string;
   contactName: string;
-  phone: string | null;
   email: string | null;
   relationship: string | null;
   customRelationship: string | null;

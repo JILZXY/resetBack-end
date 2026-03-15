@@ -5,7 +5,6 @@ class SupportContactEntity {
     id;
     userId;
     contactName;
-    phone;
     email;
     relationship;
     customRelationship;
