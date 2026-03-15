@@ -46,7 +46,7 @@ let TriggerAlertUseCase = class TriggerAlertUseCase {
                     details: { user_id: userId },
                 }, common_1.HttpStatus.NOT_FOUND);
             }
-            throw new common_1.HttpException(msg, common_1.HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new common_1.HttpException('Error interno al procesar la alerta', common_1.HttpStatus.INTERNAL_SERVER_ERROR);
         }
         if (dto.resultedInRelapse !== undefined || dto.resolutionNotes) {
             try {
@@ -75,7 +75,6 @@ let TriggerAlertUseCase = class TriggerAlertUseCase {
                 message: 'La alerta fue registrada pero hubo un error al enviar las notificaciones',
                 details: {
                     alertId,
-                    error: notificationError?.message || 'Error desconocido',
                 },
             }, common_1.HttpStatus.INTERNAL_SERVER_ERROR);
         }

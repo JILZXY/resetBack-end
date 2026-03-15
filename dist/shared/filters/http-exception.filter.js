@@ -34,10 +34,6 @@ let GlobalExceptionFilter = class GlobalExceptionFilter {
             }
         }
         else if (exception instanceof Error) {
-            message = exception.message;
-            details = {
-                name: exception.name,
-            };
         }
         if (process.env.NODE_ENV === 'development') {
             details = {

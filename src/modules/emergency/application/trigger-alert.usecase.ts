@@ -45,7 +45,8 @@ export class TriggerAlertUseCase {
           HttpStatus.NOT_FOUND,
         );
       }
-      throw new HttpException(msg, HttpStatus.INTERNAL_SERVER_ERROR);
+      // Si el error no es uno de los mapeados, no exponer el detalle crudo
+      throw new HttpException('Error interno al procesar la alerta', HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     // 1.5. Actualizar la alerta con los datos adicionales del DTO si existen
@@ -88,7 +89,6 @@ export class TriggerAlertUseCase {
             'La alerta fue registrada pero hubo un error al enviar las notificaciones',
           details: {
             alertId,
-            error: notificationError?.message || 'Error desconocido',
           },
         },
         HttpStatus.INTERNAL_SERVER_ERROR,
