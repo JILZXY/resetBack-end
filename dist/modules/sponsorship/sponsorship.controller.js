@@ -22,6 +22,7 @@ const graduate_sponsor_usecase_1 = require("./application/graduate-sponsor.useca
 const get_godchild_profile_usecase_1 = require("./application/get-godchild-profile.usecase");
 const request_sponsorship_dto_1 = require("./infrastructure/dtos/request-sponsorship.dto");
 const terminate_sponsorship_dto_1 = require("./infrastructure/dtos/terminate-sponsorship.dto");
+const graduate_addict_dto_1 = require("./infrastructure/dtos/graduate-addict.dto");
 const jwt_auth_guard_1 = require("../auth/guards/jwt-auth.guard");
 let SponsorshipController = class SponsorshipController {
     requestUseCase;
@@ -50,8 +51,8 @@ let SponsorshipController = class SponsorshipController {
     async terminate(req, sponsorshipId, dto) {
         return await this.terminateUseCase.execute(req.user.userId, sponsorshipId, dto);
     }
-    async graduate(req) {
-        return await this.graduateUseCase.execute(req.user.userId);
+    async graduate(req, dto) {
+        return await this.graduateUseCase.execute(req.user.userId, dto.addictId);
     }
     async godchildProfile(req) {
         return await this.godchildProfileUseCase.execute(req.user.userId);
@@ -95,9 +96,11 @@ __decorate([
 __decorate([
     (0, common_1.Post)('graduate'),
     (0, common_1.HttpCode)(200),
+    (0, common_1.UsePipes)(new common_1.ValidationPipe({ whitelist: true, forbidNonWhitelisted: true })),
     __param(0, (0, common_1.Request)()),
+    __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
+    __metadata("design:paramtypes", [Object, graduate_addict_dto_1.GraduateAddictDto]),
     __metadata("design:returntype", Promise)
 ], SponsorshipController.prototype, "graduate", null);
 __decorate([

@@ -28,6 +28,15 @@ let UserRepository = class UserRepository {
             return null;
         return this.toEntity(user);
     }
+    async findByEmailIncludeDeleted(email) {
+        const user = await this.prisma.user.findFirst({
+            where: { email },
+            include: { addictions: true },
+        });
+        if (!user)
+            return null;
+        return this.toEntity(user);
+    }
     async findById(id) {
         const user = await this.prisma.user.findFirst({
             where: { id, is_deleted: false },
@@ -101,6 +110,16 @@ let UserRepository = class UserRepository {
             },
         });
     }
+    async reactivate(id) {
+        await this.prisma.user.update({
+            where: { id },
+            data: {
+                is_deleted: false,
+                deleted_at: null,
+                is_verified: true,
+            },
+        });
+    }
     toEntity(raw) {
         const entity = new user_entity_1.UserEntity();
         entity.id = raw.id;
@@ -114,6 +133,7 @@ let UserRepository = class UserRepository {
         entity.twoFactorEnabled = raw.two_factor_enabled;
         entity.createdAt = raw.created_at;
         entity.updatedAt = raw.updated_at;
+        entity.isDeleted = raw.is_deleted;
         entity.addictions = raw.addictions ?? [];
         return entity;
     }

@@ -21,7 +21,9 @@ const forgot_password_usecase_1 = require("./application/forgot-password.usecase
 const reset_password_usecase_1 = require("./application/reset-password.usecase");
 const verify_email_usecase_1 = require("./application/verify-email.usecase");
 const delete_account_usecase_1 = require("./application/delete-account.usecase");
+const become_addict_usecase_1 = require("./application/become-addict.usecase");
 const verify_2fa_usecase_1 = require("./application/verify-2fa.usecase");
+const reactivate_account_usecase_1 = require("./application/reactivate-account.usecase");
 const password_reset_token_repository_1 = require("./infrastructure/repositories/password-reset-token.repository");
 const verification_token_repository_1 = require("./infrastructure/repositories/verification-token.repository");
 const trusted_device_repository_1 = require("./infrastructure/repositories/trusted-device.repository");
@@ -55,6 +57,8 @@ exports.AuthModule = AuthModule = __decorate([
             verify_email_usecase_1.VerifyEmailUseCase,
             delete_account_usecase_1.DeleteAccountUseCase,
             verify_2fa_usecase_1.Verify2FAUseCase,
+            become_addict_usecase_1.BecomeAddictUseCase,
+            reactivate_account_usecase_1.ReactivateAccountUseCase,
             password_reset_token_repository_1.PasswordResetTokenRepository,
             verification_token_repository_1.VerificationTokenRepository,
             trusted_device_repository_1.TrustedDeviceRepository,

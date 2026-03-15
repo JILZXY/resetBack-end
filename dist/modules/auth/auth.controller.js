@@ -17,6 +17,7 @@ const common_1 = require("@nestjs/common");
 const register_user_usecase_1 = require("./application/register-user.usecase");
 const login_usecase_1 = require("./application/login.usecase");
 const verify_2fa_usecase_1 = require("./application/verify-2fa.usecase");
+const become_addict_usecase_1 = require("./application/become-addict.usecase");
 const register_dto_1 = require("./infrastructure/dtos/register.dto");
 const login_dto_1 = require("./infrastructure/dtos/login.dto");
 const verify_2fa_dto_1 = require("./infrastructure/dtos/verify-2fa.dto");
@@ -26,6 +27,9 @@ const reset_password_usecase_1 = require("./application/reset-password.usecase")
 const verify_email_usecase_1 = require("./application/verify-email.usecase");
 const delete_account_usecase_1 = require("./application/delete-account.usecase");
 const reset_password_dto_1 = require("./infrastructure/dtos/reset-password.dto");
+const become_addict_dto_1 = require("./infrastructure/dtos/become-addict.dto");
+const reactivate_dto_1 = require("./infrastructure/dtos/reactivate.dto");
+const reactivate_account_usecase_1 = require("./application/reactivate-account.usecase");
 const jwt_auth_guard_1 = require("./guards/jwt-auth.guard");
 let AuthController = class AuthController {
     registerUseCase;
@@ -36,7 +40,9 @@ let AuthController = class AuthController {
     resetPasswordUseCase;
     verifyEmailUseCase;
     deleteAccountUseCase;
-    constructor(registerUseCase, loginUseCase, verify2FAUseCase, getProfileUseCase, forgotPasswordUseCase, resetPasswordUseCase, verifyEmailUseCase, deleteAccountUseCase) {
+    becomeAddictUseCase;
+    reactivateAccountUseCase;
+    constructor(registerUseCase, loginUseCase, verify2FAUseCase, getProfileUseCase, forgotPasswordUseCase, resetPasswordUseCase, verifyEmailUseCase, deleteAccountUseCase, becomeAddictUseCase, reactivateAccountUseCase) {
         this.registerUseCase = registerUseCase;
         this.loginUseCase = loginUseCase;
         this.verify2FAUseCase = verify2FAUseCase;
@@ -45,6 +51,8 @@ let AuthController = class AuthController {
         this.resetPasswordUseCase = resetPasswordUseCase;
         this.verifyEmailUseCase = verifyEmailUseCase;
         this.deleteAccountUseCase = deleteAccountUseCase;
+        this.becomeAddictUseCase = becomeAddictUseCase;
+        this.reactivateAccountUseCase = reactivateAccountUseCase;
     }
     register(dto) {
         return this.registerUseCase.execute(dto);
@@ -74,6 +82,12 @@ let AuthController = class AuthController {
     }
     deleteAccount(req) {
         return this.deleteAccountUseCase.execute(req.user.userId);
+    }
+    relapse(req, dto) {
+        return this.becomeAddictUseCase.execute(req.user.userId, dto);
+    }
+    reactivate(dto) {
+        return this.reactivateAccountUseCase.execute(dto);
     }
     handleDeviceIdCookie(result, res) {
         if (result && result.newDeviceId) {
@@ -154,6 +168,24 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "deleteAccount", null);
+__decorate([
+    (0, common_1.Post)('relapse'),
+    (0, common_1.UseGuards)(jwt_auth_guard_1.JwtAuthGuard),
+    (0, common_1.UsePipes)(new common_1.ValidationPipe({ whitelist: true, forbidNonWhitelisted: true })),
+    __param(0, (0, common_1.Request)()),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, become_addict_dto_1.BecomeAddictDto]),
+    __metadata("design:returntype", void 0)
+], AuthController.prototype, "relapse", null);
+__decorate([
+    (0, common_1.Post)('reactivate'),
+    (0, common_1.UsePipes)(new common_1.ValidationPipe({ whitelist: true, forbidNonWhitelisted: true })),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [reactivate_dto_1.ReactivateDto]),
+    __metadata("design:returntype", void 0)
+], AuthController.prototype, "reactivate", null);
 exports.AuthController = AuthController = __decorate([
     (0, common_1.Controller)('auth'),
     __metadata("design:paramtypes", [register_user_usecase_1.RegisterUserUseCase,
@@ -163,6 +195,8 @@ exports.AuthController = AuthController = __decorate([
         forgot_password_usecase_1.ForgotPasswordUseCase,
         reset_password_usecase_1.ResetPasswordUseCase,
         verify_email_usecase_1.VerifyEmailUseCase,
-        delete_account_usecase_1.DeleteAccountUseCase])
+        delete_account_usecase_1.DeleteAccountUseCase,
+        become_addict_usecase_1.BecomeAddictUseCase,
+        reactivate_account_usecase_1.ReactivateAccountUseCase])
 ], AuthController);
 //# sourceMappingURL=auth.controller.js.map
