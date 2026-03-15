@@ -14,6 +14,7 @@ const class_validator_1 = require("class-validator");
 class Verify2FADto {
     mfaToken;
     code;
+    rememberMe;
 }
 exports.Verify2FADto = Verify2FADto;
 __decorate([
@@ -27,4 +28,9 @@ __decorate([
     (0, class_validator_1.Length)(6, 6, { message: 'El código debe tener 6 dígitos' }),
     __metadata("design:type", String)
 ], Verify2FADto.prototype, "code", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsBoolean)(),
+    __metadata("design:type", Boolean)
+], Verify2FADto.prototype, "rememberMe", void 0);
 //# sourceMappingURL=verify-2fa.dto.js.map
