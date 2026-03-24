@@ -20,10 +20,10 @@ export class StreakEventRepository {
         streak_id: data.streakId,
         event_type: data.eventType,
         event_date: data.eventDate,
-        days_achieved: data.daysAchieved ?? null,
-        avg_craving_period: data.avgCravingPeriod ?? null,
-        avg_emotion_period: data.avgEmotionPeriod ?? null,
-        emergency_alert_id: data.emergencyAlertId ?? null,
+        days_achieved: data.daysAchieved ?? undefined,
+        avg_craving_period: data.avgCravingPeriod ?? undefined,
+        avg_emotion_period: data.avgEmotionPeriod ?? undefined,
+        emergency_alert_id: data.emergencyAlertId ?? undefined,
       },
     });
     return this.toEntity(event);
@@ -52,8 +52,12 @@ export class StreakEventRepository {
     entity.eventType = raw.event_type;
     entity.eventDate = raw.event_date;
     entity.daysAchieved = raw.days_achieved;
-    entity.avgCravingPeriod = raw.avg_craving_period ? Number(raw.avg_craving_period) : null;
-    entity.avgEmotionPeriod = raw.avg_emotion_period ? Number(raw.avg_emotion_period) : null;
+    entity.avgCravingPeriod = raw.avg_craving_period
+      ? Number(raw.avg_craving_period)
+      : null;
+    entity.avgEmotionPeriod = raw.avg_emotion_period
+      ? Number(raw.avg_emotion_period)
+      : null;
     entity.createdAt = raw.created_at;
     return entity;
   }

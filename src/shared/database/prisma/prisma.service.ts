@@ -10,16 +10,17 @@ export class PrismaService implements OnModuleInit, OnModuleDestroy {
 
   constructor(private config: ConfigService) {
     const pool = new Pool({
-      connectionString: this.config.get('DATABASE_URL'),
+      connectionString: this.config.get<string>('database.url'),
     });
 
     const adapter = new PrismaPg(pool);
 
     this.prisma = new PrismaClient({
       adapter,
-      log: process.env.NODE_ENV === 'development' 
-        ? ['query', 'info', 'warn', 'error'] 
-        : ['error'],
+      log:
+        this.config.get<string>('app.nodeEnv') === 'development'
+          ? ['query', 'info', 'warn', 'error']
+          : ['error'],
     });
   }
 
@@ -31,6 +32,18 @@ export class PrismaService implements OnModuleInit, OnModuleDestroy {
   async onModuleDestroy() {
     await this.prisma.$disconnect();
     console.log('Database disconnected');
+  }
+
+  get $transaction() {
+    return this.prisma.$transaction.bind(this.prisma);
+  }
+
+  get $queryRaw() {
+    return this.prisma.$queryRaw.bind(this.prisma);
+  }
+
+  get $queryRawUnsafe() {
+    return this.prisma.$queryRawUnsafe.bind(this.prisma);
   }
 
   // Exponer métodos de acceso
@@ -76,5 +89,17 @@ export class PrismaService implements OnModuleInit, OnModuleDestroy {
 
   get logAbsence() {
     return this.prisma.logAbsence;
+  }
+
+  get passwordResetToken() {
+    return this.prisma.passwordResetToken;
+  }
+
+  get trustedDevice() {
+    return this.prisma.trustedDevice;
+  }
+
+  get verificationToken() {
+    return this.prisma.verificationToken;
   }
 }

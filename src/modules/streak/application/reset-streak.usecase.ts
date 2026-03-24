@@ -23,13 +23,6 @@ export class ResetStreakUseCase {
       );
     }
 
-    await this.eventRepo.create({
-      streakId: streak.id,
-      eventType: 'manual_reset',
-      eventDate: new Date(),
-      daysAchieved: streak.dayCounter,
-    });
-
     await this.streakRepo.reset(streak.id, new Date());
   }
 }

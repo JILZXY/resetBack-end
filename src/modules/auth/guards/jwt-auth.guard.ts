@@ -1,4 +1,9 @@
-import { Injectable, ExecutionContext, HttpException, HttpStatus } from '@nestjs/common';
+import {
+  Injectable,
+  ExecutionContext,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 
 @Injectable()
@@ -8,7 +13,8 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
       throw new HttpException(
         {
           code: 'TOKEN_INVALID_OR_EXPIRED',
-          message: 'Token inválido o expirado. Por favor inicia sesión nuevamente',
+          message:
+            'Token inválido o expirado. Por favor inicia sesión nuevamente',
           details: { reason: info?.message ?? 'unauthorized' },
         },
         HttpStatus.UNAUTHORIZED,

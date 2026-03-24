@@ -3,9 +3,9 @@ export class DailyLogEntity {
   userId: string;
   logDate: Date;
   consumed: boolean;
-  cravingLevelId: string | null;
-  emotionalStateId: string | null;
-  triggers: string | null;
-  notes: string | null;
+  cravingLevelId: string;
+  emotionalStateId: string;
+  triggers: string;
+  notes: string;
   createdAt: Date;
 }
