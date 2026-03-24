@@ -8,6 +8,8 @@ import { JwtStrategy } from './auth.service';
 import { UserRepository } from './infrastructure/repositories/user.repository';
 import { RegisterUserUseCase } from './application/register-user.usecase';
 import { LoginUseCase } from './application/login.usecase';
+import { AdminLoginUseCase } from './application/admin-login.usecase';
+import { UpdateProfileUseCase } from './application/update-profile.usecase';
 import { GetProfileUseCase } from './application/get-profile.usecase';
 import { ForgotPasswordUseCase } from './application/forgot-password.usecase';
 import { ResetPasswordUseCase } from './application/reset-password.usecase';
@@ -16,6 +18,7 @@ import { DeleteAccountUseCase } from './application/delete-account.usecase';
 import { BecomeAddictUseCase } from './application/become-addict.usecase';
 import { Verify2FAUseCase } from './application/verify-2fa.usecase';
 import { ReactivateAccountUseCase } from './application/reactivate-account.usecase';
+import { GetDebugTokenUseCase } from './application/get-debug-token.usecase';
 import { PasswordResetTokenRepository } from './infrastructure/repositories/password-reset-token.repository';
 import { VerificationTokenRepository } from './infrastructure/repositories/verification-token.repository';
 import { TrustedDeviceRepository } from './infrastructure/repositories/trusted-device.repository';
@@ -40,6 +43,8 @@ import { TrustedDeviceRepository } from './infrastructure/repositories/trusted-d
     UserRepository,
     RegisterUserUseCase,
     LoginUseCase,
+    AdminLoginUseCase,
+    UpdateProfileUseCase,
     GetProfileUseCase,
     ForgotPasswordUseCase,
     ResetPasswordUseCase,
@@ -48,6 +53,7 @@ import { TrustedDeviceRepository } from './infrastructure/repositories/trusted-d
     Verify2FAUseCase,
     BecomeAddictUseCase,
     ReactivateAccountUseCase,
+    GetDebugTokenUseCase,
     PasswordResetTokenRepository,
     VerificationTokenRepository,
     TrustedDeviceRepository,

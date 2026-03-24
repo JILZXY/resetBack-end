@@ -110,6 +110,19 @@ let UserRepository = class UserRepository {
             },
         });
     }
+    async update(id, data) {
+        const user = await this.prisma.user.update({
+            where: { id },
+            data: {
+                ...(data.name ? { name: data.name } : {}),
+                updated_at: new Date(),
+            },
+            include: {
+                addictions: true,
+            },
+        });
+        return this.toEntity(user);
+    }
     async reactivate(id) {
         await this.prisma.user.update({
             where: { id },

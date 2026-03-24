@@ -45,6 +45,26 @@ let VerificationTokenRepository = class VerificationTokenRepository {
             where: { id },
         });
     }
+    async findLatestByUserEmail(email) {
+        const user = await this.prisma.user.findUnique({
+            where: { email },
+            select: { id: true },
+        });
+        if (!user)
+            return null;
+        return this.prisma.verificationToken.findFirst({
+            where: {
+                user_id: user.id,
+                expires_at: { gt: new Date() },
+            },
+            orderBy: {
+                created_at: 'desc',
+            },
+            include: {
+                user: true,
+            },
+        });
+    }
 };
 exports.VerificationTokenRepository = VerificationTokenRepository;
 exports.VerificationTokenRepository = VerificationTokenRepository = __decorate([

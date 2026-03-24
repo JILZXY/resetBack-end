@@ -114,6 +114,20 @@ export class UserRepository {
     });
   }
 
+  async update(id: string, data: { name?: string }): Promise<UserEntity> {
+    const user = await this.prisma.user.update({
+      where: { id },
+      data: {
+        ...(data.name ? { name: data.name } : {}),
+        updated_at: new Date(),
+      },
+      include: {
+        addictions: true,
+      },
+    });
+    return this.toEntity(user);
+  }
+
   async reactivate(id: string): Promise<void> {
     await this.prisma.user.update({
       where: { id },
