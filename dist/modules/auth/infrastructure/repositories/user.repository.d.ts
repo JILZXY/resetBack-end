@@ -16,6 +16,9 @@ export declare class UserRepository {
         classification?: string;
     }): Promise<UserEntity>;
     softDelete(id: string): Promise<void>;
+    update(id: string, data: {
+        name?: string;
+    }): Promise<UserEntity>;
     reactivate(id: string): Promise<void>;
     private toEntity;
 }

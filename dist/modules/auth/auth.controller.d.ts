@@ -1,10 +1,13 @@
 import type { Response, Request as ExpressRequest } from 'express';
 import { RegisterUserUseCase } from './application/register-user.usecase';
+import { UpdateProfileUseCase } from './application/update-profile.usecase';
 import { LoginUseCase } from './application/login.usecase';
 import { Verify2FAUseCase } from './application/verify-2fa.usecase';
 import { BecomeAddictUseCase } from './application/become-addict.usecase';
+import { AdminLoginUseCase } from './application/admin-login.usecase';
 import { RegisterDto } from './infrastructure/dtos/register.dto';
 import { LoginDto } from './infrastructure/dtos/login.dto';
+import { UpdateProfileDto } from './infrastructure/dtos/update-profile.dto';
 import { Verify2FADto } from './infrastructure/dtos/verify-2fa.dto';
 import { GetProfileUseCase } from './application/get-profile.usecase';
 import { ForgotPasswordUseCase } from './application/forgot-password.usecase';
@@ -15,6 +18,7 @@ import { ResetPasswordDto } from './infrastructure/dtos/reset-password.dto';
 import { BecomeAddictDto } from './infrastructure/dtos/become-addict.dto';
 import { ReactivateDto } from './infrastructure/dtos/reactivate.dto';
 import { ReactivateAccountUseCase } from './application/reactivate-account.usecase';
+import { GetDebugTokenUseCase } from './application/get-debug-token.usecase';
 export declare class AuthController {
     private readonly registerUseCase;
     private readonly loginUseCase;
@@ -26,7 +30,10 @@ export declare class AuthController {
     private readonly deleteAccountUseCase;
     private readonly becomeAddictUseCase;
     private readonly reactivateAccountUseCase;
-    constructor(registerUseCase: RegisterUserUseCase, loginUseCase: LoginUseCase, verify2FAUseCase: Verify2FAUseCase, getProfileUseCase: GetProfileUseCase, forgotPasswordUseCase: ForgotPasswordUseCase, resetPasswordUseCase: ResetPasswordUseCase, verifyEmailUseCase: VerifyEmailUseCase, deleteAccountUseCase: DeleteAccountUseCase, becomeAddictUseCase: BecomeAddictUseCase, reactivateAccountUseCase: ReactivateAccountUseCase);
+    private readonly updateProfileUseCase;
+    private readonly getDebugTokenUseCase;
+    private readonly adminLoginUseCase;
+    constructor(registerUseCase: RegisterUserUseCase, loginUseCase: LoginUseCase, verify2FAUseCase: Verify2FAUseCase, getProfileUseCase: GetProfileUseCase, forgotPasswordUseCase: ForgotPasswordUseCase, resetPasswordUseCase: ResetPasswordUseCase, verifyEmailUseCase: VerifyEmailUseCase, deleteAccountUseCase: DeleteAccountUseCase, becomeAddictUseCase: BecomeAddictUseCase, reactivateAccountUseCase: ReactivateAccountUseCase, updateProfileUseCase: UpdateProfileUseCase, getDebugTokenUseCase: GetDebugTokenUseCase, adminLoginUseCase: AdminLoginUseCase);
     register(dto: RegisterDto): Promise<{
         id: string;
         name: string;
@@ -37,6 +44,15 @@ export declare class AuthController {
         createdAt: Date;
     }>;
     login(dto: LoginDto, req: ExpressRequest, res: Response): Promise<any>;
+    adminLogin(dto: LoginDto): Promise<{
+        accessToken: string;
+        user: {
+            id: any;
+            name: any;
+            email: any;
+            role: any;
+        };
+    }>;
     verify2FA(dto: Verify2FADto, res: Response): Promise<any>;
     getProfile(req: any): Promise<{
         id: string;
@@ -65,8 +81,21 @@ export declare class AuthController {
         message: string;
         role: string;
     }>;
+    updateProfile(req: any, dto: UpdateProfileDto): Promise<import("./domain/user.entity").UserEntity | {
+        id: string;
+        name: string;
+        email: string;
+        role: string | null;
+        sponsorCode: string | null;
+    } | null>;
     reactivate(dto: ReactivateDto): Promise<{
         message: string;
+    }>;
+    getDebugToken(req: any): Promise<{
+        email: string;
+        token: string;
+        type: string;
+        expiresAt: Date;
     }>;
     private handleDeviceIdCookie;
 }
