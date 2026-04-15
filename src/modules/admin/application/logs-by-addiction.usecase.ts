@@ -14,7 +14,6 @@ export class LogsByAddictionUseCase {
       if (filter.to) logWhere.log_date.lte = new Date(filter.to);
     }
 
-    // Obtener todas las adicciones activas con sus usuarios
     const addictions = await this.prisma.userAddiction.findMany({
       where: { is_active: true },
       select: {
@@ -24,7 +23,6 @@ export class LogsByAddictionUseCase {
       },
     });
 
-    // Agrupar usuarios por clasificación de adicción
     const classificationMap = new Map<string, Set<string>>();
     const addictionNameMap = new Map<string, Set<string>>();
 
@@ -42,7 +40,6 @@ export class LogsByAddictionUseCase {
       addictionNameMap.get(name)!.add(a.user_id);
     }
 
-    // Calcular métricas por clasificación (chemical vs behavioral)
     const byClassification: any[] = [];
     for (const [classification, userIds] of classificationMap) {
       const ids = Array.from(userIds);
@@ -69,7 +66,6 @@ export class LogsByAddictionUseCase {
       });
     }
 
-    // Calcular métricas por nombre de adicción
     const byAddictionName: any[] = [];
     for (const [name, userIds] of addictionNameMap) {
       const ids = Array.from(userIds);
@@ -86,7 +82,6 @@ export class LogsByAddictionUseCase {
       });
     }
 
-    // Ordenar por totalLogs descendente
     byAddictionName.sort((a, b) => b.totalLogs - a.totalLogs);
 
     return {

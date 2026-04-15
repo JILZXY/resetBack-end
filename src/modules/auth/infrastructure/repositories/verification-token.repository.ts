@@ -6,7 +6,6 @@ export class VerificationTokenRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(userId: string, token: string, expiresAt: Date) {
-    // Eliminar tokens previos para ese usuario
     await this.prisma.verificationToken.deleteMany({
       where: { user_id: userId },
     });

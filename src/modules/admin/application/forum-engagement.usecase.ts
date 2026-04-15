@@ -40,30 +40,27 @@ export class ForumEngagementUseCase {
       this.reactionModel.countDocuments(reactionQuery),
     ]);
 
-    // Usuarios únicos que publicaron posts
     const uniquePostAuthors = await this.postModel.distinct(
       'authorId',
       postQuery,
     );
-    // Usuarios únicos que comentaron
+
     const uniqueCommentAuthors = await this.commentModel.distinct(
       'authorId',
       commentQuery,
     );
-    // Usuarios únicos que reaccionaron
+
     const uniqueReactors = await this.reactionModel.distinct(
       'userId',
       reactionQuery,
     );
 
-    // Todos los usuarios únicos del foro (unión de los 3 conjuntos)
     const allForumUsers = new Set([
       ...uniquePostAuthors,
       ...uniqueCommentAuthors,
       ...uniqueReactors,
     ]);
 
-    // Posts por día (aggregation pipeline)
     const postsByDay = await this.postModel.aggregate([
       { $match: postQuery },
       {

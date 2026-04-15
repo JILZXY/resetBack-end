@@ -90,7 +90,6 @@ export class UserRepository {
       });
     }
 
-    // Actualizar avatar_url dinámico basado en el ID generado
     const updatedUser = await this.prisma.user.update({
       where: { id: user.id },
       data: {
@@ -120,7 +119,7 @@ export class UserRepository {
       data: {
         is_deleted: false,
         deleted_at: null,
-        is_verified: true, // Asumimos que ya estaba verificado si lo borró
+        is_verified: true,
       },
     });
   }

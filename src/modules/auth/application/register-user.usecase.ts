@@ -49,14 +49,12 @@ export class RegisterUserUseCase {
       classification: dto.classification,
     });
 
-    // GENERAR TOKEN DE VERIFICACIÓN
     const token = crypto.randomBytes(32).toString('hex');
     const expiresAt = new Date();
-    expiresAt.setHours(expiresAt.getHours() + 24); // Expira en 24 horas
+    expiresAt.setHours(expiresAt.getHours() + 24);
 
     await this.tokenRepo.create(user.id, token, expiresAt);
-    
-    // ENVIAR COREO DE VERIFICACIÓN VIA BREVO
+
     await this.mailService.sendVerificationEmail(user.email, token);
 
     return {

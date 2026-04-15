@@ -8,6 +8,8 @@ export class LoginDto {
   password: string;
 
   @IsOptional()
-  @IsBoolean({ message: 'La opción de recordar dispositivo debe ser un valor booleano' })
+  @IsBoolean({
+    message: 'La opción de recordar dispositivo debe ser un valor booleano',
+  })
   rememberMe?: boolean;
 }

@@ -24,7 +24,6 @@ export class GraduateSponsorUseCase {
       );
     }
 
-    // Verificar que el sponsorId sea efectivamente su padrino activo
     const activeSponsorship = await this.prisma.sponsorship.findFirst({
       where: {
         addict_id: addictId,
@@ -42,9 +41,7 @@ export class GraduateSponsorUseCase {
 
     const sponsorCode = nanoid(8).toUpperCase();
 
-    // Iniciar transacción para actualizar todo el estado
     await this.prisma.$transaction(async (tx) => {
-      // 1. Terminar apadrinamiento
       await tx.sponsorship.update({
         where: { id: activeSponsorship.id },
         data: {
@@ -54,7 +51,6 @@ export class GraduateSponsorUseCase {
         },
       });
 
-      // 2. Desactivar adicciones activas
       const addictions = addict.addictions ?? [];
       for (const addiction of addictions) {
         if (addiction.is_active) {
@@ -65,7 +61,6 @@ export class GraduateSponsorUseCase {
         }
       }
 
-      // 3. Cambiar el rol a PADRINO y asignar sponsor_code
       await tx.user.update({
         where: { id: addictId },
         data: {
@@ -76,7 +71,8 @@ export class GraduateSponsorUseCase {
     });
 
     return {
-      message: '¡Felicidades! Tu ahijado se ha graduado como Padrino exitosamente',
+      message:
+        '¡Felicidades! Tu ahijado se ha graduado como Padrino exitosamente',
       addictName: addict.name,
       sponsorCode,
     };

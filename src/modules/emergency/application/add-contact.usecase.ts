@@ -45,7 +45,8 @@ export class AddContactUseCase {
         throw new HttpException(
           {
             code: 'DUPLICATE_CONTACT_EMAIL',
-            message: 'Ya tienes un contacto registrado con este correo electrónico',
+            message:
+              'Ya tienes un contacto registrado con este correo electrónico',
             details: { email: dto.email },
           },
           HttpStatus.CONFLICT,

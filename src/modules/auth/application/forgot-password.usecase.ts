@@ -15,19 +15,23 @@ export class ForgotPasswordUseCase {
   async execute(email: string) {
     const user = await this.userRepo.findByEmail(email);
 
-    // Por seguridad, no informamos si el correo no existe, 
-    // pero simplemente no hacemos nada.
     if (!user) {
-      return { message: 'Si el correo está registrado, recibirás un enlace de recuperación' };
+      return {
+        message:
+          'Si el correo está registrado, recibirás un enlace de recuperación',
+      };
     }
 
     const token = crypto.randomBytes(32).toString('hex');
     const expiresAt = new Date();
-    expiresAt.setHours(expiresAt.getHours() + 1); // Expira en 1 hora
+    expiresAt.setHours(expiresAt.getHours() + 1);
 
     await this.tokenRepo.create(user.id, token, expiresAt);
     await this.mailService.sendPasswordReset(user.email, token);
 
-    return { message: 'Si el correo está registrado, recibirás un enlace de recuperación' };
+    return {
+      message:
+        'Si el correo está registrado, recibirás un enlace de recuperación',
+    };
   }
 }

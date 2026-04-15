@@ -49,40 +49,39 @@ export class LoginUseCase {
       throw new HttpException(
         {
           code: 'EMAIL_NOT_VERIFIED',
-          message: 'Debes verificar tu correo electrónico antes de iniciar sesión',
+          message:
+            'Debes verificar tu correo electrónico antes de iniciar sesión',
           details: { email: user.email },
         },
         HttpStatus.FORBIDDEN,
       );
     }
 
-    // LÓGICA DE 2FA / TRUSTED DEVICE
     if (deviceIdFromCookie) {
-      const isTrusted = await this.trustedDeviceRepo.findValidDevice(user.id, deviceIdFromCookie);
+      const isTrusted = await this.trustedDeviceRepo.findValidDevice(
+        user.id,
+        deviceIdFromCookie,
+      );
       if (isTrusted) {
         await this.trustedDeviceRepo.updateLastUsed(isTrusted.id);
         return this.generateTokenResponse(user);
       }
     }
 
-    // El dispositivo NO es de confianza o no se proporcionó cookie
-    // Generar código 2FA de 6 dígitos
     const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
     const expiresAt = new Date();
-    expiresAt.setMinutes(expiresAt.getMinutes() + 10); // Expira en 10 min
+    expiresAt.setMinutes(expiresAt.getMinutes() + 10);
 
     await this.tokenRepo.create(user.id, otpCode, expiresAt);
     await this.mailService.send2FACode(user.email, otpCode);
 
-    // Generar un token temporal de MFA que expire rápido (p.ej. 15 min)
-    // Este token servirá para validar el paso 2 sin enviar el password de nuevo
     const mfaToken = this.jwtService.sign(
-      { 
-        sub: user.id, 
-        type: 'mfa_challenge', 
-        rememberMe: dto.rememberMe 
+      {
+        sub: user.id,
+        type: 'mfa_challenge',
+        rememberMe: dto.rememberMe,
       },
-      { expiresIn: '15m' }
+      { expiresIn: '15m' },
     );
 
     return {

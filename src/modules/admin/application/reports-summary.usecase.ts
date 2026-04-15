@@ -22,21 +22,18 @@ export class ReportsSummaryUseCase {
 
     const totalReports = await this.reportModel.countDocuments(query);
 
-    // Por razón
     const byReason = await this.reportModel.aggregate([
       { $match: query },
       { $group: { _id: '$reason', count: { $sum: 1 } } },
       { $sort: { count: -1 } },
     ]);
 
-    // Por estado
     const byStatus = await this.reportModel.aggregate([
       { $match: query },
       { $group: { _id: '$status', count: { $sum: 1 } } },
       { $sort: { count: -1 } },
     ]);
 
-    // Por tipo de target
     const byTargetType = await this.reportModel.aggregate([
       { $match: query },
       { $group: { _id: '$targetType', count: { $sum: 1 } } },

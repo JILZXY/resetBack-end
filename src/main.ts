@@ -19,7 +19,7 @@ async function bootstrap() {
   const allowedOrigins = frontendUrls
     ? frontendUrls.split(',').map((url) => url.trim())
     : [];
-    
+
   const corsOrigin = allowedOrigins.length > 0 ? allowedOrigins : true;
 
   app.enableCors({
@@ -29,7 +29,6 @@ async function bootstrap() {
     allowedHeaders: 'Content-Type, Authorization, X-Requested-With, Accept',
   });
 
-  // Configurar WebSocket adapter (socket.io) con los mismos orígenes permitidos
   const ioAdapter = new IoAdapter(app);
   app.useWebSocketAdapter(ioAdapter);
 

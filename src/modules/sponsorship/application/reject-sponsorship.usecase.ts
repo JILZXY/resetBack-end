@@ -14,7 +14,6 @@ export class RejectSponsorshipUseCase {
   ) {}
 
   async execute(userId: string) {
-    // Buscar solicitud pendiente donde el usuario sea el padrino
     const pending = await this.sponsorshipRepo.findPendingBySponsorId(userId);
 
     if (!pending) {
@@ -28,17 +27,14 @@ export class RejectSponsorshipUseCase {
       );
     }
 
-    // Eliminar el registro para liberar constraints @unique
     await this.sponsorshipRepo.reject(pending.id);
 
-    // Limpiar notificación de solicitud para el padrino
     await this.notificationRepo.markAsReadByCriteria({
       userId: userId,
       actorId: pending.addictId,
       type: 'SPONSORSHIP_REQUEST',
     });
 
-    // Notificar al adicto (fire-and-forget)
     this.notifyAddict(userId, pending.addictId).catch(() => {});
 
     return { message: 'Solicitud de apadrinamiento rechazada' };

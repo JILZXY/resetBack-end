@@ -22,7 +22,11 @@ export class NotificationService {
       <p>Tu rol como red de seguridad es fundamental en este camino de restauración.</p>
     `;
 
-    await this.mailService.sendEmail(contactEmail, subject, this.mailService.getBaseTemplate('Alerta de Emergencia', content));
+    await this.mailService.sendEmail(
+      contactEmail,
+      subject,
+      this.mailService.getBaseTemplate('Alerta de Emergencia', content),
+    );
   }
 
   async sendWelcomeEmail(userEmail: string, userName: string): Promise<void> {
@@ -38,6 +42,10 @@ export class NotificationService {
       <p style="margin-top: 40px; font-style: italic; color: #64748b;">"El primer paso no te lleva a donde quieres ir, pero te saca de donde estás."</p>
     `;
 
-    await this.mailService.sendEmail(userEmail, subject, this.mailService.getBaseTemplate('Bienvenida', content));
+    await this.mailService.sendEmail(
+      userEmail,
+      subject,
+      this.mailService.getBaseTemplate('Bienvenida', content),
+    );
   }
 }

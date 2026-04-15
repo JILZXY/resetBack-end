@@ -14,14 +14,12 @@ export class EmotionalTrendsUseCase {
       if (filter.to) where.log_date.lte = new Date(filter.to);
     }
 
-    // Obtener todos los logs con sus niveles de craving y emoción
     const logs = await this.prisma.dailyLog.findMany({
       where,
       include: { craving_level: true, emotional_state: true },
       orderBy: { log_date: 'asc' },
     });
 
-    // Promedios globales
     const logsWithCraving = logs.filter((l) => l.craving_level !== null);
     const logsWithEmotion = logs.filter((l) => l.emotional_state !== null);
 
@@ -49,7 +47,6 @@ export class EmotionalTrendsUseCase {
           )
         : null;
 
-    // Agrupar por fecha para serie temporal
     const dailyMap = new Map<
       string,
       { cravings: number[]; emotions: number[]; count: number }
@@ -86,14 +83,12 @@ export class EmotionalTrendsUseCase {
       logCount: data.count,
     }));
 
-    // Distribución de niveles de craving
     const cravingDist = new Map<number, number>();
     for (const log of logsWithCraving) {
       const level = log.craving_level!.level;
       cravingDist.set(level, (cravingDist.get(level) || 0) + 1);
     }
 
-    // Distribución de niveles de emoción
     const emotionDist = new Map<number, number>();
     for (const log of logsWithEmotion) {
       const level = log.emotional_state!.level;

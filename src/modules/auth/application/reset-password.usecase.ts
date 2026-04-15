@@ -18,14 +18,16 @@ export class ResetPasswordUseCase {
 
     if (!tokenRecord) {
       throw new HttpException(
-        { code: 'INVALID_OR_EXPIRED_TOKEN', message: 'El token es inválido o ha expirado' },
+        {
+          code: 'INVALID_OR_EXPIRED_TOKEN',
+          message: 'El token es inválido o ha expirado',
+        },
         HttpStatus.BAD_REQUEST,
       );
     }
 
     const passwordHash = await bcrypt.hash(dto.newPassword, 10);
 
-    // Usamos una transacción para asegurar que el token se elimine al actualizar la password
     await this.prisma.$transaction([
       this.prisma.user.update({
         where: { id: tokenRecord.user_id },

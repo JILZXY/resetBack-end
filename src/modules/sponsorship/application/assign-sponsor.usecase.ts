@@ -17,7 +17,6 @@ export class RequestSponsorshipUseCase {
   ) {}
 
   async execute(userId: string, dto: RequestSponsorshipDto) {
-    // 1. Buscar padrino por sponsor_code
     const sponsor = await this.userRepo.findBySponsorCode(dto.sponsor_code);
     if (!sponsor || sponsor.role !== 'PADRINO') {
       throw new HttpException(
@@ -30,7 +29,6 @@ export class RequestSponsorshipUseCase {
       );
     }
 
-    // 2. Verificar que el adicto no se auto-apadrine
     if (sponsor.id === userId) {
       throw new HttpException(
         {
@@ -42,7 +40,6 @@ export class RequestSponsorshipUseCase {
       );
     }
 
-    // 3. Verificar que el adicto no tenga ya una relación activa o pendiente
     const existingActive =
       await this.sponsorshipRepo.findActiveByAddictId(userId);
     if (existingActive) {
@@ -69,13 +66,11 @@ export class RequestSponsorshipUseCase {
       );
     }
 
-    // 4. Crear solicitud con status PENDING
     const sponsorship = await this.sponsorshipRepo.createRequest(
       sponsor.id,
       userId,
     );
 
-    // 5. Notificación al padrino (fire-and-forget)
     this.notifySponsorship(userId, sponsor.id, sponsor.email).catch(() => {});
 
     return {
@@ -89,7 +84,6 @@ export class RequestSponsorshipUseCase {
     sponsorId: string,
     sponsorEmail: string,
   ) {
-    // Notificación in-app
     const actor = await this.userRepo.findById(actorId);
 
     const notification = await this.notificationRepo.create({
@@ -102,7 +96,6 @@ export class RequestSponsorshipUseCase {
     });
     this.notificationGateway.sendToUser(sponsorId, notification);
 
-    // Notificación por email
     await this.emailService.sendEmergencyAlert(
       sponsorEmail,
       actor?.name ?? 'Un usuario',

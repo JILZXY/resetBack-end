@@ -89,7 +89,6 @@ export class ForumController {
     return this.deletePost.execute(req.user.userId, id);
   }
 
-  // Reacciones con toggle (prevención de duplicados)
   @Post('posts/:id/react')
   reactPost(@Request() req: any, @Param('id') id: string) {
     return this.toggleReaction.execute(req.user.userId, id, 'post');
@@ -100,7 +99,6 @@ export class ForumController {
     return this.toggleReaction.execute(req.user.userId, id, 'comment');
   }
 
-  // Reportes
   @Post('posts/:id/report')
   @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
   reportPost(
@@ -121,7 +119,6 @@ export class ForumController {
     return this.createReport.execute(req.user.userId, id, 'comment', dto);
   }
 
-  // Comentarios
   @Post('posts/:id/comments')
   @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
   addComment(
@@ -142,7 +139,6 @@ export class ForumController {
     return this.deleteComment.execute(req.user.userId, id);
   }
 
-  // Notas de Aliento
   @Post('encouragement')
   @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
   sendEncouragement(

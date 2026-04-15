@@ -7,7 +7,7 @@ export class TrustedDeviceRepository {
 
   async create(userId: string, deviceIdentifier: string, deviceName?: string) {
     const expiresAt = new Date();
-    expiresAt.setDate(expiresAt.getDate() + 30); // 30 días de duración
+    expiresAt.setDate(expiresAt.getDate() + 30);
 
     return this.prisma.trustedDevice.create({
       data: {

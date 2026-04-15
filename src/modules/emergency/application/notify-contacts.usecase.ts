@@ -11,7 +11,6 @@ export class NotifyContactsUseCase {
     private readonly prisma: PrismaService,
   ) {}
 
-  // Útil para reenviar notificaciones manualmente si fallaron
   async execute(userId: string): Promise<void> {
     const user = await this.prisma.user.findUnique({ where: { id: userId } });
     const contacts = await this.contactRepo.findAllByUserId(userId);

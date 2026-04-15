@@ -6,7 +6,6 @@ export class PasswordResetTokenRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(userId: string, token: string, expiresAt: Date) {
-    // Eliminar tokens previos para ese usuario para evitar acumulación
     await this.prisma.passwordResetToken.deleteMany({
       where: { user_id: userId },
     });
