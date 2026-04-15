@@ -2,6 +2,7 @@
 # /dist <-- Removido para permitir despliegue pre-compilado
 /node_modules
 /build
+/test/selenium
 
 # Logs
 logs
