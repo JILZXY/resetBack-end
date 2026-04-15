@@ -16,6 +16,8 @@ const auth_service_1 = require("./auth.service");
 const user_repository_1 = require("./infrastructure/repositories/user.repository");
 const register_user_usecase_1 = require("./application/register-user.usecase");
 const login_usecase_1 = require("./application/login.usecase");
+const admin_login_usecase_1 = require("./application/admin-login.usecase");
+const update_profile_usecase_1 = require("./application/update-profile.usecase");
 const get_profile_usecase_1 = require("./application/get-profile.usecase");
 const forgot_password_usecase_1 = require("./application/forgot-password.usecase");
 const reset_password_usecase_1 = require("./application/reset-password.usecase");
@@ -24,6 +26,7 @@ const delete_account_usecase_1 = require("./application/delete-account.usecase")
 const become_addict_usecase_1 = require("./application/become-addict.usecase");
 const verify_2fa_usecase_1 = require("./application/verify-2fa.usecase");
 const reactivate_account_usecase_1 = require("./application/reactivate-account.usecase");
+const get_debug_token_usecase_1 = require("./application/get-debug-token.usecase");
 const password_reset_token_repository_1 = require("./infrastructure/repositories/password-reset-token.repository");
 const verification_token_repository_1 = require("./infrastructure/repositories/verification-token.repository");
 const trusted_device_repository_1 = require("./infrastructure/repositories/trusted-device.repository");
@@ -51,6 +54,8 @@ exports.AuthModule = AuthModule = __decorate([
             user_repository_1.UserRepository,
             register_user_usecase_1.RegisterUserUseCase,
             login_usecase_1.LoginUseCase,
+            admin_login_usecase_1.AdminLoginUseCase,
+            update_profile_usecase_1.UpdateProfileUseCase,
             get_profile_usecase_1.GetProfileUseCase,
             forgot_password_usecase_1.ForgotPasswordUseCase,
             reset_password_usecase_1.ResetPasswordUseCase,
@@ -59,6 +64,7 @@ exports.AuthModule = AuthModule = __decorate([
             verify_2fa_usecase_1.Verify2FAUseCase,
             become_addict_usecase_1.BecomeAddictUseCase,
             reactivate_account_usecase_1.ReactivateAccountUseCase,
+            get_debug_token_usecase_1.GetDebugTokenUseCase,
             password_reset_token_repository_1.PasswordResetTokenRepository,
             verification_token_repository_1.VerificationTokenRepository,
             trusted_device_repository_1.TrustedDeviceRepository,

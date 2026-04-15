@@ -13,11 +13,14 @@ import {
 } from '@nestjs/common';
 import type { Response, Request as ExpressRequest } from 'express';
 import { RegisterUserUseCase } from './application/register-user.usecase';
+import { UpdateProfileUseCase } from './application/update-profile.usecase';
 import { LoginUseCase } from './application/login.usecase';
 import { Verify2FAUseCase } from './application/verify-2fa.usecase';
 import { BecomeAddictUseCase } from './application/become-addict.usecase';
+import { AdminLoginUseCase } from './application/admin-login.usecase';
 import { RegisterDto } from './infrastructure/dtos/register.dto';
 import { LoginDto } from './infrastructure/dtos/login.dto';
+import { UpdateProfileDto } from './infrastructure/dtos/update-profile.dto';
 import { Verify2FADto } from './infrastructure/dtos/verify-2fa.dto';
 import { GetProfileUseCase } from './application/get-profile.usecase';
 import { ForgotPasswordUseCase } from './application/forgot-password.usecase';
@@ -28,6 +31,7 @@ import { ResetPasswordDto } from './infrastructure/dtos/reset-password.dto';
 import { BecomeAddictDto } from './infrastructure/dtos/become-addict.dto';
 import { ReactivateDto } from './infrastructure/dtos/reactivate.dto';
 import { ReactivateAccountUseCase } from './application/reactivate-account.usecase';
+import { GetDebugTokenUseCase } from './application/get-debug-token.usecase';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 @Controller('auth')
@@ -44,6 +48,10 @@ export class AuthController {
     private readonly becomeAddictUseCase: BecomeAddictUseCase,
     private readonly reactivateAccountUseCase: ReactivateAccountUseCase,
   ) {}
+    private readonly updateProfileUseCase: UpdateProfileUseCase,
+    private readonly getDebugTokenUseCase: GetDebugTokenUseCase,
+    private readonly adminLoginUseCase: AdminLoginUseCase,
+  ) { }
 
   @Post('register')
   @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
@@ -67,6 +75,12 @@ export class AuthController {
     this.handleDeviceIdCookie(result, res);
 
     return result;
+  }
+
+  @Post('admin-login')
+  @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
+  async adminLogin(@Body() dto: LoginDto) {
+    return this.adminLoginUseCase.execute(dto);
   }
 
   @Post('verify-2fa')
@@ -117,10 +131,22 @@ export class AuthController {
     return this.becomeAddictUseCase.execute(req.user.userId, dto);
   }
 
+  @Post('profile') // Use PATCH or POST. I will use PATCH. Wait, the route says POST below. I will add PATCH 'profile' here.
+  @UseGuards(JwtAuthGuard)
+  @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
+  updateProfile(@Request() req: any, @Body() dto: UpdateProfileDto) {
+    return this.updateProfileUseCase.execute(req.user.userId, dto);
+  }
+
   @Post('reactivate')
   @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
   reactivate(@Body() dto: ReactivateDto) {
     return this.reactivateAccountUseCase.execute(dto);
+  }
+
+  @Get('debug/last-token/:email')
+  getDebugToken(@Request() req: any) {
+    return this.getDebugTokenUseCase.execute(req.params.email);
   }
 
   private handleDeviceIdCookie(result: any, res: Response) {

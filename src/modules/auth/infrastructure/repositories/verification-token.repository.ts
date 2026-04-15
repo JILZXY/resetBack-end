@@ -36,4 +36,28 @@ export class VerificationTokenRepository {
       where: { id },
     });
   }
+
+  async findLatestByUserEmail(email: string) {
+    // Buscamos el usuario primero para obtener su ID
+    // Esto evita un bug conocido de Prisma 7 con filtros de relación en multi-schema usando el adaptador de pg
+    const user = await this.prisma.user.findUnique({
+      where: { email },
+      select: { id: true },
+    });
+
+    if (!user) return null;
+
+    return this.prisma.verificationToken.findFirst({
+      where: {
+        user_id: user.id,
+        expires_at: { gt: new Date() },
+      },
+      orderBy: {
+        created_at: 'desc',
+      },
+      include: {
+        user: true,
+      },
+    });
+  }
 }
