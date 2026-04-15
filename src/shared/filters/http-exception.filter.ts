@@ -36,7 +36,6 @@ export class GlobalExceptionFilter implements ExceptionFilter {
         code = this.statusToCode(status);
       }
     } else if (exception instanceof Error) {
-      // Se mantiene el mensaje genérico y abstracto para evitar exponer la arquitectura o tecnologías en los errores 500.
     }
 
     if (process.env.NODE_ENV === 'development') {

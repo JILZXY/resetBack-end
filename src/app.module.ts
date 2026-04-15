@@ -22,7 +22,11 @@ import { MailModule } from './shared/mail/mail.module';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: process.env.ENV_FILE || (process.env.NODE_ENV === 'production' ? '.env.production' : '.env.development'),
+      envFilePath:
+        process.env.ENV_FILE ||
+        (process.env.NODE_ENV === 'production'
+          ? '.env.production'
+          : '.env.development'),
       ignoreEnvFile: !!process.env.IGNORE_ENV_FILE || false,
       load: [appConfig, databaseConfig, jwtConfig, mongoConfig, brevoConfig],
     }),

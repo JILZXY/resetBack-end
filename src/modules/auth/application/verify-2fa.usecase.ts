@@ -21,7 +21,10 @@ export class Verify2FAUseCase {
       payload = this.jwtService.verify(dto.mfaToken);
     } catch (e) {
       throw new HttpException(
-        { code: 'INVALID_MFA_TOKEN', message: 'El token de desafío ha expirado o es inválido' },
+        {
+          code: 'INVALID_MFA_TOKEN',
+          message: 'El token de desafío ha expirado o es inválido',
+        },
         HttpStatus.UNAUTHORIZED,
       );
     }
@@ -38,27 +41,31 @@ export class Verify2FAUseCase {
 
     if (!tokenRecord || tokenRecord.user_id !== userId) {
       throw new HttpException(
-        { code: 'INVALID_OTP_CODE', message: 'El código ingresado es incorrecto o ha expirado' },
+        {
+          code: 'INVALID_OTP_CODE',
+          message: 'El código ingresado es incorrecto o ha expirado',
+        },
         HttpStatus.BAD_REQUEST,
       );
     }
 
-    // Código correcto -> Proceder con el login real
     const user = await this.userRepo.findById(userId);
     if (!user) {
-        throw new HttpException('Usuario no encontrado', HttpStatus.NOT_FOUND);
+      throw new HttpException('Usuario no encontrado', HttpStatus.NOT_FOUND);
     }
 
-    // Eliminar el OTP usado
     await this.tokenRepo.delete(tokenRecord.id);
 
     const response = this.generateTokenResponse(user);
 
-    // Si marcó "recordar dispositivo" (en el login inicial o en esta pantalla), generar uno nuevo
     let newDeviceId: string | undefined;
     if (payload.rememberMe || dto.rememberMe) {
       newDeviceId = crypto.randomBytes(32).toString('hex');
-      await this.trustedDeviceRepo.create(user.id, newDeviceId, 'Dispositivo de confianza');
+      await this.trustedDeviceRepo.create(
+        user.id,
+        newDeviceId,
+        'Dispositivo de confianza',
+      );
     }
 
     return { ...response, newDeviceId };

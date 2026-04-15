@@ -10,7 +10,8 @@ export class MailService {
   async sendEmail(to: string, subject: string, htmlContent: string) {
     const apiKey = this.configService.get<string>('brevo.apiKey');
     const fromEmail = this.configService.get<string>('brevo.fromEmail');
-    const fromName = this.configService.get<string>('brevo.fromName') || 'ReSet App';
+    const fromName =
+      this.configService.get<string>('brevo.fromName') || 'ReSet App';
 
     if (!apiKey || apiKey === 'not_configured') {
       this.logger.warn('Brevo API key not configured, skipping email');
@@ -169,24 +170,21 @@ export class MailService {
     `;
   }
 
-  /**
-   * Obtiene la URL principal del frontend eliminando duplicados (como localhost en prod)
-   */
   public getPrimaryFrontendUrl(): string {
     const urls = this.configService.get<string>('app.frontendUrl') || '';
     const urlList = urls.split(',').map((u) => u.trim());
-    const isProd = this.configService.get<string>('app.nodeEnv') === 'production';
+    const isProd =
+      this.configService.get<string>('app.nodeEnv') === 'production';
 
     if (isProd) {
-      // En producción, preferimos la URL que no sea localhost
-      const prodUrl = urlList.find((u) => u.startsWith('https') && !u.includes('localhost'));
+      const prodUrl = urlList.find(
+        (u) => u.startsWith('https') && !u.includes('localhost'),
+      );
       return prodUrl || urlList[0] || 'https://reset-app.tech';
     }
 
     return urlList[0] || 'http://localhost:3000';
   }
-
-
 
   async sendVerificationEmail(to: string, token: string) {
     const subject = 'Verifica tu correo electrónico - ReSet';
@@ -200,7 +198,11 @@ export class MailService {
       <p style="margin-top: 30px;">Si el botón no funciona, copia y pega este enlace en tu navegador:</p>
       <p style="font-size: 12px; color: #64748b;">${frontendUrl}/verify-email?token=${token}</p>
     `;
-    return this.sendEmail(to, subject, this.getBaseTemplate('Verificación', content));
+    return this.sendEmail(
+      to,
+      subject,
+      this.getBaseTemplate('Verificación', content),
+    );
   }
 
   async sendPasswordReset(to: string, token: string) {
@@ -216,7 +218,11 @@ export class MailService {
       <p style="margin-top: 30px;">Si no solicitaste este cambio, puedes ignorar este correo con seguridad. Tu cuenta permanece protegida.</p>
       <p>Este enlace expirará en 1 hora.</p>
     `;
-    return this.sendEmail(to, subject, this.getBaseTemplate('Recuperación', content));
+    return this.sendEmail(
+      to,
+      subject,
+      this.getBaseTemplate('Recuperación', content),
+    );
   }
 
   async send2FACode(to: string, code: string) {
@@ -232,7 +238,11 @@ export class MailService {
       <p>Este código expirará en <strong>10 minutos</strong>.</p>
       <p style="font-size: 14px; color: #64748b;">Si no intentaste iniciar sesión, te recomendamos cambiar tu contraseña de inmediato.</p>
     `;
-    return this.sendEmail(to, subject, this.getBaseTemplate('Seguridad', content));
+    return this.sendEmail(
+      to,
+      subject,
+      this.getBaseTemplate('Seguridad', content),
+    );
   }
 
   async sendFarewellEmail(to: string, userName: string) {
@@ -246,6 +256,10 @@ export class MailService {
       </div>
       <p>Gracias por habernos permitido acompañarte durante este tiempo.</p>
     `;
-    return this.sendEmail(to, subject, this.getBaseTemplate('Despedida', content));
+    return this.sendEmail(
+      to,
+      subject,
+      this.getBaseTemplate('Despedida', content),
+    );
   }
 }

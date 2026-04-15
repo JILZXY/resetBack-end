@@ -44,7 +44,7 @@ export class NotificationRepository {
   private toEntity(raw: NotificationDocument): NotificationEntity {
     const entity = new NotificationEntity();
     entity.id = (raw._id as any).toString();
-    entity._id = (raw._id as any).toString(); // add _id for frontend expectation
+    entity._id = (raw._id as any).toString();
     entity.userId = raw.userId;
     entity.actorId = raw.actorId;
     entity.type = raw.type;

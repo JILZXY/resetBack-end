@@ -21,24 +21,25 @@ export class BecomeAddictUseCase {
     }
 
     if (user.role === 'ADICTO') {
-      throw new HttpException('El usuario ya es un adicto', HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        'El usuario ya es un adicto',
+        HttpStatus.BAD_REQUEST,
+      );
     }
 
-    // Iniciar transacción para el cambio de rol
     await this.prisma.$transaction(async (tx) => {
-      // 1. Terminar todas sus relaciones activas donde es padrino
       for (const sponsorship of user.sponsorships_as_sponsor) {
         await tx.sponsorship.update({
           where: { id: sponsorship.id },
           data: {
             status: 'INACTIVE',
             ended_at: new Date(),
-            termination_reason: 'El Padrino ha decidido volver a ser un Adicto (Relapso)',
+            termination_reason:
+              'El Padrino ha decidido volver a ser un Adicto (Relapso)',
           },
         });
       }
 
-      // 2. Crear o actualizar su registro de adicción (evita error de duplicado si ya existía antes de ser padrino)
       const addiction = await tx.userAddiction.upsert({
         where: { user_id: userId },
         update: {
@@ -72,7 +73,6 @@ export class BecomeAddictUseCase {
         },
       });
 
-      // 4. Cambiar rol a ADICTO y eliminar sponsor_code
       await tx.user.update({
         where: { id: userId },
         data: {
@@ -83,7 +83,8 @@ export class BecomeAddictUseCase {
     });
 
     return {
-      message: 'Tu rol ha sido cambiado a Adicto. Ánimo, estamos aquí para apoyarte.',
+      message:
+        'Tu rol ha sido cambiado a Adicto. Ánimo, estamos aquí para apoyarte.',
       role: 'ADICTO',
     };
   }

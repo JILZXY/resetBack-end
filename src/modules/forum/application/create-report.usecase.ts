@@ -18,7 +18,6 @@ export class CreateReportUseCase {
     targetType: 'post' | 'comment',
     dto: CreateReportDto,
   ) {
-    // Validar que el target existe
     if (targetType === 'post') {
       const post = await this.postRepo.findById(targetId);
       if (!post) {

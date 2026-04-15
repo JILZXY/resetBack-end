@@ -14,7 +14,6 @@ export class LogsFrequencyUseCase {
       if (filter.to) where.log_date.lte = new Date(filter.to);
     }
 
-    // Agrupar logs por fecha
     const logsByDate = await this.prisma.dailyLog.groupBy({
       by: ['log_date'],
       where,
@@ -22,11 +21,9 @@ export class LogsFrequencyUseCase {
       orderBy: { log_date: 'asc' },
     });
 
-    // Total y promedio
     const totalLogs = logsByDate.reduce((sum, d) => sum + d._count.id, 0);
     const totalDays = logsByDate.length || 1;
 
-    // Logs con consumo vs sin consumo
     const logsConsumed = await this.prisma.dailyLog.count({
       where: { ...where, consumed: true },
     });
@@ -34,7 +31,6 @@ export class LogsFrequencyUseCase {
       where: { ...where, consumed: false },
     });
 
-    // Usuarios únicos que registraron logs en el período
     const uniqueUsers = await this.prisma.dailyLog.groupBy({
       by: ['user_id'],
       where,

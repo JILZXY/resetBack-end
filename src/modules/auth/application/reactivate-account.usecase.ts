@@ -21,7 +21,10 @@ export class ReactivateAccountUseCase {
         );
       }
 
-      const isPasswordValid = await bcrypt.compare(dto.password, user.passwordHash);
+      const isPasswordValid = await bcrypt.compare(
+        dto.password,
+        user.passwordHash,
+      );
       if (!isPasswordValid) {
         throw new HttpException(
           {
@@ -35,7 +38,8 @@ export class ReactivateAccountUseCase {
       await this.userRepo.reactivate(user.id);
 
       return {
-        message: 'Cuenta reactivada correctamente. Ahora puedes iniciar sesión.',
+        message:
+          'Cuenta reactivada correctamente. Ahora puedes iniciar sesión.',
       };
     } catch (error) {
       if (error instanceof HttpException) throw error;
@@ -43,7 +47,7 @@ export class ReactivateAccountUseCase {
       throw new HttpException(
         {
           code: 'INTERNAL_ERROR',
-          message: 'Error interno al reactivar la cuenta'
+          message: 'Error interno al reactivar la cuenta',
         },
         HttpStatus.INTERNAL_SERVER_ERROR,
       );

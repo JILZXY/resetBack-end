@@ -1,6 +1,6 @@
 export class NotificationEntity {
-  _id: string; // for frontend compatibility
-  id: string; // for backend semantic consistency
+  _id: string;
+  id: string;
   userId: string;
   actorId: string;
   type: string;

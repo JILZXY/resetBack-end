@@ -20,7 +20,6 @@ export class Reaction {
 
 export const ReactionSchema = SchemaFactory.createForClass(Reaction);
 
-// Índice único compuesto: un usuario solo puede reaccionar una vez por target
 ReactionSchema.index(
   { targetId: 1, targetType: 1, userId: 1 },
   { unique: true },

@@ -23,14 +23,12 @@ export class CorrelationMetricsUseCase {
       if (filter.to) logWhere.log_date.lte = new Date(filter.to);
     }
 
-    // 1. Obtener todos los user IDs activos (que tienen al menos un log)
     const allUsersWithLogs = await this.prisma.dailyLog.groupBy({
       by: ['user_id'],
       where: logWhere,
     });
     const allUserIds = allUsersWithLogs.map((u) => u.user_id);
 
-    // 2. Identificar usuarios del foro (tienen al menos 1 post o comentario)
     const postAuthors = await this.postModel.distinct('authorId', {
       isDeleted: false,
     });
@@ -39,11 +37,9 @@ export class CorrelationMetricsUseCase {
     });
     const forumUserIds = new Set<string>([...postAuthors, ...commentAuthors]);
 
-    // 3. Separar en dos grupos
     const usersWithForum = allUserIds.filter((id) => forumUserIds.has(id));
     const usersWithoutForum = allUserIds.filter((id) => !forumUserIds.has(id));
 
-    // 4. Calcular métricas para cada grupo
     const [forumGroupMetrics, noForumGroupMetrics] = await Promise.all([
       this.getGroupMetrics(usersWithForum, logWhere),
       this.getGroupMetrics(usersWithoutForum, logWhere),
@@ -77,7 +73,6 @@ export class CorrelationMetricsUseCase {
       user_id: { in: userIds },
     };
 
-    // Obtener logs con sus relaciones de nivel
     const logs = await this.prisma.dailyLog.findMany({
       where,
       include: { craving_level: true, emotional_state: true },
@@ -86,7 +81,6 @@ export class CorrelationMetricsUseCase {
     const totalLogs = logs.length;
     const consumedLogs = logs.filter((l) => l.consumed).length;
 
-    // Promedios de craving y emoción usando los niveles numéricos de las relaciones
     const logsWithCraving = logs.filter((l) => l.craving_level !== null);
     const logsWithEmotion = logs.filter((l) => l.emotional_state !== null);
 
@@ -114,7 +108,6 @@ export class CorrelationMetricsUseCase {
           )
         : null;
 
-    // Promedio de días de racha
     const streaks = await this.prisma.streak.findMany({
       where: { user_id: { in: userIds } },
       select: { day_counter: true },

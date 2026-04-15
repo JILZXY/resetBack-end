@@ -43,7 +43,7 @@ export class AuthController {
     private readonly deleteAccountUseCase: DeleteAccountUseCase,
     private readonly becomeAddictUseCase: BecomeAddictUseCase,
     private readonly reactivateAccountUseCase: ReactivateAccountUseCase,
-  ) { }
+  ) {}
 
   @Post('register')
   @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
@@ -59,7 +59,10 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ) {
     const deviceIdFromCookie = req.cookies['device_id'];
-    const result: any = await this.loginUseCase.execute(dto, deviceIdFromCookie);
+    const result: any = await this.loginUseCase.execute(
+      dto,
+      deviceIdFromCookie,
+    );
 
     this.handleDeviceIdCookie(result, res);
 
@@ -106,7 +109,7 @@ export class AuthController {
   deleteAccount(@Request() req: any) {
     return this.deleteAccountUseCase.execute(req.user.userId);
   }
-  
+
   @Post('relapse')
   @UseGuards(JwtAuthGuard)
   @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
@@ -126,8 +129,8 @@ export class AuthController {
         httpOnly: true,
         secure: true,
         sameSite: 'none',
-        partitioned: true, // Importante para CHIPS (cookies cross-site modernas)
-        maxAge: 30 * 24 * 60 * 60 * 1000, // 30 días
+        partitioned: true,
+        maxAge: 30 * 24 * 60 * 60 * 1000,
       });
       delete result.newDeviceId;
     }

@@ -46,7 +46,6 @@ export class PrismaService implements OnModuleInit, OnModuleDestroy {
     return this.prisma.$queryRawUnsafe.bind(this.prisma);
   }
 
-  // Exponer métodos de acceso
   get user() {
     return this.prisma.user;
   }

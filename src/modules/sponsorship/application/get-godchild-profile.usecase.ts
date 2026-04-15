@@ -10,7 +10,6 @@ export class GetGodchildProfileUseCase {
   ) {}
 
   async execute(userId: string) {
-    // Buscar relación activa donde el usuario sea el padrino
     const sponsorship =
       await this.sponsorshipRepo.findActiveBySponsorId(userId);
 
@@ -27,9 +26,8 @@ export class GetGodchildProfileUseCase {
 
     const addictId = sponsorship.addictId;
 
-    // Obtener datos del ahijado (excluyendo campos sensibles)
     const user = await this.prisma.user.findFirst({
-      where: { 
+      where: {
         id: addictId,
         is_deleted: false,
       },
@@ -53,13 +51,11 @@ export class GetGodchildProfileUseCase {
       throw new HttpException('Ahijado no encontrado', HttpStatus.NOT_FOUND);
     }
 
-    // Obtener estadísticas del ahijado
     const stats = await this.prisma.$queryRaw<any[]>`
       SELECT * FROM core.fn_get_user_stats(${addictId}::uuid)
     `;
     const rawStats = stats[0] || {};
 
-    // Obtener últimos 10 logs
     const recentLogs = await this.prisma.dailyLog.findMany({
       where: { user_id: addictId },
       orderBy: { log_date: 'desc' },

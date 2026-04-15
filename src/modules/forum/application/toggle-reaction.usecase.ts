@@ -23,7 +23,6 @@ export class ToggleReactionUseCase {
     targetId: string,
     targetType: 'post' | 'comment',
   ) {
-    // Validar que el target existe y obtener su autor
     let targetAuthorId: string | undefined;
 
     if (targetType === 'post') {
@@ -54,7 +53,6 @@ export class ToggleReactionUseCase {
       targetAuthorId = comment.authorId;
     }
 
-    // Verificar si el usuario ya reaccionó
     const existing = await this.reactionRepo.findOne(
       userId,
       targetId,
@@ -62,7 +60,6 @@ export class ToggleReactionUseCase {
     );
 
     if (existing) {
-      // Deshacer reacción
       await this.reactionRepo.delete(userId, targetId, targetType);
 
       if (targetType === 'post') {
@@ -73,7 +70,6 @@ export class ToggleReactionUseCase {
 
       return { action: 'removed', message: 'Reacción eliminada' };
     } else {
-      // Crear reacción
       await this.reactionRepo.create({ userId, targetId, targetType });
 
       if (targetType === 'post') {
@@ -82,9 +78,10 @@ export class ToggleReactionUseCase {
         await this.commentRepo.incrementReaction(targetId);
       }
 
-      // Notificación al autor del target (fire-and-forget, sin auto-notificación)
       if (targetAuthorId && targetAuthorId !== userId) {
-        const actor = await this.prisma.user.findUnique({ where: { id: userId } });
+        const actor = await this.prisma.user.findUnique({
+          where: { id: userId },
+        });
 
         this.notificationRepo
           .create({

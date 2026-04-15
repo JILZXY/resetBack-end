@@ -14,7 +14,6 @@ export class AcceptSponsorshipUseCase {
   ) {}
 
   async execute(userId: string) {
-    // Buscar solicitud pendiente donde el usuario sea el padrino
     const pending = await this.sponsorshipRepo.findPendingBySponsorId(userId);
 
     if (!pending) {
@@ -28,17 +27,14 @@ export class AcceptSponsorshipUseCase {
       );
     }
 
-    // Aceptar la solicitud
     const sponsorship = await this.sponsorshipRepo.accept(pending.id);
 
-    // Limpiar notificación de solicitud para el padrino
     await this.notificationRepo.markAsReadByCriteria({
       userId: userId,
       actorId: pending.addictId,
       type: 'SPONSORSHIP_REQUEST',
     });
 
-    // Notificar al adicto (fire-and-forget)
     this.notifyAddict(userId, pending.addictId).catch(() => {});
 
     return {
@@ -49,7 +45,7 @@ export class AcceptSponsorshipUseCase {
 
   private async notifyAddict(sponsorId: string, addictId: string) {
     const actor = await this.userRepo.findById(sponsorId);
-    
+
     const notification = await this.notificationRepo.create({
       userId: addictId,
       actorId: sponsorId,

@@ -6,27 +6,23 @@ export class StreaksSummaryUseCase {
   constructor(private readonly prisma: PrismaService) {}
 
   async execute() {
-    // Estadísticas generales de rachas
     const [totalStreaks, activeStreaks, brokenStreaks] = await Promise.all([
       this.prisma.streak.count(),
       this.prisma.streak.count({ where: { status: 'active' } }),
       this.prisma.streak.count({ where: { status: 'broken' } }),
     ]);
 
-    // Promedios y máximos
     const streakAgg = await this.prisma.streak.aggregate({
       _avg: { day_counter: true },
       _max: { day_counter: true },
     });
 
-    // Solo rachas activas
     const activeAgg = await this.prisma.streak.aggregate({
       where: { status: 'active' },
       _avg: { day_counter: true },
       _max: { day_counter: true },
     });
 
-    // Distribución de rachas por rango de días
     const allStreaks = await this.prisma.streak.findMany({
       select: { day_counter: true, status: true },
     });
@@ -50,7 +46,6 @@ export class StreaksSummaryUseCase {
       else distribution['90+']++;
     }
 
-    // Tasa de recaída
     const relapseRate =
       totalStreaks > 0
         ? Number(((brokenStreaks / totalStreaks) * 100).toFixed(2))

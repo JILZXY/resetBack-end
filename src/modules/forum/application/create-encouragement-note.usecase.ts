@@ -10,7 +10,6 @@ export class CreateEncouragementNoteUseCase {
   ) {}
 
   async execute(senderId: string, receiverId: string, content: string) {
-    // Validar que el receptor existe
     const receiver = await this.userRepo.findById(receiverId);
     if (!receiver) {
       throw new HttpException(
@@ -22,9 +21,6 @@ export class CreateEncouragementNoteUseCase {
         HttpStatus.NOT_FOUND,
       );
     }
-
-    // El remitente debe ser PADRINO (opcional, según lógica de negocio)
-    // Pero aquí asumimos que el controlador ya filtra o que cualquiera puede enviar aliento si es sponsor.
 
     const note = await this.noteRepo.create({
       senderId,

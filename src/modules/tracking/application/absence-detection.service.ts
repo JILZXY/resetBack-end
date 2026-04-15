@@ -8,13 +8,6 @@ export class AbsenceDetectionService {
 
   constructor(private readonly prisma: PrismaService) {}
 
-  /**
-   * Se ejecuta todos los días a las 3:00 AM.
-   * Invoca la función tracking.fn_detect_absence() que:
-   * - Detecta usuarios con rachas activas que no han registrado un log
-   * - Inserta registros en tracking.log_absences
-   * - Pausa rachas si la ausencia supera 48 horas
-   */
   @Cron('0 3 * * *')
   async handleAbsenceDetection() {
     this.logger.log('Ejecutando detección de ausencias...');

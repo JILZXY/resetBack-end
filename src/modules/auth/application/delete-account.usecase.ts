@@ -23,20 +23,16 @@ export class DeleteAccountUseCase {
       );
     }
 
-    // Terminar todas sus relaciones de apadrinamiento (como padrino o como ahijado)
     await this.prisma.sponsorship.updateMany({
       where: {
-        OR: [
-          { sponsor_id: userId },
-          { addict_id: userId }
-        ],
-        status: { in: ['ACTIVE', 'PENDING'] }
+        OR: [{ sponsor_id: userId }, { addict_id: userId }],
+        status: { in: ['ACTIVE', 'PENDING'] },
       },
       data: {
         status: 'INACTIVE',
         ended_at: new Date(),
-        termination_reason: 'Cuenta del usuario eliminada'
-      }
+        termination_reason: 'Cuenta del usuario eliminada',
+      },
     });
 
     await this.userRepo.softDelete(userId);

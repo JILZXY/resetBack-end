@@ -21,7 +21,6 @@ export class OverviewMetricsUseCase {
   ) {}
 
   async execute() {
-    // PostgreSQL metrics via Prisma
     const [totalUsers, totalLogs, totalStreaks, activeStreaks] =
       await Promise.all([
         this.prisma.user.count(),
@@ -30,14 +29,12 @@ export class OverviewMetricsUseCase {
         this.prisma.streak.count({ where: { status: 'active' } }),
       ]);
 
-    // MongoDB metrics via Mongoose
     const [totalPosts, totalComments, totalReactions] = await Promise.all([
       this.postModel.countDocuments({ isDeleted: false }),
       this.commentModel.countDocuments({ isDeleted: false }),
       this.reactionModel.countDocuments(),
     ]);
 
-    // Usuarios únicos que han hecho al menos un log
     const usersWithLogs = await this.prisma.dailyLog.groupBy({
       by: ['user_id'],
     });

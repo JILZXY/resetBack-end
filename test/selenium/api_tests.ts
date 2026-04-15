@@ -4,7 +4,6 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as dotenv from 'dotenv';
 
-// Load environment variables from .env.development
 dotenv.config({ path: path.join(__dirname, '../../.env.development') });
 
 interface ApiResponse {
@@ -105,7 +104,6 @@ async function runApiTests() {
       return null;
     }
 
-    // 1. Register
     logResult(`Attempting to register user: ${email}`);
     await testEndpoint('Register', '/auth/register', 'POST', {
       name: 'Selenium Test User',
@@ -115,7 +113,6 @@ async function runApiTests() {
       addictionName: 'Testing',
     });
 
-    // 2. Login
     const loginRes = await testEndpoint('Login', '/auth/login', 'POST', {
       email,
       password,
@@ -148,7 +145,6 @@ async function runApiTests() {
       }
     }
 
-    // 3. Tracking
     await testEndpoint('Get Tracking Logs', '/tracking/logs');
     await testEndpoint('Get Tracking Statistics', '/tracking/statistics');
     await testEndpoint('Create Tracking Log', '/tracking/logs', 'POST', {
@@ -159,11 +155,9 @@ async function runApiTests() {
       notes: 'Final automated test log',
     });
 
-    // 4. Streak
     await testEndpoint('Get Current Streak', '/streak');
     await testEndpoint('Get Streak Events', '/streak/events');
 
-    // 5. Emergency
     await testEndpoint('Get Emergency Contacts', '/emergency/contacts');
     await testEndpoint('Get Alerts', '/emergency/alerts');
 
@@ -193,7 +187,6 @@ async function runApiTests() {
       );
     }
 
-    // 6. Forum
     await testEndpoint('Get Forum Posts', '/forum/posts');
     await testEndpoint('Get My Posts', '/forum/posts/my/list');
 
@@ -215,7 +208,6 @@ async function runApiTests() {
       await testEndpoint('Edit Post', `/forum/posts/${postId}`, 'PUT', {
         title: 'Updated Post Title',
         content: 'Updated content.',
-        // is_anonymous should not exist in UpdatePostDto
       });
       await testEndpoint(
         'React to Post',
@@ -230,7 +222,7 @@ async function runApiTests() {
         'POST',
         {
           content: 'Final automated test comment',
-          is_anonymous: false, // Required in CreateCommentDto
+          is_anonymous: false,
         },
       );
       const commentData = commentRes?.data || commentRes;
@@ -245,7 +237,6 @@ async function runApiTests() {
       await testEndpoint('Delete Post', `/forum/posts/${postId}`, 'DELETE');
     }
 
-    // 7. Admin Metrics (likely to return 404/403)
     logResult('\n--- Checking Admin Endpoints ---');
     await testEndpoint('Admin Overview', '/admin/metrics/overview');
     await testEndpoint('Admin Logs Frequency', '/admin/metrics/logs-frequency');

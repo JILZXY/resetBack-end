@@ -16,12 +16,14 @@ export class VerifyEmailUseCase {
 
     if (!tokenRecord) {
       throw new HttpException(
-        { code: 'INVALID_OR_EXPIRED_TOKEN', message: 'El token de verificación es inválido o ha expirado' },
+        {
+          code: 'INVALID_OR_EXPIRED_TOKEN',
+          message: 'El token de verificación es inválido o ha expirado',
+        },
         HttpStatus.BAD_REQUEST,
       );
     }
 
-    // Usamos una transacción para asegurar que el token se elimine al verificar al usuario
     await this.prisma.$transaction([
       this.prisma.user.update({
         where: { id: tokenRecord.user_id },
@@ -32,6 +34,9 @@ export class VerifyEmailUseCase {
       }),
     ]);
 
-    return { message: 'Correo electrónico verificado correctamente. Ya puedes iniciar sesión.' };
+    return {
+      message:
+        'Correo electrónico verificado correctamente. Ya puedes iniciar sesión.',
+    };
   }
 }
