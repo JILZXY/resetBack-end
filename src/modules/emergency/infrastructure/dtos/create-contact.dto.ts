@@ -14,12 +14,7 @@ export class CreateContactDto {
   @IsNotEmpty()
   @IsString()
   @MaxLength(100)
-  contact_name: string;
-
-  @IsOptional()
-  @IsString()
-  @MaxLength(20)
-  phone?: string;
+  contactName: string;
 
   @IsOptional()
   @IsEmail()
@@ -32,11 +27,11 @@ export class CreateContactDto {
 
   @IsOptional()
   @IsString()
-  custom_relationship?: string;
+  customRelationship?: string;
 
   @IsOptional()
   @IsInt()
   @Min(1)
   @Max(5)
-  priority_order?: number;
+  priorityOrder?: number;
 }

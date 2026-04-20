@@ -19,11 +19,17 @@ import { UpdatePostUseCase } from './application/update-post.usecase';
 import { DeletePostUseCase } from './application/delete-post.usecase';
 import { CreateCommentUseCase } from './application/create-comment.usecase';
 import { DeleteCommentUseCase } from './application/delete-comment.usecase';
+import { ToggleReactionUseCase } from './application/toggle-reaction.usecase';
+import { CreateReportUseCase } from './application/create-report.usecase';
+import { CreateEncouragementNoteUseCase } from './application/create-encouragement-note.usecase';
 import { PostRepository } from './infrastructure/repositories/post.repository';
 import { CommentRepository } from './infrastructure/repositories/comment.repository';
+import { EncouragementNoteRepository } from './infrastructure/repositories/encouragement-note.repository';
 import { CreatePostDto } from './infrastructure/dtos/create-post.dto';
 import { UpdatePostDto } from './infrastructure/dtos/update-post.dto';
 import { CreateCommentDto } from './infrastructure/dtos/create-comment.dto';
+import { CreateReportDto } from './infrastructure/dtos/create-report.dto';
+import { CreateEncouragementNoteDto } from './infrastructure/dtos/create-encouragement-note.dto';
 
 @Controller('forum')
 @UseGuards(JwtAuthGuard)
@@ -35,8 +41,12 @@ export class ForumController {
     private readonly deletePost: DeletePostUseCase,
     private readonly createComment: CreateCommentUseCase,
     private readonly deleteComment: DeleteCommentUseCase,
+    private readonly toggleReaction: ToggleReactionUseCase,
+    private readonly createReport: CreateReportUseCase,
+    private readonly createEncouragement: CreateEncouragementNoteUseCase,
     private readonly postRepo: PostRepository,
     private readonly commentRepo: CommentRepository,
+    private readonly noteRepo: EncouragementNoteRepository,
   ) {}
 
   @Post('posts')
@@ -66,7 +76,11 @@ export class ForumController {
 
   @Put('posts/:id')
   @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
-  update(@Request() req: any, @Param('id') id: string, @Body() dto: UpdatePostDto) {
+  update(
+    @Request() req: any,
+    @Param('id') id: string,
+    @Body() dto: UpdatePostDto,
+  ) {
     return this.updatePost.execute(req.user.userId, id, dto);
   }
 
@@ -76,8 +90,33 @@ export class ForumController {
   }
 
   @Post('posts/:id/react')
-  reactPost(@Param('id') id: string) {
-    return this.postRepo.incrementReaction(id);
+  reactPost(@Request() req: any, @Param('id') id: string) {
+    return this.toggleReaction.execute(req.user.userId, id, 'post');
+  }
+
+  @Post('comments/:id/react')
+  reactComment(@Request() req: any, @Param('id') id: string) {
+    return this.toggleReaction.execute(req.user.userId, id, 'comment');
+  }
+
+  @Post('posts/:id/report')
+  @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
+  reportPost(
+    @Request() req: any,
+    @Param('id') id: string,
+    @Body() dto: CreateReportDto,
+  ) {
+    return this.createReport.execute(req.user.userId, id, 'post', dto);
+  }
+
+  @Post('comments/:id/report')
+  @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
+  reportComment(
+    @Request() req: any,
+    @Param('id') id: string,
+    @Body() dto: CreateReportDto,
+  ) {
+    return this.createReport.execute(req.user.userId, id, 'comment', dto);
   }
 
   @Post('posts/:id/comments')
@@ -100,8 +139,21 @@ export class ForumController {
     return this.deleteComment.execute(req.user.userId, id);
   }
 
-  @Post('comments/:id/react')
-  reactComment(@Param('id') id: string) {
-    return this.commentRepo.incrementReaction(id);
+  @Post('encouragement')
+  @UsePipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }))
+  sendEncouragement(
+    @Request() req: any,
+    @Body() dto: CreateEncouragementNoteDto,
+  ) {
+    return this.createEncouragement.execute(
+      req.user.userId,
+      dto.receiverId,
+      dto.content,
+    );
+  }
+
+  @Get('encouragement/my-notes')
+  getMyNotes(@Request() req: any) {
+    return this.noteRepo.findByReceiverId(req.user.userId);
   }
 }

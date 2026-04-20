@@ -1,0 +1,13 @@
+services:
+  reset-backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: reset-backend
+    restart: unless-stopped
+    ports:
+      - "81:3000"
+    env_file:
+      - .env.production
+    environment:
+      - NODE_ENV=production

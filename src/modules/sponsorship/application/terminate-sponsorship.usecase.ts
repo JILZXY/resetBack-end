@@ -1,44 +1,41 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
 import { SponsorshipRepository } from '../infrastructure/repositories/sponsorship.repository';
 import { TerminateSponsorshipDto } from '../infrastructure/dtos/terminate-sponsorship.dto';
-import { PrismaService } from 'src/shared/database/prisma/prisma.service';
 
 @Injectable()
 export class TerminateSponsorshipUseCase {
-  constructor(
-    private readonly sponsorshipRepo: SponsorshipRepository,
-    private readonly prisma: PrismaService,
-  ) {}
+  constructor(private readonly sponsorshipRepo: SponsorshipRepository) {}
 
-  async execute(userId: string, sponsorshipId: string, dto: TerminateSponsorshipDto) {
-    // Validar que el sponsorship existe y que el usuario tiene permisos
+  async execute(
+    userId: string,
+    sponsorshipId: string,
+    dto: TerminateSponsorshipDto,
+  ) {
     const sponsorship = await this.sponsorshipRepo.findById(sponsorshipId);
 
     if (!sponsorship) {
-      throw new HttpException('Relación de apadrinamiento no encontrada', HttpStatus.NOT_FOUND);
+      throw new HttpException(
+        'Relación de apadrinamiento no encontrada',
+        HttpStatus.NOT_FOUND,
+      );
     }
 
-    if (!sponsorship.isActive) {
-      throw new HttpException('La relación ya estaba terminada', HttpStatus.BAD_REQUEST);
+    if (sponsorship.status !== 'ACTIVE') {
+      throw new HttpException(
+        'La relación no está activa',
+        HttpStatus.BAD_REQUEST,
+      );
     }
 
-    // El padrino o el ahijado pueden dar por terminada la relación
-    if (sponsorship.sponsorId !== userId && sponsorship.addictId !== userId) {
-      throw new HttpException('No tienes permisos para terminar esta relación', HttpStatus.FORBIDDEN);
+    if (sponsorship.addictId !== userId) {
+      throw new HttpException(
+        'Solo el ahijado puede terminar esta relación de apadrinamiento',
+        HttpStatus.FORBIDDEN,
+      );
     }
 
-    // Delegar la terminación a la función de DB usando el sponsor_id
     const reason = dto.reason || 'Terminación voluntaria';
-    const result: any[] = await this.prisma.$queryRaw(
-      Prisma.sql`SELECT core.fn_close_sponsorship(${sponsorship.sponsorId}::uuid, ${reason}) AS success`,
-    );
-
-    const success = result[0]?.success ?? false;
-
-    if (!success) {
-      throw new HttpException('No se pudo terminar la relación de apadrinamiento', HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+    await this.sponsorshipRepo.setInactive(sponsorshipId, reason);
 
     return {
       message: 'Relación de apadrinamiento terminada exitosamente',

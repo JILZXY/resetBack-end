@@ -3,7 +3,10 @@ import { HydratedDocument } from 'mongoose';
 
 export type PostDocument = HydratedDocument<Post>;
 
-@Schema({ collection: 'posts', timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' } })
+@Schema({
+  collection: 'posts',
+  timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' },
+})
 export class Post {
   @Prop({ required: true })
   authorId: string;
@@ -28,6 +31,12 @@ export class Post {
 
   @Prop({ default: 0 })
   commentCount: number;
+
+  @Prop({ default: false })
+  isDeleted: boolean;
+
+  @Prop({ default: false })
+  isEdited: boolean;
 }
 
 export const PostSchema = SchemaFactory.createForClass(Post);

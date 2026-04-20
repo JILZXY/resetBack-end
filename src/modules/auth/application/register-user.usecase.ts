@@ -1,16 +1,33 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { UserRepository } from '../infrastructure/repositories/user.repository';
 import { RegisterDto } from '../infrastructure/dtos/register.dto';
+import { VerificationTokenRepository } from '../infrastructure/repositories/verification-token.repository';
+import { MailService } from 'src/shared/mail/mail.service';
 import * as bcrypt from 'bcrypt';
+import * as crypto from 'crypto';
 
 @Injectable()
 export class RegisterUserUseCase {
-  constructor(private readonly userRepo: UserRepository) {}
+  constructor(
+    private readonly userRepo: UserRepository,
+    private readonly tokenRepo: VerificationTokenRepository,
+    private readonly mailService: MailService,
+  ) {}
 
   async execute(dto: RegisterDto) {
-    const existing = await this.userRepo.findByEmail(dto.email);
+    const existing = await this.userRepo.findByEmailIncludeDeleted(dto.email);
 
     if (existing) {
+      if (existing.isDeleted) {
+        throw new HttpException(
+          {
+            code: 'ACCOUNT_DEACTIVATED',
+            message: 'Esta cuenta ha sido desactivada. ¿Deseas reactivarla?',
+            details: { email: dto.email },
+          },
+          HttpStatus.FORBIDDEN,
+        );
+      }
       throw new HttpException(
         {
           code: 'EMAIL_ALREADY_EXISTS',
@@ -32,11 +49,21 @@ export class RegisterUserUseCase {
       classification: dto.classification,
     });
 
+    const token = crypto.randomBytes(32).toString('hex');
+    const expiresAt = new Date();
+    expiresAt.setHours(expiresAt.getHours() + 24);
+
+    await this.tokenRepo.create(user.id, token, expiresAt);
+
+    await this.mailService.sendVerificationEmail(user.email, token);
+
     return {
       id: user.id,
       name: user.name,
       email: user.email,
       role: user.role,
+      sponsorCode: user.sponsorCode,
+      avatarUrl: user.avatarUrl,
       createdAt: user.createdAt,
     };
   }

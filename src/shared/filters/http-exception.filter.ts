@@ -28,13 +28,22 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       } else if (typeof exceptionResponse === 'object') {
         const resp = exceptionResponse as Record<string, unknown>;
         code = (resp.code as string) ?? this.statusToCode(status);
-        message = (resp.message as string) ?? message;
+        message = (resp.message as string) ?? (resp.error as string) ?? message;
         details = (resp.details as Record<string, unknown>) ?? {};
       }
 
       if (code === 'INTERNAL_SERVER_ERROR') {
         code = this.statusToCode(status);
       }
+    } else if (exception instanceof Error) {
+    }
+
+    if (process.env.NODE_ENV === 'development') {
+      details = {
+        ...details,
+        rawMessage: (exception as any)?.message,
+        stack: (exception as any)?.stack,
+      };
     }
 
     console.error(`[${request.method}] ${request.url} → ${status}`, exception);

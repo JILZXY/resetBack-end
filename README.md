@@ -1,98 +1,157 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Reset Backend API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+[![NestJS](https://nestjs.com/img/logo-small.svg)](https://nestjs.com/)
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+---
 
-## Description
+## Resumen
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+**ReSet** es una aplicación web/móvil de automonitoreo y acompañamiento digital para personas post‑rehabilitadas de adicciones, enfocada en mantener la sobriedad y fortalecer la red de apoyo.
 
-## Project setup
+---
 
-```bash
-$ npm install
-```
+## Introducción
 
-## Compile and run the project
+En México, el seguimiento post‑tratamiento de adicciones suele limitarse a consultas esporádicas, dejando a la persona vulnerable durante la reinserción a la vida cotidiana.
 
-```bash
-# development
-$ npm run start
+ReSet es una aplicación de automonitoreo y apoyo social que permite registrar consumo/no consumo, craving y estado emocional, así como gestionar rachas de sobriedad y una red de apoyo.
 
-# watch mode
-$ npm run start:dev
+---
 
-# production mode
-$ npm run start:prod
-```
+## Descripción
 
-## Run tests
+Este proyecto es una API **NestJS** que gestiona la bitácora de usuarios adictos, incluyendo módulos de patrocinio, seguimiento, foros, emergencias y rachas.
+
+---
+
+## Requisitos previos
+
+- **Node.js** (v20 o superior)
+- **npm** (v10 o superior) o **yarn**
+- **Docker** (opcional, para ejecutar la base de datos y la API en contenedores)
+- **PostgreSQL** (local o vía Docker)
+
+> **Nota:** No se incluyen secretos ni variables de entorno en este documento. Usa el archivo `.env.example` como plantilla.
+
+---
+
+## Instalación
 
 ```bash
-# unit tests
-$ npm run test
+# Clonar el repositorio
+git clone https://github.com/JILZXY/resetBack-end.git
+cd resetBack-end
 
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+# Instalar dependencias
+npm install
 ```
 
-## Deployment
+---
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+## Configuración local
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+1. Copia el archivo de ejemplo de variables de entorno:
+   ```bash
+   cp .env.example .env
+   ```
+2. Edita `.env` con tus credenciales (`DATABASE_URL`, `JWT_SECRET`, etc.).
+3. (Opcional) Levanta la base de datos con Docker:
+   ```bash
+   docker compose up -d
+   ```
+
+---
+
+## Ejecutar la API
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+# Modo desarrollo (recarga automática)
+npm run start:dev
+
+# Modo producción
+npm run build && npm run start:prod
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+La API estará disponible en `http://localhost:3000`.
 
-## Resources
+---
 
-Check out a few resources that may come in handy when working with NestJS:
+## Endpoints principales
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+### 1. Foro (`/forum`)
+| Método | Ruta | Descripción |
+|--------|------|-------------|
+| `GET` | `/forum/posts` | Obtener lista de publicaciones.
+| `POST` | `/forum/posts` | Crear una nueva publicación.
+| `GET` | `/forum/posts/:id` | Obtener detalle de una publicación.
+| `PUT` | `/forum/posts/:id` | Actualizar una publicación.
+| `DELETE` | `/forum/posts/:id` | Eliminar una publicación.
+| `POST` | `/forum/posts/:id/reactions` | Añadir reacción a una publicación.
+| `POST` | `/forum/comments` | Crear comentario en una publicación.
 
-## Support
+### 2. Bitácora / Logs (`/tracking/logs`)
+| Método | Ruta | Descripción |
+|--------|------|-------------|
+| `POST` | `/tracking/logs` | Registrar un nuevo log (consumo, craving, estado emocional, notas).
+| `GET` | `/tracking/logs` | Obtener historial de logs con filtros.
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+#### Parámetros de consulta para `GET /tracking/logs`
+| Parámetro | Tipo | Descripción |
+|-----------|------|-------------|
+| `year` | `number` | Año completo (ej. `2026`). |
+| `month` | `number` | Mes (1‑12). Requiere `year`. |
+| `day` | `number` | Día del mes (1‑31). Requiere `year` y `month`. |
+| `from` | `string` (ISO) | Fecha de inicio para rango personalizado. |
+| `to` | `string` (ISO) | Fecha de fin para rango personalizado. |
 
-## Stay in touch
+Ejemplos:
+- `GET /tracking/logs?year=2026`
+- `GET /tracking/logs?year=2026&month=4`
+- `GET /tracking/logs?year=2026&month=4&day=15`
+- `GET /tracking/logs?from=2026-01-01&to=2026-01-15`
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+Los resultados se devuelven ordenados de **más reciente a más antiguo**.
 
-## License
+### 3. Emergencia (`/emergency`)
+| Método | Ruta | Descripción |
+|--------|------|-------------|
+| `POST` | `/emergency/contacts` | Registrar un contacto de emergencia.
+| `GET` | `/emergency/contacts` | Listar contactos de emergencia del usuario.
+| `POST` | `/emergency/alert` | Enviar alerta de emergencia a los contactos registrados.
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+### 4. Tracking (`/tracking` – funcionalidades adicionales)
+| Método | Ruta | Descripción |
+|--------|------|-------------|
+| `GET` | `/tracking/statistics` | Obtener estadísticas agregadas (promedio de craving, estado emocional, racha actual, etc.). |
+| `GET` | `/tracking/stats/moving-average` | Obtener promedio móvil de consumo/craving.
+| `GET` | `/tracking/logs/latest` | Obtener el log más reciente.
+
+### 5. Racha (`/streak`)
+| Método | Ruta | Descripción |
+|--------|------|-------------|
+| `GET` | `/streak` | Obtener la racha actual del usuario.
+| `GET` | `/streak/best` | Obtener las mejores rachas del usuario.
+| `POST` | `/streak/reset` | Resetear la racha (usado por lógica interna).
+
+---
+
+## Docker
+
+Puedes levantar la aplicación y la base de datos con Docker Compose:
+
+```bash
+docker compose up --build
+```
+
+---
+
+## Tests
+
+```bash
+# Unit tests
+npm run test
+
+# End‑to‑end tests
+npm run test:e2e
+```
+

@@ -12,9 +12,9 @@ export class GetPostsUseCase {
   async execute(page: number, limit: number, tag?: string) {
     const posts = await this.postRepo.findAll(page, limit, tag);
 
-    const authorIds = [...new Set(
-      posts.filter((p) => !p.isAnonymous).map((p) => p.authorId)
-    )];
+    const authorIds = [
+      ...new Set(posts.filter((p) => !p.isAnonymous).map((p) => p.authorId)),
+    ];
 
     const users = authorIds.length
       ? await this.prisma.user.findMany({

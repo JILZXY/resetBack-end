@@ -4,7 +4,7 @@ export class SponsorshipEntity {
   addictId: string;
   startedAt: Date;
   endedAt: Date;
-  isActive: boolean;
+  status: string;
   terminationReason: string;
   createdAt: Date;
 }
