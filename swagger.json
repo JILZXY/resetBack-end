@@ -1,0 +1,2223 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/api/v1": {
+      "get": {
+        "operationId": "AppController_healthCheck",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "App"
+        ]
+      }
+    },
+    "/api/v1/auth/register": {
+      "post": {
+        "operationId": "AuthController_register",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/api/v1/auth/login": {
+      "post": {
+        "operationId": "AuthController_login",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/api/v1/auth/verify-2fa": {
+      "post": {
+        "operationId": "AuthController_verify2FA",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Verify2FADto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/api/v1/auth/profile": {
+      "get": {
+        "operationId": "AuthController_getProfile",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/api/v1/auth/forgot-password": {
+      "post": {
+        "operationId": "AuthController_forgotPassword",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/api/v1/auth/reset-password": {
+      "post": {
+        "operationId": "AuthController_resetPassword",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResetPasswordDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/api/v1/auth/verify-email": {
+      "post": {
+        "operationId": "AuthController_verifyEmail",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/api/v1/auth/account": {
+      "delete": {
+        "operationId": "AuthController_deleteAccount",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/api/v1/auth/relapse": {
+      "post": {
+        "operationId": "AuthController_relapse",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BecomeAddictDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/api/v1/auth/reactivate": {
+      "post": {
+        "operationId": "AuthController_reactivate",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReactivateDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/api/v1/tracking/logs": {
+      "post": {
+        "operationId": "TrackingController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateLogDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DailyLogEntity"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Tracking"
+        ]
+      },
+      "get": {
+        "operationId": "TrackingController_history",
+        "parameters": [
+          {
+            "name": "from",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "to",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "year",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "month",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 12,
+              "type": "number"
+            }
+          },
+          {
+            "name": "day",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 31,
+              "type": "number"
+            }
+          },
+          {
+            "name": "userId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DailyLogEntity"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Tracking"
+        ]
+      }
+    },
+    "/api/v1/tracking/statistics": {
+      "get": {
+        "operationId": "TrackingController_statistics",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Tracking"
+        ]
+      }
+    },
+    "/api/v1/tracking/logs/latest": {
+      "get": {
+        "operationId": "TrackingController_latest",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Tracking"
+        ]
+      }
+    },
+    "/api/v1/tracking/stats/moving-average": {
+      "get": {
+        "operationId": "TrackingController_movingAvg",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Tracking"
+        ]
+      }
+    },
+    "/api/v1/sponsorships/request": {
+      "post": {
+        "operationId": "SponsorshipController_request",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestSponsorshipDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Sponsorship"
+        ]
+      }
+    },
+    "/api/v1/sponsorships/accept": {
+      "patch": {
+        "operationId": "SponsorshipController_accept",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Sponsorship"
+        ]
+      }
+    },
+    "/api/v1/sponsorships/reject": {
+      "patch": {
+        "operationId": "SponsorshipController_reject",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Sponsorship"
+        ]
+      }
+    },
+    "/api/v1/sponsorships/{id}/terminate": {
+      "patch": {
+        "operationId": "SponsorshipController_terminate",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TerminateSponsorshipDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Sponsorship"
+        ]
+      }
+    },
+    "/api/v1/sponsorships/graduate": {
+      "post": {
+        "operationId": "SponsorshipController_graduate",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GraduateAddictDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Sponsorship"
+        ]
+      }
+    },
+    "/api/v1/sponsorships/godchild/profile": {
+      "get": {
+        "operationId": "SponsorshipController_godchildProfile",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Sponsorship"
+        ]
+      }
+    },
+    "/api/v1/forum/posts": {
+      "post": {
+        "operationId": "ForumController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePostDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PostEntity"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Forum"
+        ]
+      },
+      "get": {
+        "operationId": "ForumController_findAll",
+        "parameters": [
+          {
+            "name": "tag",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {}
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {}
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Forum"
+        ]
+      }
+    },
+    "/api/v1/forum/posts/{id}": {
+      "get": {
+        "operationId": "ForumController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Forum"
+        ]
+      },
+      "put": {
+        "operationId": "ForumController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePostDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Forum"
+        ]
+      },
+      "delete": {
+        "operationId": "ForumController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Forum"
+        ]
+      }
+    },
+    "/api/v1/forum/posts/my/list": {
+      "get": {
+        "operationId": "ForumController_myPosts",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PostEntity"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Forum"
+        ]
+      }
+    },
+    "/api/v1/forum/posts/{id}/react": {
+      "post": {
+        "operationId": "ForumController_reactPost",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Forum"
+        ]
+      }
+    },
+    "/api/v1/forum/comments/{id}/react": {
+      "post": {
+        "operationId": "ForumController_reactComment",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Forum"
+        ]
+      }
+    },
+    "/api/v1/forum/posts/{id}/report": {
+      "post": {
+        "operationId": "ForumController_reportPost",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateReportDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Forum"
+        ]
+      }
+    },
+    "/api/v1/forum/comments/{id}/report": {
+      "post": {
+        "operationId": "ForumController_reportComment",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateReportDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Forum"
+        ]
+      }
+    },
+    "/api/v1/forum/posts/{id}/comments": {
+      "post": {
+        "operationId": "ForumController_addComment",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCommentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommentEntity"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Forum"
+        ]
+      },
+      "get": {
+        "operationId": "ForumController_getComments",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CommentEntity"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Forum"
+        ]
+      }
+    },
+    "/api/v1/forum/comments/{id}": {
+      "delete": {
+        "operationId": "ForumController_removeComment",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Forum"
+        ]
+      }
+    },
+    "/api/v1/forum/encouragement": {
+      "post": {
+        "operationId": "ForumController_sendEncouragement",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateEncouragementNoteDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EncouragementNoteEntity"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Forum"
+        ]
+      }
+    },
+    "/api/v1/forum/encouragement/my-notes": {
+      "get": {
+        "operationId": "ForumController_getMyNotes",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EncouragementNoteEntity"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Forum"
+        ]
+      }
+    },
+    "/api/v1/notifications": {
+      "get": {
+        "operationId": "NotificationController_getMyNotifications",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/NotificationEntity"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Notification"
+        ]
+      }
+    },
+    "/api/v1/notifications/unread-count": {
+      "get": {
+        "operationId": "NotificationController_getUnreadCount",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Notification"
+        ]
+      }
+    },
+    "/api/v1/notifications/{id}/read": {
+      "patch": {
+        "operationId": "NotificationController_markAsRead",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Notification"
+        ]
+      }
+    },
+    "/api/v1/notifications/read-all": {
+      "patch": {
+        "operationId": "NotificationController_markAllAsRead",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Notification"
+        ]
+      }
+    },
+    "/api/v1/emergency/contacts": {
+      "post": {
+        "operationId": "EmergencyController_createContact",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateContactDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SupportContactEntity"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Emergency"
+        ]
+      },
+      "get": {
+        "operationId": "EmergencyController_getContacts",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SupportContactEntity"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Emergency"
+        ]
+      }
+    },
+    "/api/v1/emergency/contacts/{id}": {
+      "delete": {
+        "operationId": "EmergencyController_deleteContact",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Emergency"
+        ]
+      }
+    },
+    "/api/v1/emergency/alert": {
+      "post": {
+        "operationId": "EmergencyController_triggerEmergency",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TriggerAlertDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Emergency"
+        ]
+      }
+    },
+    "/api/v1/emergency/alerts": {
+      "get": {
+        "operationId": "EmergencyController_getAlerts",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EmergencyAlertEntity"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Emergency"
+        ]
+      }
+    },
+    "/api/v1/streak": {
+      "get": {
+        "operationId": "StreakController_getStreak",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Streak"
+        ]
+      }
+    },
+    "/api/v1/streak/events": {
+      "get": {
+        "operationId": "StreakController_getEvents",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/StreakEventEntity"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Streak"
+        ]
+      }
+    },
+    "/api/v1/streak/best": {
+      "get": {
+        "operationId": "StreakController_getBest",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Streak"
+        ]
+      }
+    },
+    "/api/v1/streak/reset": {
+      "post": {
+        "operationId": "StreakController_reset",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Streak"
+        ]
+      }
+    },
+    "/api/v1/admin/metrics/overview": {
+      "get": {
+        "operationId": "AdminController_getOverview",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/api/v1/admin/metrics/logs-frequency": {
+      "get": {
+        "operationId": "AdminController_getLogsFrequency",
+        "parameters": [
+          {
+            "name": "from",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "to",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/api/v1/admin/metrics/forum-engagement": {
+      "get": {
+        "operationId": "AdminController_getForumEngagement",
+        "parameters": [
+          {
+            "name": "from",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "to",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/api/v1/admin/metrics/correlation": {
+      "get": {
+        "operationId": "AdminController_getCorrelation",
+        "parameters": [
+          {
+            "name": "from",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "to",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/api/v1/admin/metrics/logs-by-addiction": {
+      "get": {
+        "operationId": "AdminController_getLogsByAddiction",
+        "parameters": [
+          {
+            "name": "from",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "to",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/api/v1/admin/metrics/emotional-trends": {
+      "get": {
+        "operationId": "AdminController_getEmotionalTrends",
+        "parameters": [
+          {
+            "name": "from",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "to",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/api/v1/admin/metrics/streaks-summary": {
+      "get": {
+        "operationId": "AdminController_getStreaksSummary",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/api/v1/admin/metrics/reports-summary": {
+      "get": {
+        "operationId": "AdminController_getReportsSummary",
+        "parameters": [
+          {
+            "name": "from",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "to",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Admin"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "Reset API",
+    "description": "The Reset application API documentation",
+    "version": "1.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "securitySchemes": {
+      "bearer": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "type": "http"
+      }
+    },
+    "schemas": {
+      "RegisterDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "email": {
+            "type": "string",
+            "maxLength": 150,
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 8
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "ADICTO",
+              "PADRINO"
+            ]
+          },
+          "addictionName": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "classification": {
+            "type": "string",
+            "maxLength": 50
+          }
+        },
+        "required": [
+          "name",
+          "email",
+          "password"
+        ]
+      },
+      "LoginDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "password": {
+            "type": "string"
+          },
+          "rememberMe": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ]
+      },
+      "Verify2FADto": {
+        "type": "object",
+        "properties": {
+          "mfaToken": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string",
+            "minLength": 6,
+            "maxLength": 6
+          },
+          "rememberMe": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "mfaToken",
+          "code"
+        ]
+      },
+      "ResetPasswordDto": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string"
+          },
+          "newPassword": {
+            "type": "string",
+            "minLength": 6
+          }
+        },
+        "required": [
+          "token",
+          "newPassword"
+        ]
+      },
+      "BecomeAddictDto": {
+        "type": "object",
+        "properties": {
+          "addictionName": {
+            "type": "string"
+          },
+          "classification": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "addictionName"
+        ]
+      },
+      "ReactivateDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 6
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ]
+      },
+      "CreateLogDto": {
+        "type": "object",
+        "properties": {
+          "log_date": {
+            "type": "string"
+          },
+          "consumed": {
+            "type": "boolean"
+          },
+          "craving_level": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 10
+          },
+          "emotional_state": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 10
+          },
+          "triggers": {
+            "type": "string"
+          },
+          "notes": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "log_date",
+          "consumed",
+          "craving_level",
+          "emotional_state"
+        ]
+      },
+      "DailyLogEntity": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "userId": {
+            "type": "string"
+          },
+          "logDate": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "consumed": {
+            "type": "boolean"
+          },
+          "cravingLevelId": {
+            "type": "string"
+          },
+          "emotionalStateId": {
+            "type": "string"
+          },
+          "triggers": {
+            "type": "string"
+          },
+          "notes": {
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "userId",
+          "logDate",
+          "consumed",
+          "cravingLevelId",
+          "emotionalStateId",
+          "triggers",
+          "notes",
+          "createdAt"
+        ]
+      },
+      "RequestSponsorshipDto": {
+        "type": "object",
+        "properties": {
+          "sponsor_code": {
+            "type": "string",
+            "maxLength": 10
+          }
+        },
+        "required": [
+          "sponsor_code"
+        ]
+      },
+      "TerminateSponsorshipDto": {
+        "type": "object",
+        "properties": {
+          "reason": {
+            "type": "string",
+            "maxLength": 500
+          }
+        },
+        "required": [
+          "reason"
+        ]
+      },
+      "GraduateAddictDto": {
+        "type": "object",
+        "properties": {
+          "addictId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "addictId"
+        ]
+      },
+      "CreatePostDto": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "content": {
+            "type": "string"
+          },
+          "is_anonymous": {
+            "type": "boolean"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "images": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "title",
+          "content",
+          "is_anonymous"
+        ]
+      },
+      "PostEntity": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "authorId": {
+            "type": "string"
+          },
+          "authorName": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "isAnonymous": {
+            "type": "boolean"
+          },
+          "images": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "reactionUps": {
+            "type": "number"
+          },
+          "commentCount": {
+            "type": "number"
+          },
+          "isDeleted": {
+            "type": "boolean"
+          },
+          "isEdited": {
+            "type": "boolean"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "authorId",
+          "title",
+          "content",
+          "isAnonymous",
+          "images",
+          "tags",
+          "reactionUps",
+          "commentCount",
+          "isDeleted",
+          "isEdited",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "UpdatePostDto": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "content": {
+            "type": "string"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "images": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "CreateReportDto": {
+        "type": "object",
+        "properties": {
+          "reason": {
+            "enum": [
+              "SPAM",
+              "HARASSMENT",
+              "HATE_SPEECH",
+              "INAPPROPRIATE_CONTENT",
+              "OTHER"
+            ],
+            "type": "string"
+          },
+          "details": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "reason"
+        ]
+      },
+      "CreateCommentDto": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "string"
+          },
+          "is_anonymous": {
+            "type": "boolean"
+          },
+          "parent_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "content",
+          "is_anonymous"
+        ]
+      },
+      "CommentEntity": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "postId": {
+            "type": "string"
+          },
+          "parentId": {
+            "type": "string",
+            "nullable": true
+          },
+          "authorId": {
+            "type": "string"
+          },
+          "authorName": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "isAnonymous": {
+            "type": "boolean"
+          },
+          "reactionUps": {
+            "type": "number"
+          },
+          "reportCount": {
+            "type": "number"
+          },
+          "isDeleted": {
+            "type": "boolean"
+          },
+          "isEdited": {
+            "type": "boolean"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "postId",
+          "parentId",
+          "authorId",
+          "content",
+          "isAnonymous",
+          "reactionUps",
+          "reportCount",
+          "isDeleted",
+          "isEdited",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "CreateEncouragementNoteDto": {
+        "type": "object",
+        "properties": {
+          "receiverId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "content": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "receiverId",
+          "content"
+        ]
+      },
+      "EncouragementNoteEntity": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "senderId": {
+            "type": "string"
+          },
+          "receiverId": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "senderId",
+          "receiverId",
+          "content",
+          "createdAt"
+        ]
+      },
+      "NotificationEntity": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "userId": {
+            "type": "string"
+          },
+          "actorId": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "targetId": {
+            "type": "string"
+          },
+          "actorName": {
+            "type": "string"
+          },
+          "actorAvatarUrl": {
+            "type": "string"
+          },
+          "isRead": {
+            "type": "boolean"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "_id",
+          "id",
+          "userId",
+          "actorId",
+          "type",
+          "targetId",
+          "isRead",
+          "createdAt"
+        ]
+      },
+      "CreateContactDto": {
+        "type": "object",
+        "properties": {
+          "contactName": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "email": {
+            "type": "string",
+            "maxLength": 150,
+            "format": "email"
+          },
+          "relationship": {
+            "type": "string",
+            "enum": [
+              "familia",
+              "amigo",
+              "padrino",
+              "terapeuta",
+              "otro"
+            ]
+          },
+          "customRelationship": {
+            "type": "string"
+          },
+          "priorityOrder": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 5
+          }
+        },
+        "required": [
+          "contactName"
+        ]
+      },
+      "SupportContactEntity": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "userId": {
+            "type": "string"
+          },
+          "contactName": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "relationship": {
+            "type": "string",
+            "nullable": true
+          },
+          "customRelationship": {
+            "type": "string",
+            "nullable": true
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "priorityOrder": {
+            "type": "number",
+            "nullable": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "userId",
+          "contactName",
+          "email",
+          "relationship",
+          "customRelationship",
+          "isActive",
+          "priorityOrder",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "TriggerAlertDto": {
+        "type": "object",
+        "properties": {
+          "resultedInRelapse": {
+            "type": "boolean"
+          },
+          "resolutionNotes": {
+            "type": "string"
+          }
+        }
+      },
+      "EmergencyAlertEntity": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "userId": {
+            "type": "string"
+          },
+          "userAddictionId": {
+            "type": "string"
+          },
+          "activatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "resultedInRelapse": {
+            "type": "boolean"
+          },
+          "resolutionNotes": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "userId",
+          "userAddictionId",
+          "activatedAt",
+          "resultedInRelapse",
+          "resolutionNotes",
+          "createdAt"
+        ]
+      },
+      "StreakEventEntity": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "streakId": {
+            "type": "string"
+          },
+          "emergencyAlertId": {
+            "type": "string",
+            "nullable": true
+          },
+          "eventType": {
+            "type": "string",
+            "nullable": true
+          },
+          "eventDate": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "daysAchieved": {
+            "type": "number",
+            "nullable": true
+          },
+          "avgCravingPeriod": {
+            "type": "number",
+            "nullable": true
+          },
+          "avgEmotionPeriod": {
+            "type": "number",
+            "nullable": true
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "streakId",
+          "emergencyAlertId",
+          "eventType",
+          "eventDate",
+          "daysAchieved",
+          "avgCravingPeriod",
+          "avgEmotionPeriod",
+          "createdAt"
+        ]
+      }
+    }
+  }
+}
